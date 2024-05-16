@@ -25,7 +25,7 @@ public class UserDTO {
     private int age;
 
     @NotNull
-    @Email
+    @Email(message = "invalid email adress")
     private String email;
 
     @NotBlank(message = "username is mandatory")
@@ -33,7 +33,7 @@ public class UserDTO {
     private String username;
 
     @Pattern(regexp = "\\d{10}")
-    @NotBlank(message = "password is mandatory")
+    @NotBlank(message = "invalid password")
     private String password;
 
 }

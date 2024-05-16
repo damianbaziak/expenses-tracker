@@ -2,7 +2,6 @@ package com.example.trainingsapp.user.controller;
 
 import com.example.trainingsapp.user.dto.UserDTO;
 import com.example.trainingsapp.user.entity.User;
-import com.example.trainingsapp.user.repository.UserRepository;
 import com.example.trainingsapp.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +26,6 @@ public class UserController {
         if (userFromDb.isPresent()) {
                 return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
             }
-
-        User savedUser = userService.addUser(userDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return new ResponseEntity<>(userService.addUser(userDTO), HttpStatus.CREATED);
     }
 }
