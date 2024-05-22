@@ -1,14 +1,13 @@
-package com.example.trainingsapp.user.controller;
+package com.example.trainingsapp.user;
 
 import com.example.trainingsapp.user.dto.UserDTO;
-import com.example.trainingsapp.user.entity.User;
-import com.example.trainingsapp.user.service.UserService;
+import com.example.trainingsapp.user.model.User;
+import com.example.trainingsapp.user.service.UserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -16,7 +15,7 @@ import java.util.Optional;
 @RestController
 public class UserController {
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @PostMapping("/signup")
     public ResponseEntity registerUser(@Valid @RequestBody UserDTO userDTO) {
@@ -38,15 +37,11 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity uptadeUser (@PathVariable Long id, @Valid @RequestBody UserDTO userUpdate) {
+    public ResponseEntity uptadeUser(@PathVariable Long id, @RequestBody UserDTO userUpdate) {
         User user = userService.updateUser(id, userUpdate);
 
         return new ResponseEntity<>(user, HttpStatus.OK);
 
 
     }
-
-
-
-
-    }
+}

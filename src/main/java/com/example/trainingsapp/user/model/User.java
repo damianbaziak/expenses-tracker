@@ -1,4 +1,4 @@
-package com.example.trainingsapp.user.entity;
+package com.example.trainingsapp.user.model;
 
 import jakarta.persistence.*;
 import lombok.*;

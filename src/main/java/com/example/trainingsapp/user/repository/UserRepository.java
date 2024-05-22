@@ -1,6 +1,6 @@
 package com.example.trainingsapp.user.repository;
 
-import com.example.trainingsapp.user.entity.User;
+import com.example.trainingsapp.user.model.User;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
