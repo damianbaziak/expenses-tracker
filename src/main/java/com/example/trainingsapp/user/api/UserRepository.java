@@ -1,4 +1,4 @@
-package com.example.trainingsapp.user.repository;
+package com.example.trainingsapp.user.api;
 
 import com.example.trainingsapp.user.model.User;
 import org.springframework.data.repository.CrudRepository;

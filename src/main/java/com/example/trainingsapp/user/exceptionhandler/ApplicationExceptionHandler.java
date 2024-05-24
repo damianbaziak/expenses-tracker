@@ -1,4 +1,4 @@
-package com.example.trainingsapp.user.advice;
+package com.example.trainingsapp.user.exceptionhandler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
