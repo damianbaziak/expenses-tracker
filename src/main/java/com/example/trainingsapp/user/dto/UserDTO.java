@@ -31,7 +31,7 @@ public class UserDTO {
     @Size(min = 2, max = 15, message = "username must be between 2 and 20 characters")
     private String username;
 
-    @Pattern(regexp = "^[^\\s]{10}$")
+    @Pattern(regexp = "^[a-zA-Z0-9.]{10}$")
     @NotBlank(message = "invalid password")
     private String password;
 

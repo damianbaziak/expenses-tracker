@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
+
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -30,22 +31,19 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username);
     }
 
-    public User updateUser(Long id, UserDTO userUptade) {
+    public User updateUser(Long id, UserDTO userUpdate) {
         Optional<User> userFromDb = userRepository.findById(id);
         if (!userFromDb.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product with this id not found.");
         }
-        User existingUser = userFromDb.get();
 
-        if (userUptade.getFirstname() != null) existingUser.setFirstname(userUptade.getFirstname());
-        if (userUptade.getLastname() != null) existingUser.setLastname(userUptade.getLastname());
-        if (userUptade.getAge() != 0) existingUser.setAge(userUptade.getAge());
-        if (userUptade.getEmail() != null) existingUser.setEmail(userUptade.getEmail());
-        if (userUptade.getPassword() != null) existingUser.setPassword(userUptade.getPassword());
-        if (userUptade.getUsername() != null) existingUser.setUsername(userUptade.getUsername());
+        User existingUser = userFromDb.get();
+        existingUser.setUsername(userUpdate.getUsername());
 
         return userRepository.save(existingUser);
+
     }
+
 }
 
 
