@@ -10,7 +10,6 @@ public class UserDTO {
     @Size(min = 2, message = "firstname must have min 2 characters")
     private String firstname;
 
-
     @NotBlank(message = "lastname is mandatory")
     @Size(min = 2, message = "lastname must have min 2 characters")
     private String lastname;
