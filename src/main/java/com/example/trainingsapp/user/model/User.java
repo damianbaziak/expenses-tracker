@@ -1,7 +1,11 @@
 package com.example.trainingsapp.user.model;
 
+import com.example.trainingsapp.wallets.model.Wallet;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -18,6 +22,8 @@ public class User {
     private String email;
     private String username;
     private String password;
+    @OneToMany
+    private List<Wallet> wallets = new ArrayList<>();
 
     public User() {
     }
