@@ -1,7 +1,6 @@
 package com.example.trainingsapp.user.api.dto;
 
 import com.example.trainingsapp.wallets.model.Wallet;
-import jakarta.persistence.OneToMany;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 

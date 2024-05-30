@@ -30,7 +30,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable Long id) {
-        Optional<User> user = userService.getUser(id);
+        Optional<User> user = userService.getUserById(id);
         if (!user.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

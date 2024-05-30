@@ -30,16 +30,10 @@ public class Wallet {
     private List<FinancialTransaction> financialTransactionList = new ArrayList<>();
 
 
-
-    public Wallet(Long id, User user, String name, Instant creationDate, List<FinancialTransaction> financialTransaktionList) {
-        this.id = id;
+    public Wallet(String name, User user) {
         this.user = user;
         this.name = name;
-        this.creationDate = creationDate;
-        this.financialTransactionList = financialTransaktionList;
-    }
-
-    public Wallet() {
+        this.creationDate = Instant.now();
     }
 
     public Long getId() {

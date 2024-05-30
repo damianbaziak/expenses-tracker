@@ -12,7 +12,7 @@ public interface UserService {
 
     User addUser(UserDTO userDTO);
 
-    Optional<User> getUser(Long id);
+    Optional<User> getUserById(Long id);
 
     Optional<User> getUserByUsername(String username);
 
