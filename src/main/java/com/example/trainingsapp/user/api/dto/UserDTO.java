@@ -1,11 +1,7 @@
 package com.example.trainingsapp.user.api.dto;
 
-import com.example.trainingsapp.wallets.model.Wallet;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Valid
 public class UserDTO {
@@ -34,16 +30,13 @@ public class UserDTO {
     @NotBlank(message = "invalid password")
     private String password;
 
-    private List<Wallet> wallets = new ArrayList<>();
-
-    public UserDTO(String firstname, String lastname, int age, String email, String username, String password, List<Wallet> wallets) {
+    public UserDTO(String firstname, String lastname, int age, String email, String username, String password, String role) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.age = age;
         this.email = email;
         this.username = username;
         this.password = password;
-        this.wallets = wallets;
     }
 
     public String getFirstname() {
@@ -94,13 +87,6 @@ public class UserDTO {
         this.password = password;
     }
 
-    public List<Wallet> getWallets() {
-        return wallets;
-    }
-
-    public void setWallets(List<Wallet> wallets) {
-        this.wallets = wallets;
-    }
 }
 
 

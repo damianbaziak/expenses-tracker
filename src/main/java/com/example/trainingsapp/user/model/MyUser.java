@@ -6,11 +6,11 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Builder
 @Entity
 @Table(name = "users")
-@AllArgsConstructor(staticName = "build")
-public class User {
+@AllArgsConstructor
+public class MyUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +22,11 @@ public class User {
     private String email;
     private String username;
     private String password;
+    private String role;
     @OneToMany
     private List<Wallet> wallets = new ArrayList<>();
 
-    public User() {
+    public MyUser() {
     }
 
     public Long getId() {
@@ -82,5 +83,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
