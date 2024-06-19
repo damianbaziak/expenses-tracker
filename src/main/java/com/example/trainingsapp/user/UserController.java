@@ -1,11 +1,10 @@
 package com.example.trainingsapp.user;
 
-import com.example.trainingsapp.user.api.UserServiceImpl;
 import com.example.trainingsapp.user.api.dto.UsernameUpdateDTO;
+import com.example.trainingsapp.user.model.MyUser;
+import com.example.trainingsapp.user.api.UserServiceImpl;
 import com.example.trainingsapp.user.api.dto.EmailUptadeDTO;
 import com.example.trainingsapp.user.api.dto.PasswordUptadeDTO;
-import com.example.trainingsapp.user.api.dto.UserDTO;
-import com.example.trainingsapp.user.model.MyUser;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,21 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+
 @RequestMapping("api/users")
 @RestController
 public class UserController {
     @Autowired
     private UserServiceImpl userService;
-
-    @PostMapping("/register")
-    public ResponseEntity registerUser(@Valid @RequestBody UserDTO userDTO) {
-        Optional<MyUser> userFromDb = userService.getUserByUsername(userDTO.getUsername());
-
-        if (userFromDb.isPresent()) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-        }
-        return new ResponseEntity<>(userService.addUser(userDTO), HttpStatus.CREATED);
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable Long id) {
@@ -56,7 +46,7 @@ public class UserController {
 
     @PatchMapping("update/password/{id}")
     public ResponseEntity updatePassword(@PathVariable Long id, @Valid @RequestBody PasswordUptadeDTO passwordUptadeDto) {
-        MyUser updatedUser = userService.udatePassword(id, passwordUptadeDto);
+        MyUser updatedUser = userService.updatePassword(id, passwordUptadeDto);
 
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
 

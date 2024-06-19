@@ -1,4 +1,5 @@
 package com.example.trainingsapp.authorization;
+import com.example.trainingsapp.authorization.api.AuthServiceImpl;
 import com.example.trainingsapp.authorization.webtoken.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -17,7 +18,7 @@ import java.io.IOException;
 @Configuration
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Autowired
-    AuthoService authoService;
+    AuthServiceImpl authoService;
     @Autowired
     private JwtService jwtService;
 
