@@ -8,12 +8,13 @@ import java.util.Optional;
 
 public interface AuthService {
 
-    public MyUser addUser(UserDTO userDTO);
+    MyUser addUser(UserDTO userDTO);
 
-    public Optional<MyUser> findById(Long id);
+    Optional<MyUser> findById(Long id);
 
-    public Optional<MyUser> getUserByUsername(String username);
+    Optional<MyUser> getUserByUsername(String username);
 
-    public String loginUser(UserLoginDTO userLoginDTO);
+    String loginUser(UserLoginDTO userLoginDTO);
+
 
 }

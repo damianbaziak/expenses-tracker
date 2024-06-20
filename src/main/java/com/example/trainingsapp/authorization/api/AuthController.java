@@ -21,20 +21,21 @@ import java.util.Optional;
 public class AuthController {
 
     @Autowired
-    AuthService authService;
+    AuthServiceImpl authService;
 
     @PostMapping("/register")
     public ResponseEntity registerUser(@Valid @RequestBody UserDTO userDTO) {
         Optional<MyUser> userFromDb = authService.getUserByUsername(userDTO.getUsername());
 
         if (userFromDb.isPresent()) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                    .body("User with this username already extists");
         }
         return new ResponseEntity<>(authService.addUser(userDTO), HttpStatus.CREATED);
     }
 
     @PostMapping
     public ResponseEntity loginUser(@Valid @RequestBody UserLoginDTO userLoginDTO) {
-
+        return new ResponseEntity<>(authService.loginUser(userLoginDTO), HttpStatus.OK);
     }
 }

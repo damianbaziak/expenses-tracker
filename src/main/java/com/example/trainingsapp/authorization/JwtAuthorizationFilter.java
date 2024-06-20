@@ -18,7 +18,7 @@ import java.io.IOException;
 @Configuration
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Autowired
-    AuthServiceImpl authoService;
+    MyUserDetailsService userDetailsService;
     @Autowired
     private JwtService jwtService;
 
@@ -35,7 +35,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         String jwt = authHeader.substring(7);
         String username = jwtService.exractUsername(jwt);
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = authoService.loadUserByUsername(username);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             if (userDetails != null && jwtService.isTokenValid(jwt)) {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         username,
