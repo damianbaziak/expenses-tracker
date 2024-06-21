@@ -37,9 +37,19 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public MyUser addUser(UserDTO userDTO) {
-        if (userRepository.existsByEmail(userDTO.getEmail())) {
+        Optional<MyUser> userFromDb = userRepository.findByemail(userDTO.getEmail());
+
+        if (userFromDb.isPresent()) {
             throw new AppRuntimeException(ErrorCode.U001, "User with this email already exist");
         }
+
+        Optional<MyUser> userByUsername = userRepository.findByUsername(userDTO.getUsername());
+
+        if (userByUsername.isPresent()) {
+            throw new AppRuntimeException(ErrorCode.U001, "User with this username already exist");
+        }
+
+
         MyUser user = MyUser.builder()
                 .firstname(userDTO.getFirstname())
                 .lastname(userDTO.getLastname())
@@ -51,26 +61,29 @@ public class AuthServiceImpl implements AuthService {
         return userRepository.save(user);
     }
 
+    @Override
     public String loginUser(UserLoginDTO userLoginDTO) {
         Optional<MyUser> userFromDb = userRepository.findByemail(userLoginDTO.email());
 
-        if (userFromDb.isEmpty()) {
-            throw new UsernameNotFoundException("User with this email or password not exist");
+        if (!userFromDb.isPresent()) {
+            throw new AppRuntimeException(ErrorCode.U002, "User with this email not exist");
         }
+
+        Optional<MyUser> userByUsername = userRepository.findByemail(userLoginDTO.email());
+
+        if (!userByUsername.isPresent()) {
+            throw new AppRuntimeException(ErrorCode.U002, "User with this username not exist");
+        }
+
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 userLoginDTO.email(), userLoginDTO.password()
         ));
-        return jwtService.generateToken(userDetailsService.loadUserByUsername(userLoginDTO.email()));
-    }
 
-    @Override
-    public Optional<MyUser> findById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    @Override
-    public Optional<MyUser> getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+        if (authentication.isAuthenticated()) {
+            return jwtService.generateToken(userDetailsService.loadUserByUsername(userLoginDTO.email()));
+        } else {
+            throw new AppRuntimeException(ErrorCode.U002, "Invalid credentials");
+        }
     }
 
 

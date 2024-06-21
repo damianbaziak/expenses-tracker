@@ -3,6 +3,7 @@ package com.example.trainingsapp.general;
 import com.example.trainingsapp.general.exception.AppRuntimeException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -29,6 +30,5 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleAppRuntimeException(AppRuntimeException exception) {
         return ResponseEntity.status(exception.getStatusCode()).body(exception.getDescription());
     }
-
 
 }
