@@ -26,10 +26,6 @@ public class WalletController {
 
         Long userID = Long.valueOf(principal.getName());
 
-        if (walletFromDb.isPresent()) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-        }
-
         Wallet wallet = walletService.createWallet(createWalletDTO, userID);
 
         return new ResponseEntity<>(wallet, HttpStatus.CREATED);

@@ -32,8 +32,8 @@ public class WebSecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry -> {
                     registry.requestMatchers("/", "/api/auth/**").permitAll();
-                    registry.requestMatchers("/admin/**").hasRole("ADMIN");
-                    registry.requestMatchers("/user/**").hasRole("USER");
+                    registry.requestMatchers("/home").authenticated();
+                    registry.requestMatchers("/user").authenticated();
                     // Any other URL that is not specified here requires authentication.
                     registry.anyRequest().authenticated();
                 })

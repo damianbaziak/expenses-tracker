@@ -1,5 +1,7 @@
 package com.example.trainingsapp.wallets.api;
 
+import com.example.trainingsapp.general.exception.AppRuntimeException;
+import com.example.trainingsapp.general.exception.ErrorCode;
 import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.model.MyUser;
 import com.example.trainingsapp.wallets.api.dto.CreateWalletDTO;
@@ -20,7 +22,8 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public Wallet createWallet(CreateWalletDTO createWalletDTO, Long userId) {
-        MyUser walletOwner = userRepository.findById(userId).orElseThrow();
+
+        MyUser walletOwner = getUserbyUserId(userId);
         String walletName = createWalletDTO.getName();
 
         Wallet wallet = new Wallet(walletName, walletOwner);
@@ -31,5 +34,10 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public Optional<Wallet> getByName(String name) {
         return walletRepository.findByName(name);
+    }
+
+    public MyUser getUserbyUserId(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() ->
+                new AppRuntimeException(ErrorCode.U003, String.format("User with id: %d doesn't exist.", userId)));
     }
 }

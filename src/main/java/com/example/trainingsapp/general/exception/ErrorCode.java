@@ -2,8 +2,8 @@ package com.example.trainingsapp.general.exception;
 
 public enum ErrorCode {
     U001("U001", "USER_ALREADY_EXISTS", 400),
-    U002("002", "INVALID CREDENTIALS", 401);
-
+    U002("U002", "INVALID CREDENTIALS", 401),
+    U003("U003","USER NOT FOUND", 404);
 
     private final String status;
     private final String message;
