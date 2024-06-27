@@ -1,5 +1,6 @@
 package com.example.trainingsapp.authorization;
 
+import com.example.trainingsapp.authorization.api.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,10 +33,16 @@ public class WebSecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry -> {
                     registry.requestMatchers("/", "/api/auth/**").permitAll();
-                    registry.requestMatchers("/home").authenticated();
-                    registry.requestMatchers("/user").authenticated();
+                    registry.requestMatchers(
+                            "/api/users/me",
+                                    "/api/transactions/**",
+                                    "/api/categories/**",
+                                    "/api/wallets/**",
+                                    "/api/auth/logout"
+                            )
+                            .authenticated();
                     // Any other URL that is not specified here requires authentication.
-                    registry.anyRequest().authenticated();
+                    registry.anyRequest().permitAll();
                 })
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)

@@ -1,7 +1,7 @@
 package com.example.trainingsapp.wallets.model;
 
 import com.example.trainingsapp.financialtransaktion.FinancialTransaction;
-import com.example.trainingsapp.user.model.MyUser;
+import com.example.trainingsapp.user.model.User;
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -19,7 +19,7 @@ public class Wallet {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private MyUser user;
+    private User user;
 
     private String name;
 
@@ -29,8 +29,10 @@ public class Wallet {
     @OneToMany
     private List<FinancialTransaction> financialTransactionList = new ArrayList<>();
 
+    public Wallet() {
+    }
 
-    public Wallet(String name, MyUser user) {
+    public Wallet(String name, User user) {
         this.user = user;
         this.name = name;
         this.creationDate = Instant.now();
@@ -44,11 +46,11 @@ public class Wallet {
         this.id = id;
     }
 
-    public MyUser getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(MyUser user) {
+    public void setUser(User user) {
         this.user = user;
     }
 

@@ -1,9 +1,8 @@
-package com.example.trainingsapp.authorization;
+package com.example.trainingsapp.authorization.api;
 
 import com.example.trainingsapp.user.api.UserRepository;
-import com.example.trainingsapp.user.model.MyUser;
+import com.example.trainingsapp.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,23 +17,16 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<MyUser> user = userRepository.findByemail(email);
+        Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
             var userObj = user.get();
-            return User.builder()
+            return org.springframework.security.core.userdetails.User.builder()
                     .username(userObj.getEmail())
                     .password(userObj.getPassword())
-                    .roles(getRoles(userObj))
                     .build();
         } else {
             throw new UsernameNotFoundException(email);
         }
     }
-
-    private String[] getRoles(MyUser user) {
-        if (user.getRole() == null) {
-            return new String[]{"USER"};
-        }
-        return user.getRole().split(",");
-    }
 }
+

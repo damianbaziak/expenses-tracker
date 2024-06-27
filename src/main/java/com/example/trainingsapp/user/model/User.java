@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @AllArgsConstructor
-public class MyUser {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,11 +22,10 @@ public class MyUser {
     private String email;
     private String username;
     private String password;
-    private String role;
     @OneToMany
     private List<Wallet> wallets = new ArrayList<>();
 
-    public MyUser() {
+    public User() {
     }
 
     public Long getId() {
@@ -83,13 +82,5 @@ public class MyUser {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 }

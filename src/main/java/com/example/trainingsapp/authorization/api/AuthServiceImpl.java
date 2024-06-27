@@ -1,18 +1,16 @@
 package com.example.trainingsapp.authorization.api;
 
-import com.example.trainingsapp.authorization.MyUserDetailsService;
 import com.example.trainingsapp.authorization.api.dto.UserLoginDTO;
 import com.example.trainingsapp.authorization.webtoken.JwtService;
 import com.example.trainingsapp.general.exception.AppRuntimeException;
 import com.example.trainingsapp.general.exception.ErrorCode;
 import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.api.dto.UserDTO;
-import com.example.trainingsapp.user.model.MyUser;
+import com.example.trainingsapp.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,21 +34,21 @@ public class AuthServiceImpl implements AuthService {
     JwtService jwtService;
 
     @Override
-    public MyUser addUser(UserDTO userDTO) {
-        Optional<MyUser> userFromDb = userRepository.findByemail(userDTO.getEmail());
+    public User addUser(UserDTO userDTO) {
+        Optional<User> userFromDb = userRepository.findByEmail(userDTO.getEmail());
 
         if (userFromDb.isPresent()) {
             throw new AppRuntimeException(ErrorCode.U001, "User with this email already exist");
         }
 
-        Optional<MyUser> userByUsername = userRepository.findByUsername(userDTO.getUsername());
+        Optional<User> userByUsername = userRepository.findByUsername(userDTO.getUsername());
 
         if (userByUsername.isPresent()) {
             throw new AppRuntimeException(ErrorCode.U001, "User with this username already exist");
         }
 
 
-        MyUser user = MyUser.builder()
+        User user = User.builder()
                 .firstname(userDTO.getFirstname())
                 .lastname(userDTO.getLastname())
                 .age(userDTO.getAge())
@@ -63,27 +61,21 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String loginUser(UserLoginDTO userLoginDTO) {
-        Optional<MyUser> userFromDb = userRepository.findByemail(userLoginDTO.email());
-
+        Optional<User> userFromDb = userRepository.findByEmail(userLoginDTO.email());
         if (!userFromDb.isPresent()) {
             throw new AppRuntimeException(ErrorCode.U002, "User with this email not exist");
         }
 
-        Optional<MyUser> userByUsername = userRepository.findByemail(userLoginDTO.email());
-
-        if (!userByUsername.isPresent()) {
-            throw new AppRuntimeException(ErrorCode.U002, "User with this username not exist");
+        User u = userFromDb.get();
+        if (!passwordEncoder.matches(userLoginDTO.password(), u.getPassword())) {
+            throw new AppRuntimeException(ErrorCode.U002, "User with this email or password not exist");
         }
-
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                userLoginDTO.email(), userLoginDTO.password()
-        ));
+                userLoginDTO.email(), userLoginDTO.password()));
 
-        if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(userDetailsService.loadUserByUsername(userLoginDTO.email()));
-        } else {
-            throw new AppRuntimeException(ErrorCode.U002, "Invalid credentials");
-        }
+
+        return jwtService.generateToken(userDetailsService.loadUserByUsername(userLoginDTO.email()));
+
     }
 
 
