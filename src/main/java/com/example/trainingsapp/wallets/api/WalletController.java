@@ -1,11 +1,10 @@
 package com.example.trainingsapp.wallets.api;
 
-import com.example.trainingsapp.general.exception.AppRuntimeException;
-import com.example.trainingsapp.general.exception.ErrorCode;
 import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.model.User;
 import com.example.trainingsapp.wallets.api.dto.WalletCreateDTO;
 import com.example.trainingsapp.wallets.api.dto.WalletDTO;
+import com.example.trainingsapp.wallets.api.dto.WalletUpdateDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -26,7 +25,7 @@ public class WalletController {
     @Autowired
     WalletServiceImpl walletService;
 
-    @PostMapping()
+    @PostMapping("/")
     public ResponseEntity createWallet(@Valid @RequestBody WalletCreateDTO createWalletDTO, Principal principal) {
         String email = principal.getName();
         Optional<User> user = userRepository.findByEmail(email);
@@ -51,8 +50,19 @@ public class WalletController {
         return new ResponseEntity<>("Wallet deleted successfully", HttpStatus.OK);
     }
 
-    @PatchMapping()
-    public ResponseEntity
+    @PatchMapping("/{id}")
+    public ResponseEntity<WalletDTO> updateWallet(@Min(1) @NotNull @PathVariable Long id, @Valid @RequestBody WalletUpdateDTO walletUpdateDTO,
+                                         Principal principal) {
+        String email = principal.getName();
+        Optional<User> user = userRepository.findByEmail(email);
+
+        Long userId = user.get().getId();
+
+        WalletDTO walletDTO = walletService.updateWallet(id, walletUpdateDTO, userId);
+
+        return new ResponseEntity<>(walletDTO, HttpStatus.OK);
+
+    }
 
 
 }

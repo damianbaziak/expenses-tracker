@@ -28,7 +28,7 @@ public class WalletServiceImpl implements WalletService {
     public WalletDTO createWallet (WalletCreateDTO createWalletDTO, Long userId) {
 
         User walletOwner = getUserByUserId(userId);
-        String walletName = createWalletDTO.getName();
+        String walletName = createWalletDTO.name();
 
         Wallet wallet = new Wallet(walletName, walletOwner);
 
@@ -50,7 +50,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public WalletDTO updateWallet(WalletUpdateDTO updateWalletDTO, Long walletId, Long userId) {
+    public WalletDTO updateWallet(Long walletId, WalletUpdateDTO updateWalletDTO, Long userId) {
         Optional<Wallet> wallet = walletRepository.findById(walletId);
         if (!wallet.isPresent()) {
             throw new AppRuntimeException(ErrorCode.W001, String.format("Wallet with this id not exist"));
@@ -60,7 +60,7 @@ public class WalletServiceImpl implements WalletService {
         }
 
         Wallet existedWallet = wallet.get();
-        existedWallet.setName(updateWalletDTO.getName());
+        existedWallet.setName(updateWalletDTO.name());
 
         walletRepository.save(existedWallet);
 

@@ -12,7 +12,7 @@ public interface WalletService {
     //Optional<Wallet> getByName(String name);
     void deleteWallet(Long walletId, Long userId);
 
-    WalletDTO updateWallet(WalletUpdateDTO updateWalletDTO, Long walletId, Long userId);
+    WalletDTO updateWallet(Long walletId, WalletUpdateDTO updateWalletDTO, Long userId);
 
     Optional<Wallet> findById(Long walletId, Long UserId);
 
