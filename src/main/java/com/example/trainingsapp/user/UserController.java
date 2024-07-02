@@ -1,10 +1,10 @@
 package com.example.trainingsapp.user;
 
-import com.example.trainingsapp.user.api.dto.UsernameUpdateDTO;
-import com.example.trainingsapp.user.model.User;
-import com.example.trainingsapp.user.api.UserServiceImpl;
+import com.example.trainingsapp.user.api.UserService;
 import com.example.trainingsapp.user.api.dto.EmailUptadeDTO;
 import com.example.trainingsapp.user.api.dto.PasswordUptadeDTO;
+import com.example.trainingsapp.user.api.dto.UsernameUpdateDTO;
+import com.example.trainingsapp.user.model.User;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ import java.util.Optional;
 @RestController
 public class UserController {
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable Long id) {

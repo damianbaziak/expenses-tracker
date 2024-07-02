@@ -47,7 +47,7 @@ public class WebSecurityConfiguration {
                 })
                 .httpBasic(Customizer.withDefaults())
                 //.formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
-                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
+                //.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

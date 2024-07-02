@@ -41,7 +41,7 @@ public class WalletServiceImpl implements WalletService {
     public void deleteWallet(Long walletId, Long userId) {
         Optional<Wallet> wallet = walletRepository.findById(walletId);
         if (!wallet.isPresent()) {
-            throw new AppRuntimeException(ErrorCode.W001, String.format("Wallet with this id not exist", walletId));
+            throw new AppRuntimeException(ErrorCode.W001, String.format("Wallet with this id: %d not exist", walletId));
         }
         if (!wallet.get().getUser().getId().equals(userId)) {
             throw new AppRuntimeException(ErrorCode.W002, "You don't have permissions to delete that wallet");
@@ -53,7 +53,7 @@ public class WalletServiceImpl implements WalletService {
     public WalletDTO updateWallet(Long walletId, WalletUpdateDTO updateWalletDTO, Long userId) {
         Optional<Wallet> wallet = walletRepository.findById(walletId);
         if (!wallet.isPresent()) {
-            throw new AppRuntimeException(ErrorCode.W001, String.format("Wallet with this id not exist"));
+            throw new AppRuntimeException(ErrorCode.W001, String.format("Wallet with this id: %d not exist", walletId));
         }
         if (!wallet.get().getUser().getId().equals(userId)) {
             throw new AppRuntimeException(ErrorCode.W002, "You don't have permissions to delete that wallet");
@@ -71,7 +71,7 @@ public class WalletServiceImpl implements WalletService {
     public Optional<Wallet> findById(Long walletId, Long userId) {
         Optional<Wallet> wallet = walletRepository.findById(walletId);
         if (!wallet.isPresent()) {
-            throw new AppRuntimeException(ErrorCode.W001, String.format("Wallet with this id not exist"));
+            throw new AppRuntimeException(ErrorCode.W001, String.format("Wallet with this id: %d not exist", walletId));
         }
         if (!wallet.get().getUser().getId().equals(userId)) {
             throw new AppRuntimeException(ErrorCode.W002, "You don't have permissions to view that wallet");

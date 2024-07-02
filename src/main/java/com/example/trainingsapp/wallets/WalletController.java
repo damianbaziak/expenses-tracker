@@ -1,7 +1,8 @@
-package com.example.trainingsapp.wallets.api;
+package com.example.trainingsapp.wallets;
 
 import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.model.User;
+import com.example.trainingsapp.wallets.api.WalletService;
 import com.example.trainingsapp.wallets.api.dto.WalletCreateDTO;
 import com.example.trainingsapp.wallets.api.dto.WalletDTO;
 import com.example.trainingsapp.wallets.api.dto.WalletUpdateDTO;
@@ -11,22 +12,26 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Optional;
 
+@Validated
 @RestController
-@RequestMapping("api/wallets")
+@RequestMapping("/api/wallets")
 public class WalletController {
 
     @Autowired
     UserRepository userRepository;
+
     @Autowired
-    WalletServiceImpl walletService;
+    WalletService walletService;
 
     @PostMapping("/")
     public ResponseEntity createWallet(@Valid @RequestBody WalletCreateDTO createWalletDTO, Principal principal) {
+
         String email = principal.getName();
         Optional<User> user = userRepository.findByEmail(email);
 
@@ -51,8 +56,11 @@ public class WalletController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<WalletDTO> updateWallet(@Min(1) @NotNull @PathVariable Long id, @Valid @RequestBody WalletUpdateDTO walletUpdateDTO,
-                                         Principal principal) {
+    public ResponseEntity updateWallet(@Min(1) @NotNull @PathVariable Long id, @Valid @RequestBody WalletUpdateDTO walletUpdateDTO,
+                                       Principal principal) {
+
+        System.out.println("Received request to update wallet with id: " + id);
+
         String email = principal.getName();
         Optional<User> user = userRepository.findByEmail(email);
 

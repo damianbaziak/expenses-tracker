@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Valid
-public class UsernameUpdateDTO {
+public final class UsernameUpdateDTO {
 
     @NotBlank(message = "username is mandatory")
     @Size(min = 2, max = 15, message = "username must be between 2 and 15 characters")
