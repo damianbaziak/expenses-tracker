@@ -1,4 +1,4 @@
-package com.example.trainingsapp.wallets.api.dto;
+package com.example.trainingsapp.wallet.api.dto;
 
 import java.time.Instant;
 

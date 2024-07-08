@@ -1,7 +1,7 @@
-package com.example.trainingsapp.wallets.api;
+package com.example.trainingsapp.wallet.api;
 
-import com.example.trainingsapp.wallets.api.dto.WalletDTO;
-import com.example.trainingsapp.wallets.model.Wallet;
+import com.example.trainingsapp.wallet.api.dto.WalletDTO;
+import com.example.trainingsapp.wallet.model.Wallet;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

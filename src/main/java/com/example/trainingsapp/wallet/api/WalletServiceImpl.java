@@ -1,16 +1,17 @@
-package com.example.trainingsapp.wallets.api;
+package com.example.trainingsapp.wallet.api;
 
 import com.example.trainingsapp.general.exception.AppRuntimeException;
 import com.example.trainingsapp.general.exception.ErrorCode;
 import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.model.User;
-import com.example.trainingsapp.wallets.api.dto.WalletCreateDTO;
-import com.example.trainingsapp.wallets.api.dto.WalletDTO;
-import com.example.trainingsapp.wallets.api.dto.WalletUpdateDTO;
-import com.example.trainingsapp.wallets.model.Wallet;
+import com.example.trainingsapp.wallet.api.dto.WalletCreateDTO;
+import com.example.trainingsapp.wallet.api.dto.WalletDTO;
+import com.example.trainingsapp.wallet.api.dto.WalletUpdateDTO;
+import com.example.trainingsapp.wallet.model.Wallet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -77,7 +78,17 @@ public class WalletServiceImpl implements WalletService {
             throw new AppRuntimeException(ErrorCode.W002, "You don't have permissions to view that wallet");
         }
         return wallet;
+    }
 
+    @Override
+    public List<Wallet> getWallets(Long userId) {
+        List<Wallet> walletList = walletRepository.findWalletsByUserId(userId);
+
+        if (walletList.isEmpty()) {
+            throw new AppRuntimeException(ErrorCode.W001, "You have no wallets");
+        }
+
+        return walletList;
     }
 
     //@Override

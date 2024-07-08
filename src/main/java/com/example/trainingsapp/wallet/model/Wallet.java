@@ -1,13 +1,16 @@
-package com.example.trainingsapp.wallets.model;
+package com.example.trainingsapp.wallet.model;
 
 import com.example.trainingsapp.financialtransaktion.FinancialTransaction;
 import com.example.trainingsapp.user.model.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-
+@Builder
+@AllArgsConstructor
 @Entity
 @Table(name = "wallets")
 

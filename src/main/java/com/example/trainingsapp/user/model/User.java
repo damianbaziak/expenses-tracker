@@ -1,6 +1,6 @@
 package com.example.trainingsapp.user.model;
 
-import com.example.trainingsapp.wallets.model.Wallet;
+import com.example.trainingsapp.wallet.model.Wallet;
 import jakarta.persistence.*;
 import lombok.*;
 

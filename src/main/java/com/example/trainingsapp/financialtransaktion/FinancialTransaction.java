@@ -1,6 +1,6 @@
 package com.example.trainingsapp.financialtransaktion;
 
-import com.example.trainingsapp.wallets.model.Wallet;
+import com.example.trainingsapp.wallet.model.Wallet;
 import jakarta.persistence.*;
 
 @Entity

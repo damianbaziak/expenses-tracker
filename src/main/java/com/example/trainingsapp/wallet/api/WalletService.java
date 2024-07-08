@@ -1,10 +1,11 @@
-package com.example.trainingsapp.wallets.api;
+package com.example.trainingsapp.wallet.api;
 
-import com.example.trainingsapp.wallets.api.dto.WalletCreateDTO;
-import com.example.trainingsapp.wallets.api.dto.WalletUpdateDTO;
-import com.example.trainingsapp.wallets.api.dto.WalletDTO;
-import com.example.trainingsapp.wallets.model.Wallet;
+import com.example.trainingsapp.wallet.api.dto.WalletCreateDTO;
+import com.example.trainingsapp.wallet.api.dto.WalletUpdateDTO;
+import com.example.trainingsapp.wallet.api.dto.WalletDTO;
+import com.example.trainingsapp.wallet.model.Wallet;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface WalletService {
@@ -15,5 +16,7 @@ public interface WalletService {
     WalletDTO updateWallet(Long walletId, WalletUpdateDTO updateWalletDTO, Long userId);
 
     Optional<Wallet> findById(Long walletId, Long UserId);
+
+    List<Wallet> getWallets(Long userId);
 
 }

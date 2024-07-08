@@ -1,11 +1,12 @@
-package com.example.trainingsapp.wallets;
+package com.example.trainingsapp.wallet;
 
 import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.model.User;
-import com.example.trainingsapp.wallets.api.WalletService;
-import com.example.trainingsapp.wallets.api.dto.WalletCreateDTO;
-import com.example.trainingsapp.wallets.api.dto.WalletDTO;
-import com.example.trainingsapp.wallets.api.dto.WalletUpdateDTO;
+import com.example.trainingsapp.wallet.api.WalletService;
+import com.example.trainingsapp.wallet.api.dto.WalletCreateDTO;
+import com.example.trainingsapp.wallet.api.dto.WalletDTO;
+import com.example.trainingsapp.wallet.api.dto.WalletUpdateDTO;
+import com.example.trainingsapp.wallet.model.Wallet;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -16,8 +17,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
-
 @Validated
 @RestController
 @RequestMapping("/api/wallets")
@@ -69,6 +70,19 @@ public class WalletController {
         WalletDTO walletDTO = walletService.updateWallet(id, walletUpdateDTO, userId);
 
         return new ResponseEntity<>(walletDTO, HttpStatus.OK);
+
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<List<Wallet>> getWallets(Principal principal) {
+        String email = principal.getName();
+        Optional<User> user = userRepository.findByEmail(email);
+
+        Long userId = user.get().getId();
+
+        List<Wallet> wallets = walletService.getWallets(userId);
+
+        return new ResponseEntity(wallets, HttpStatus.OK);
 
     }
 
