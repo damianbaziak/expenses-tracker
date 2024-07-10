@@ -1,5 +1,7 @@
-package com.example.trainingsapp.authorization.api;
+package com.example.trainingsapp.authorization.api.impl;
 
+import com.example.trainingsapp.authorization.api.AuthService;
+import com.example.trainingsapp.authorization.api.MyUserDetailsService;
 import com.example.trainingsapp.authorization.api.dto.UserLoginDTO;
 import com.example.trainingsapp.authorization.webtoken.JwtService;
 import com.example.trainingsapp.general.exception.AppRuntimeException;
@@ -32,6 +34,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     JwtService jwtService;
+
+    public AuthServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public User addUser(UserDTO userDTO) {
