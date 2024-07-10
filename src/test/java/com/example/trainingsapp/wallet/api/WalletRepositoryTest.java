@@ -8,18 +8,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 @DataJpaTest
 public class WalletRepositoryTest {
 
     @Autowired
     WalletRepository walletRepository;
-
     @Autowired
     UserRepository userRepository;
     Wallet wallet;
@@ -47,14 +46,15 @@ public class WalletRepositoryTest {
 
     @AfterEach
     void tearDown() {
-        wallet = null;
         walletRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     // Test case SUCCESS
 
     @Test
     void testFindWalletsByUserId_Found() {
+        System.out.println(user.getId());
         List<Wallet> wallets = walletRepository.findWalletsByUserId(1L);
 
         assertThat(wallets.get(0).getId()).isEqualTo(wallet.getId());
@@ -64,7 +64,9 @@ public class WalletRepositoryTest {
 
     @Test
     void testFindWalletsByUserId_NotFound() {
+        System.out.println(user.getId());
         List<Wallet> wallets = walletRepository.findWalletsByUserId(2L);
+
 
         assertThat(wallets.isEmpty()).isTrue();
 

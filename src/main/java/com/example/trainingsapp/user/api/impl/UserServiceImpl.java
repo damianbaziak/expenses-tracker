@@ -1,5 +1,7 @@
-package com.example.trainingsapp.user.api;
+package com.example.trainingsapp.user.api.impl;
 
+import com.example.trainingsapp.user.api.UserRepository;
+import com.example.trainingsapp.user.api.UserService;
 import com.example.trainingsapp.user.api.dto.EmailUptadeDTO;
 import com.example.trainingsapp.user.api.dto.PasswordUptadeDTO;
 import com.example.trainingsapp.user.api.dto.UsernameUpdateDTO;
