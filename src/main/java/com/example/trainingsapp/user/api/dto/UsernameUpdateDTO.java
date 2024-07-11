@@ -11,6 +11,10 @@ public final class UsernameUpdateDTO {
     @Size(min = 2, max = 15, message = "username must be between 2 and 15 characters")
     private String username;
 
+    public UsernameUpdateDTO(String username) {
+        this.username = username;
+    }
+
     public String getUsername() {
         return username;
     }

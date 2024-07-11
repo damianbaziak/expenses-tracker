@@ -6,9 +6,9 @@ import com.example.trainingsapp.wallet.model.Wallet;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
@@ -50,12 +50,13 @@ public class WalletRepositoryTest {
         userRepository.deleteAll();
     }
 
+
     // Test case SUCCESS
 
     @Test
     void testFindWalletsByUserId_Found() {
         System.out.println(user.getId());
-        List<Wallet> wallets = walletRepository.findWalletsByUserId(1L);
+        List<Wallet> wallets = walletRepository.findWalletsByUserId(user.getId());
 
         assertThat(wallets.get(0).getId()).isEqualTo(wallet.getId());
     }

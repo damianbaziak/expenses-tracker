@@ -35,8 +35,9 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     JwtService jwtService;
 
-    public AuthServiceImpl(UserRepository userRepository) {
+    public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.example.trainingsapp.authorization.api;
 
+import com.example.trainingsapp.authorization.api.dto.UserLoginDTO;
 import com.example.trainingsapp.authorization.api.impl.AuthServiceImpl;
+import com.example.trainingsapp.authorization.webtoken.JwtService;
 import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.api.dto.UserDTO;
 import com.example.trainingsapp.user.model.User;
@@ -9,31 +11,49 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 class AuthServiceImplTest {
+    AuthServiceImpl authService;
     @Mock
     UserRepository userRepository;
-    AuthServiceImpl authService;
+    @Mock
+    PasswordEncoder passwordEncoder;
+    @Mock
+    Authentication authentication;
+    @Mock
+    JwtService jwtService;
     AutoCloseable autoCloseable;
     User user;
-    PasswordEncoder passwordEncoder;
     UserDTO userDTO;
+    UserLoginDTO userLoginDTO;
+
 
 
 
     @BeforeEach
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
-        authService = new AuthServiceImpl(userRepository);
+        authService = new AuthServiceImpl(userRepository, passwordEncoder);
+        when(passwordEncoder.encode(any(CharSequence.class))).thenReturn("encodedPassword");
+
+        userLoginDTO = new UserLoginDTO("damianbaziak@gmail.com", "1234567890");
+
         userDTO = new UserDTO ("damian", "baziak", 30, "damianbaziak@gmail.com",
                 "bazyl", "1234567890", "USER");
 
         user = User.builder()
-                .password(hashedPassword(userDTO.getPassword()))
+                .firstname(userDTO.getFirstname())
+                .lastname(userDTO.getLastname())
+                .age(userDTO.getAge())
+                .email(userDTO.getEmail())
+                .username(userDTO.getUsername())
+                .password(passwordEncoder.encode(userDTO.getPassword()))
                 .build();
     }
 
@@ -45,16 +65,20 @@ class AuthServiceImplTest {
     @Test
     void testAddUser() {
 
-        when(userRepository.save(user)).thenReturn(user);
-        assertThat(authService.addUser(userDTO)).isEqualTo("Success");
-    }
+        when(userRepository.save(any(User.class))).thenReturn(user);
 
-    public String hashedPassword(String password) {
-        return passwordEncoder.encode(password);
+        User result = authService.addUser(userDTO);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getAge()).isEqualTo(user.getAge());
+        assertThat(result.getId()).isEqualTo(user.getId());
+        assertThat(result.getPassword()).isEqualTo("encodedPassword");
     }
 
     @Test
     void loginUser() {
+
+
     }
 
     @Test
