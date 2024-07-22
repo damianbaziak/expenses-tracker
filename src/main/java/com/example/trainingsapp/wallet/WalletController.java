@@ -1,5 +1,6 @@
 package com.example.trainingsapp.wallet;
 
+import com.example.trainingsapp.WalletAppApplication;
 import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.model.User;
 import com.example.trainingsapp.wallet.api.WalletService;
@@ -84,6 +85,18 @@ public class WalletController {
 
         return new ResponseEntity(wallets, HttpStatus.OK);
 
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity getWalletById(@Min(1) @NotNull @PathVariable Long id, Principal principal) {
+        String email = principal.getName();
+        Optional<User> user = userRepository.findByEmail(email);
+
+        Long userId = user.get().getId();
+
+        Optional<WalletDTO> walletDTO = walletService.findById(id, userId);
+
+        return new ResponseEntity<>(walletDTO, HttpStatus.OK);
     }
 
 
