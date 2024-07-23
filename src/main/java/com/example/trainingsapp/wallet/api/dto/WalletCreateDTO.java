@@ -6,17 +6,9 @@ import jakarta.validation.constraints.Size;
 
 import java.util.Objects;
 
-public final class WalletCreateDTO {
-    private final @NotBlank @Size(min = 2, max = 20, message = "Name should contains maximum 20 characters.") @Pattern(regexp = "[\\w ]+") String name;
+public record WalletCreateDTO(
+        @NotBlank @Size(min = 2, max = 20, message = "Name should contains maximum 20 characters.") @Pattern(regexp = "[\\w ]+") String name) {
 
-    public WalletCreateDTO(
-            @NotBlank @Size(min = 2, max = 20, message = "Name should contains maximum 20 characters.") @Pattern(regexp = "[\\w ]+") String name) {
-        this.name = name;
-    }
-
-    public @NotBlank @Size(min = 2, max = 20, message = "Name should contains maximum 20 characters.") @Pattern(regexp = "[\\w ]+") String name() {
-        return name;
-    }
 
     @Override
     public boolean equals(Object obj) {
@@ -24,11 +16,6 @@ public final class WalletCreateDTO {
         if (obj == null || obj.getClass() != this.getClass()) return false;
         var that = (WalletCreateDTO) obj;
         return Objects.equals(this.name, that.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
     }
 
     @Override
