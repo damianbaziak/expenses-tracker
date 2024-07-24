@@ -3,11 +3,14 @@ package com.example.trainingsapp.wallet.api.dto;
 import java.time.Instant;
 import java.util.Objects;
 
-public final class WalletDTO {
-    private final Long id;
-    private final String name;
-    private final Instant creationDate;
-    private final Long userId;
+public class WalletDTO {
+    private Long id;
+    private String name;
+    private Instant creationDate;
+    private Long userId;
+
+    public WalletDTO() {
+    }
 
     public WalletDTO(Long id, String name, Instant creationDate, Long userId) {
         this.id = id;
@@ -16,20 +19,36 @@ public final class WalletDTO {
         this.userId = userId;
     }
 
-    public Long id() {
+    public Long getId() {
         return id;
     }
 
-    public String name() {
+    public String getName() {
         return name;
     }
 
-    public Instant creationDate() {
+    public Instant getCreationDate() {
         return creationDate;
     }
 
-    public Long userId() {
+    public Long getUserId() {
         return userId;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     @Override
