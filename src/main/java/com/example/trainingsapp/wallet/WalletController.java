@@ -10,15 +10,19 @@ import com.example.trainingsapp.wallet.model.Wallet;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+
 @Validated
 @RestController
 @RequestMapping("/api/wallets")
@@ -30,8 +34,11 @@ public class WalletController {
     @Autowired
     WalletService walletService;
 
-    @PostMapping("/")
-    public ResponseEntity createWallet(@Valid @RequestBody WalletCreateDTO createWalletDTO, Principal principal) {
+    @Autowired
+    private static final Logger logger = LoggerFactory.getLogger(WalletController.class);
+
+    @PostMapping()
+    public ResponseEntity<WalletDTO> createWallet(@Valid @RequestBody WalletCreateDTO createWalletDTO, Principal principal) {
 
         String email = principal.getName();
         Optional<User> user = userRepository.findByEmail(email);
@@ -41,6 +48,7 @@ public class WalletController {
         WalletDTO walletDTO = walletService.createWallet(createWalletDTO, userID);
 
         return new ResponseEntity<>(walletDTO, HttpStatus.CREATED);
+
 
     }
 
@@ -57,7 +65,7 @@ public class WalletController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity updateWallet(@Min(1) @NotNull @PathVariable Long id, @Valid @RequestBody WalletUpdateDTO walletUpdateDTO,
+    public ResponseEntity<WalletDTO> updateWallet(@Min(1) @NotNull @PathVariable Long id, @Valid @RequestBody WalletUpdateDTO walletUpdateDTO,
                                        Principal principal) {
 
         System.out.println("Received request to update wallet with id: " + id);
@@ -82,21 +90,20 @@ public class WalletController {
 
         List<Wallet> wallets = walletService.getWallets(userId);
 
-        return new ResponseEntity(wallets, HttpStatus.OK);
+        return new ResponseEntity<>(wallets, HttpStatus.OK);
 
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getWalletById(@Min(1) @NotNull @PathVariable Long id, Principal principal) {
+    public ResponseEntity<WalletDTO> getWalletById(@Min(1) @NotNull @PathVariable Long id, Principal principal) {
         String email = principal.getName();
         Optional<User> user = userRepository.findByEmail(email);
 
         Long userId = user.get().getId();
 
-        Optional<WalletDTO> walletDTO = walletService.findById(id, userId);
+        WalletDTO walletDTO = walletService.findById(id, userId);
 
         return new ResponseEntity<>(walletDTO, HttpStatus.OK);
+
     }
-
-
 }

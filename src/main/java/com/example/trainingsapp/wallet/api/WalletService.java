@@ -15,7 +15,7 @@ public interface WalletService {
 
     WalletDTO updateWallet(Long walletId, WalletUpdateDTO updateWalletDTO, Long userId);
 
-    Optional<WalletDTO> findById(Long walletId, Long UserId);
+    WalletDTO findById(Long walletId, Long UserId);
 
     List<Wallet> getWallets(Long userId);
 

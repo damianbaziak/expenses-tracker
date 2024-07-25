@@ -32,7 +32,7 @@ public class WalletServiceImpl implements WalletService {
     public WalletDTO createWallet (WalletCreateDTO createWalletDTO, Long userId) {
 
         User walletOwner = getUserByUserId(userId);
-        String walletName = createWalletDTO.name();
+        String walletName = createWalletDTO.getName();
 
         Wallet wallet = new Wallet(walletName, walletOwner);
 
@@ -60,7 +60,7 @@ public class WalletServiceImpl implements WalletService {
             throw new AppRuntimeException(ErrorCode.W001, String.format("Wallet with this id: %d not exist", walletId));
         }
         if (!wallet.get().getUser().getId().equals(userId)) {
-            throw new AppRuntimeException(ErrorCode.W002, "You don't have permissions to delete that wallet");
+            throw new AppRuntimeException(ErrorCode.W002, "You don't have permissions to update that wallet");
         }
 
         Wallet existedWallet = wallet.get();
@@ -72,7 +72,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public Optional<WalletDTO> findById(Long walletId, Long userId) {
+    public WalletDTO findById(Long walletId, Long userId) {
         Optional<Wallet> wallet = walletRepository.findById(walletId);
         if (!wallet.isPresent()) {
             throw new AppRuntimeException(ErrorCode.W001, String.format("Wallet with this id: %d not exist", walletId));
@@ -83,7 +83,7 @@ public class WalletServiceImpl implements WalletService {
 
         Wallet existedWallet = wallet.get();
 
-        return Optional.of(walletModelMapper.mapWalletEntityToWalletDTO(existedWallet));
+        return walletModelMapper.mapWalletEntityToWalletDTO(existedWallet);
     }
 
     @Override
