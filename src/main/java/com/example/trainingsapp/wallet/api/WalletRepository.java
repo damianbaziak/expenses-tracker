@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface WalletRepository extends CrudRepository<Wallet, Long> {
     Optional<Wallet> findByName(String name);
 
-    List<Wallet> findWalletsByUserId(Long userId);
+    List<Wallet> findAllByUserIdOrderByNameAsc(Long userId);
 }

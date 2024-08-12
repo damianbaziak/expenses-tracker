@@ -2,6 +2,7 @@ package com.example.trainingsapp.wallet.impl;
 
 import com.example.trainingsapp.user.model.User;
 import com.example.trainingsapp.wallet.api.WalletRepository;
+import com.example.trainingsapp.wallet.api.dto.WalletDTO;
 import com.example.trainingsapp.wallet.model.Wallet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,9 @@ public class WalletGetServiceImplTest {
     @BeforeEach
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
+        user = User.builder()
+                .id(1L)
+                .build();
 
         wallet = Wallet.builder()
                 .user(user)
@@ -46,10 +50,13 @@ public class WalletGetServiceImplTest {
 
     @Test
     void testGetWallets(){
-        when(walletRepository.findWalletsByUserId(1L)).thenReturn(Arrays.asList(wallet,wallet2));
+        // given
+        when(walletRepository.findAllByUserIdOrderByNameAsc(1L)).thenReturn(Arrays.asList(wallet,wallet2));
 
-        List<Wallet> result = walletService.getWallets(1L);
+        // when
+        List<WalletDTO> result = walletService.getWallets(1L);
 
+        // then
         assertThat(result).isNotNull();
         assertThat(result).hasSize(2);
         assertThat(walletService.getWallets(1L).get(0).getName()).isEqualTo(wallet.getName());

@@ -6,7 +6,7 @@ import com.example.trainingsapp.user.model.User;
 
 public interface AuthService {
 
-    User addUser(UserDTO userDTO);
+    User registerUser(UserDTO userDTO);
 
     String loginUser(UserLoginDTO userLoginDTO);
 

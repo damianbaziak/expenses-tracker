@@ -17,14 +17,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 
 @EnableWebSecurity
 @Configuration
 public class WebSecurityConfiguration {
 
     @Autowired
-    MyUserDetailsService myUserDetailsService;
+    private MyUserDetailsService myUserDetailsService;
     @Autowired
     private JwtAuthorizationFilter jwtAuthorizationFilter;
 
@@ -35,7 +35,7 @@ public class WebSecurityConfiguration {
                 .authorizeHttpRequests(registry -> {
                     registry.requestMatchers("/", "/api/auth/**").permitAll();
                     registry.requestMatchers(
-                            "/api/users/me",
+                                    "/api/users/me",
                                     "/api/transactions/**",
                                     "/api/categories/**",
                                     "/api/wallets/**",

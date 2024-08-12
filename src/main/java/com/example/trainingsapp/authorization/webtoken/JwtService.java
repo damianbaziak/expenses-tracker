@@ -1,11 +1,10 @@
 package com.example.trainingsapp.authorization.webtoken;
 
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.sql.Date;
@@ -19,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class JwtService {
     private static final String SECRET = "820FD73B8B05A60B528BE76515F36B3B393DD06DAA07B6B7690463BCD90A337B068EB427BFF3C6E3D782AD3C2F84FEF209B4D8DA106C0EBA7C7E6C47B1D3653A";
     private static final long VALIDITY = TimeUnit.DAYS.toMillis(1);
+
     public String generateToken(UserDetails userDetails) {
         Map<String, String> claims = new HashMap<>();
         claims.put("iss", "https://secure.genuinecoder.com");
@@ -29,7 +29,6 @@ public class JwtService {
                 // When the Token was generated
                 .issuedAt(Date.from(Instant.now()))
                 .expiration(Date.from(Instant.now().plusMillis(VALIDITY)))
-                // podpisz
                 .signWith(generateKey())
                 // it will be converted into JSON format
                 .compact();

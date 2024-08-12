@@ -20,15 +20,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class UserServiceImplTest {
+    // To pole służy do zarządzania zasobami, które muszą zostać zamknięte po zakończeniu testu. W kontekście Mockito, może być używane do automatycznego zamknięcia zasobów po zakończeniu testów, szczególnie przy użyciu MockitoAnnotations.openMocks(this).
+    // Pozwala to na automatyczne wyczyszczenie mocków i uniknięcie wycieków pamięci po zakończeniu testów.
+    AutoCloseable autoCloseable;
+    User user;
     @Mock
     private UserRepository userRepository;
     @InjectMocks
     private UserServiceImpl userService;
-
-    // To pole służy do zarządzania zasobami, które muszą zostać zamknięte po zakończeniu testu. W kontekście Mockito, może być używane do automatycznego zamknięcia zasobów po zakończeniu testów, szczególnie przy użyciu MockitoAnnotations.openMocks(this).
-    //Pozwala to na automatyczne wyczyszczenie mocków i uniknięcie wycieków pamięci po zakończeniu testów.
-    AutoCloseable autoCloseable;
-    User user;
 
     @BeforeEach
     void setUp() {
@@ -37,7 +36,7 @@ class UserServiceImplTest {
         List<Wallet> wallets = new ArrayList<>();
 
         user = new User(1L, "damian", "baziak", 30, "damianbaziak@gmail.com",
-                "bazyl", "1234567890", wallets  );
+                "bazyl", "1234567890", wallets);
 
 
     }

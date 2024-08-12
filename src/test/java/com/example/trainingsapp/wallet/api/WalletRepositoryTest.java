@@ -55,7 +55,7 @@ public class WalletRepositoryTest {
     @Test
     void testFindWalletsByUserId_Found() {
         System.out.println(user.getId());
-        List<Wallet> wallets = walletRepository.findWalletsByUserId(user.getId());
+        List<Wallet> wallets = walletRepository.findAllByUserIdOrderByNameAsc(user.getId());
 
         assertThat(wallets.get(0).getId()).isEqualTo(wallet.getId());
     }
@@ -65,7 +65,7 @@ public class WalletRepositoryTest {
     @Test
     void testFindWalletsByUserId_NotFound() {
         System.out.println(user.getId());
-        List<Wallet> wallets = walletRepository.findWalletsByUserId(2L);
+        List<Wallet> wallets = walletRepository.findAllByUserIdOrderByNameAsc(2L);
 
 
         assertThat(wallets.isEmpty()).isTrue();

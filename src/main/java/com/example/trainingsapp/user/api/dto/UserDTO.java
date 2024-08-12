@@ -1,9 +1,7 @@
 package com.example.trainingsapp.user.api.dto;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
-@Valid
 public class UserDTO {
 
     @NotBlank(message = "firstname is mandatory")

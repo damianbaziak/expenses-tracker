@@ -15,19 +15,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Validated
-@RequestMapping("api/auth")
+@RequestMapping("/api/auth")
 @RestController
 public class AuthController {
 
     @Autowired
-    AuthService authService;
+    private AuthService authService;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @PostMapping("/register")
     public ResponseEntity registerUser(@Valid @RequestBody UserDTO userDTO) {
-        return new ResponseEntity<>(authService.addUser(userDTO), HttpStatus.CREATED);
+        return new ResponseEntity<>(authService.registerUser(userDTO), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")

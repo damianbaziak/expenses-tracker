@@ -21,39 +21,31 @@ import java.util.Optional;
 @Service
 public class AuthServiceImpl implements AuthService {
     @Autowired
-    MyUserDetailsService userDetailsService;
+    private MyUserDetailsService userDetailsService;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    JwtService jwtService;
-
-    public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+    private JwtService jwtService;
 
     @Override
-    public User addUser(UserDTO userDTO) {
+    public User registerUser(UserDTO userDTO) {
         Optional<User> userFromDb = userRepository.findByEmail(userDTO.getEmail());
-
         if (userFromDb.isPresent()) {
             throw new AppRuntimeException(ErrorCode.U001, "User with this email already exist");
         }
 
         Optional<User> userByUsername = userRepository.findByUsername(userDTO.getUsername());
-
         if (userByUsername.isPresent()) {
             throw new AppRuntimeException(ErrorCode.U001, "User with this username already exist");
         }
-
 
         User user = User.builder()
                 .firstname(userDTO.getFirstname())
@@ -77,14 +69,13 @@ public class AuthServiceImpl implements AuthService {
         if (!passwordEncoder.matches(userLoginDTO.password(), u.getPassword())) {
             throw new AppRuntimeException(ErrorCode.U002, "User with this email or password not exist");
         }
+
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 userLoginDTO.email(), userLoginDTO.password()));
-
 
         return jwtService.generateToken(userDetailsService.loadUserByUsername(userLoginDTO.email()));
 
     }
-
 
     public String hashedPassword(String password) {
         return passwordEncoder.encode(password);

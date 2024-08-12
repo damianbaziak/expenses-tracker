@@ -1,10 +1,8 @@
 package com.example.trainingsapp.user.api.dto;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
-@Valid
 public class EmailUptadeDTO {
     @Email
     @NotNull

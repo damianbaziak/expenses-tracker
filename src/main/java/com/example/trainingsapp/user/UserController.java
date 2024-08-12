@@ -13,29 +13,29 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@RequestMapping("api/users")
+@RequestMapping("/api/users")
 @RestController
 public class UserController {
     @Autowired
     private UserService userService;
 
     @GetMapping("/{id}")
-    public ResponseEntity findById(@PathVariable Long id) {
+    public ResponseEntity findUserById(@PathVariable Long id) {
         Optional<User> user = userService.getUserById(id);
         if (!user.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with this id not exist");
         }
         return ResponseEntity.ok(user);
     }
 
-    @PatchMapping("update/username/{id}")
+    @PatchMapping("/update/username/{id}")
     public ResponseEntity uptadeUsername(@PathVariable Long id, @Valid @RequestBody UsernameUpdateDTO usernameUpdateDTO) {
         User updatedUser = userService.updateUsername(id, usernameUpdateDTO);
 
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
-    @PatchMapping("update/email/{id}")
+    @PatchMapping("/update/email/{id}")
     public ResponseEntity updateEmail(@PathVariable Long id, @Valid @RequestBody EmailUptadeDTO emailUptadeDTO) {
         User updatedUser = userService.updateEmail(id, emailUptadeDTO);
 
@@ -44,7 +44,7 @@ public class UserController {
     }
 
 
-    @PatchMapping("update/password/{id}")
+    @PatchMapping("/update/password/{id}")
     public ResponseEntity updatePassword(@PathVariable Long id, @Valid @RequestBody PasswordUptadeDTO passwordUptadeDto) {
         User updatedUser = userService.updatePassword(id, passwordUptadeDto);
 

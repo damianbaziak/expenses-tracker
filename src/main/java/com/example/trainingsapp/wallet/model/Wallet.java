@@ -3,14 +3,13 @@ package com.example.trainingsapp.wallet.model;
 import com.example.trainingsapp.financialtransaktion.FinancialTransaction;
 import com.example.trainingsapp.user.model.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+
 @Builder
-@AllArgsConstructor
 @Entity
 @Table(name = "wallets")
 
@@ -39,6 +38,15 @@ public class Wallet {
         this.user = user;
         this.name = name;
         this.creationDate = Instant.now();
+    }
+
+    public Wallet(Long id, User user, String name, Instant creationDate, List<FinancialTransaction>
+            financialTransactionList) {
+        this.id = id;
+        this.user = user;
+        this.name = name;
+        this.creationDate = creationDate;
+        this.financialTransactionList = financialTransactionList;
     }
 
     public Long getId() {

@@ -20,17 +20,16 @@ import java.util.Optional;
 @Service
 public class WalletServiceImpl implements WalletService {
     @Autowired
-    WalletModelMapper walletModelMapper;
+    private WalletModelMapper walletModelMapper;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    WalletRepository walletRepository;
+    private WalletRepository walletRepository;
 
     @Override
-    public WalletDTO createWallet (WalletCreateDTO createWalletDTO, Long userId) {
-
+    public WalletDTO createWallet(WalletCreateDTO createWalletDTO, Long userId) {
         User walletOwner = getUserByUserId(userId);
         String walletName = createWalletDTO.getName();
 
@@ -50,6 +49,7 @@ public class WalletServiceImpl implements WalletService {
         if (!wallet.get().getUser().getId().equals(userId)) {
             throw new AppRuntimeException(ErrorCode.W002, "You don't have permissions to delete that wallet");
         }
+
         walletRepository.deleteById(walletId);
     }
 
@@ -64,7 +64,7 @@ public class WalletServiceImpl implements WalletService {
         }
 
         Wallet existedWallet = wallet.get();
-        existedWallet.setName(updateWalletDTO.name());
+        existedWallet.setName(updateWalletDTO.getName());
 
         walletRepository.save(existedWallet);
 
@@ -83,24 +83,23 @@ public class WalletServiceImpl implements WalletService {
 
         Wallet existedWallet = wallet.get();
 
-        return walletModelMapper.mapWalletEntityToWalletDTO(existedWallet);
+        return new WalletDTO(existedWallet.getId(), existedWallet.getName(), existedWallet.getCreationDate(),
+                existedWallet.getUser().getId());
     }
 
     @Override
-    public List<Wallet> getWallets(Long userId) {
-        List<Wallet> walletList = walletRepository.findWalletsByUserId(userId);
+    public List<WalletDTO> getWallets(Long userId) {
+        List<Wallet> walletList = walletRepository.findAllByUserIdOrderByNameAsc(userId);
 
         if (walletList.isEmpty()) {
             throw new AppRuntimeException(ErrorCode.W001, "You have no wallets");
         }
 
-        return walletList;
+        return walletList.stream()
+                .map(wallet -> new WalletDTO(wallet.getId(), wallet.getName(), wallet.getCreationDate(), wallet.getUser()
+                        .getId()))
+                .toList();
     }
-
-    //@Override
-    //public Optional<Wallet> getByName(String name) {
-    //    return walletRepository.findByName(name);
-    //}
 
     public User getUserByUserId(Long userId) {
         return userRepository.findById(userId).orElseThrow(() ->

@@ -5,6 +5,7 @@ public class AppRuntimeException extends RuntimeException {
     private final String status;
     private final String message;
     private final Integer statusCode;
+
     public AppRuntimeException(ErrorCode errorCode, String description) {
         this.description = description;
         this.status = errorCode.getStatus();

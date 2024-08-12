@@ -23,28 +23,28 @@ public class WalletDTO {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public Instant getCreationDate() {
-        return creationDate;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
     public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 
     public void setUserId(Long userId) {
@@ -52,28 +52,15 @@ public class WalletDTO {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (WalletDTO) obj;
-        return Objects.equals(this.id, that.id) &&
-                Objects.equals(this.name, that.name) &&
-                Objects.equals(this.creationDate, that.creationDate) &&
-                Objects.equals(this.userId, that.userId);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WalletDTO walletDTO = (WalletDTO) o;
+        return Objects.equals(id, walletDTO.id) && Objects.equals(name, walletDTO.name) && Objects.equals(creationDate, walletDTO.creationDate) && Objects.equals(userId, walletDTO.userId);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, name, creationDate, userId);
     }
-
-    @Override
-    public String toString() {
-        return "WalletDTO[" +
-                "id=" + id + ", " +
-                "name=" + name + ", " +
-                "creationDate=" + creationDate + ", " +
-                "userId=" + userId + ']';
-    }
-
 }

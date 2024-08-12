@@ -2,16 +2,15 @@ package com.example.trainingsapp.authorization.api;
 
 import com.example.trainingsapp.authorization.api.dto.UserLoginDTO;
 import com.example.trainingsapp.authorization.api.impl.AuthServiceImpl;
-import com.example.trainingsapp.authorization.webtoken.JwtService;
 import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.api.dto.UserDTO;
 import com.example.trainingsapp.user.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -19,15 +18,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 class AuthServiceImplTest {
+    @InjectMocks
     AuthServiceImpl authService;
     @Mock
     UserRepository userRepository;
     @Mock
     PasswordEncoder passwordEncoder;
-    @Mock
-    Authentication authentication;
-    @Mock
-    JwtService jwtService;
     AutoCloseable autoCloseable;
     User user;
     UserDTO userDTO;
@@ -39,7 +35,7 @@ class AuthServiceImplTest {
     @BeforeEach
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
-        authService = new AuthServiceImpl(userRepository, passwordEncoder);
+
         when(passwordEncoder.encode(any(CharSequence.class))).thenReturn("encodedPassword");
 
         userLoginDTO = new UserLoginDTO("damianbaziak@gmail.com", "1234567890");
@@ -67,7 +63,7 @@ class AuthServiceImplTest {
 
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        User result = authService.addUser(userDTO);
+        User result = authService.registerUser(userDTO);
 
         assertThat(result).isNotNull();
         assertThat(result.getAge()).isEqualTo(user.getAge());

@@ -1,4 +1,5 @@
 package com.example.trainingsapp.authorization;
+
 import com.example.trainingsapp.authorization.api.MyUserDetailsService;
 import com.example.trainingsapp.authorization.webtoken.JwtService;
 import jakarta.servlet.FilterChain;
@@ -18,7 +19,7 @@ import java.io.IOException;
 @Configuration
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Autowired
-    MyUserDetailsService userDetailsService;
+    private MyUserDetailsService userDetailsService;
     @Autowired
     private JwtService jwtService;
 

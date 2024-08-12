@@ -2,14 +2,14 @@ package com.example.trainingsapp.user.model;
 
 import com.example.trainingsapp.wallet.model.Wallet;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Builder
 @Entity
 @Table(name = "users")
-@AllArgsConstructor
 public class User {
 
     @Id
@@ -26,6 +26,17 @@ public class User {
     private List<Wallet> wallets = new ArrayList<>();
 
     public User() {
+    }
+
+    public User(Long id, String firstname, String lastname, int age, String email, String username, String password, List<Wallet> wallets) {
+        this.id = id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.age = age;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.wallets = wallets;
     }
 
     public Long getId() {
