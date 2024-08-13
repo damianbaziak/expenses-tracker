@@ -2,6 +2,8 @@ package com.example.trainingsapp.user.api.dto;
 
 import jakarta.validation.constraints.*;
 
+import java.util.Objects;
+
 public class UserDTO {
 
     @NotBlank(message = "firstname is mandatory")
@@ -85,6 +87,30 @@ public class UserDTO {
         this.password = password;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserDTO userDTO = (UserDTO) o;
+        return age == userDTO.age && Objects.equals(firstname, userDTO.firstname) && Objects.equals(lastname, userDTO.lastname) && Objects.equals(email, userDTO.email) && Objects.equals(username, userDTO.username) && Objects.equals(password, userDTO.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstname, lastname, age, email, username, password);
+    }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", age=" + age +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }
 
 

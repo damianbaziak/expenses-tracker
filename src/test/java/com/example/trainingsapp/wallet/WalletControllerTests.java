@@ -8,14 +8,11 @@ import com.example.trainingsapp.wallet.api.WalletService;
 import com.example.trainingsapp.wallet.api.dto.WalletCreateDTO;
 import com.example.trainingsapp.wallet.api.dto.WalletDTO;
 import com.example.trainingsapp.wallet.api.dto.WalletUpdateDTO;
-import com.example.trainingsapp.wallet.model.Wallet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -44,11 +41,13 @@ class WalletControllerTests {
     public static final Long WALLET_ID_1L = 1L;
     public static final Long WALLET_ID_2L = 2L;
     public static final Long WALLET_ID_3L = 3L;
-    public static final Long USER_ID_1L = 1L;
-    public static final Instant DATE_NOW = Instant.now();
-    public static final String WALLET_NAME = "Test Wallet Name";
+    public static final String WALLET_NAME = "Example Wallet Name";
+    private static final Long USER_ID_1L = 1L;
     public static final String USER_EMAIL = "user@example.email.com";
-    private static final Logger logger = LoggerFactory.getLogger(WalletController.class);
+    private static final Instant DATE_1 = Instant.parse("2022-09-24T19:09:35.573036Z");
+    private static final Instant DATE_2 = Instant.parse("2022-09-25T17:10:39.684145Z");
+    private static final Instant DATE_3 = Instant.parse("2022-09-26T18:11:49.132454Z");
+    public static final Instant DATE_NOW = Instant.now();
     @MockBean
     MyUserDetailsService myUserDetailsService;
     @MockBean
@@ -141,7 +140,7 @@ class WalletControllerTests {
 
 
     }
-/*
+
     @Test
     void getWallets() throws Exception {
         // given
@@ -149,24 +148,27 @@ class WalletControllerTests {
         user.setId(USER_ID_1L);
         user.setEmail(USER_EMAIL);
 
-        List<Wallet> wallets = new ArrayList<>()
+        List<WalletDTO> walletDTOS = createWalletsForTest();
         Mockito.when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
-        Mockito.when(walletService.getWallets(USER_ID_1L)).thenReturn(wallets);
+        Mockito.when(walletService.getWallets(USER_ID_1L)).thenReturn(walletDTOS);
 
         //when
         ResultActions resultActions = mockMvc.perform(get("/api/wallets")
-                        .principal(() -> USER_EMAIL))
-                .andDo(print());
+                        .principal(() -> USER_EMAIL));
 
         // then
         resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(WALLET_ID_1L.intValue()))
-                .andExpect(jsonPath("$.name").value(WALLET_NAME));
+                .andExpect(jsonPath("$.size()").value(walletDTOS.size()))
+                .andExpect(jsonPath("$[0].id").value(WALLET_ID_1L.intValue()))
+                .andExpect(jsonPath("$[0].creationDate").value(DATE_1.toString()))
+                .andExpect(jsonPath("$[1].id").value((WALLET_ID_2L).intValue()))
+                .andExpect(jsonPath("$[1].name").value(WALLET_NAME))
+                .andExpect(jsonPath("$[1].creationDate").value(DATE_2.toString()))
+                .andExpect(jsonPath("$[2].id").value((WALLET_ID_3L).intValue()))
+                .andExpect(jsonPath("$[2].creationDate").value(DATE_3.toString()));
 
 
     }
-
- */
 
 
     @Test
@@ -192,6 +194,15 @@ class WalletControllerTests {
                 .andExpect(jsonPath("$.id").value(WALLET_ID_1L.intValue()))
                 .andExpect(jsonPath("$.name").value(WALLET_NAME));
 
+
+    }
+
+    private List<WalletDTO> createWalletsForTest() {
+        List<WalletDTO> walletDTOS = new ArrayList<>();
+        walletDTOS.add(new WalletDTO(WALLET_ID_1L, WALLET_NAME, DATE_1, USER_ID_1L));
+        walletDTOS.add(new WalletDTO(WALLET_ID_2L, WALLET_NAME, DATE_2, USER_ID_1L));
+        walletDTOS.add(new WalletDTO(WALLET_ID_3L, WALLET_NAME, DATE_3, USER_ID_1L));
+        return walletDTOS;
 
     }
 }

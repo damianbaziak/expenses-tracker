@@ -37,4 +37,11 @@ public class WalletCreateDTO {
     public int hashCode() {
         return Objects.hash(name);
     }
+
+    @Override
+    public String toString() {
+        return "WalletCreateDTO{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

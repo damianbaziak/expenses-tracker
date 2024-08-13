@@ -63,4 +63,14 @@ public class WalletDTO {
     public int hashCode() {
         return Objects.hash(id, name, creationDate, userId);
     }
+
+    @Override
+    public String toString() {
+        return "WalletDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", creationDate=" + creationDate +
+                ", userId=" + userId +
+                '}';
+    }
 }
