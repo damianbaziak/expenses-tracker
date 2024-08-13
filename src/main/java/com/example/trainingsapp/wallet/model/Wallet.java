@@ -28,7 +28,7 @@ public class Wallet {
     @Column(name = "creation_date")
     private Instant creationDate;
 
-    @OneToMany
+    @OneToMany(mappedBy = "wallet")
     private List<FinancialTransaction> financialTransactionList = new ArrayList<>();
 
     public Wallet() {

@@ -42,12 +42,12 @@ class WalletControllerTests {
     public static final Long WALLET_ID_2L = 2L;
     public static final Long WALLET_ID_3L = 3L;
     public static final String WALLET_NAME = "Example Wallet Name";
-    private static final Long USER_ID_1L = 1L;
     public static final String USER_EMAIL = "user@example.email.com";
+    public static final Instant DATE_NOW = Instant.now();
+    private static final Long USER_ID_1L = 1L;
     private static final Instant DATE_1 = Instant.parse("2022-09-24T19:09:35.573036Z");
     private static final Instant DATE_2 = Instant.parse("2022-09-25T17:10:39.684145Z");
     private static final Instant DATE_3 = Instant.parse("2022-09-26T18:11:49.132454Z");
-    public static final Instant DATE_NOW = Instant.now();
     @MockBean
     MyUserDetailsService myUserDetailsService;
     @MockBean
@@ -142,7 +142,8 @@ class WalletControllerTests {
     }
 
     @Test
-    void getWallets() throws Exception {
+    @DisplayName("Should return all wallets and Status OK")
+    void getWallets_walletsExist_shouldReturnListOfWalletsAndStatusOK() throws Exception {
         // given
         User user = new User();
         user.setId(USER_ID_1L);
@@ -154,7 +155,7 @@ class WalletControllerTests {
 
         //when
         ResultActions resultActions = mockMvc.perform(get("/api/wallets")
-                        .principal(() -> USER_EMAIL));
+                .principal(() -> USER_EMAIL));
 
         // then
         resultActions.andExpect(status().isOk())
