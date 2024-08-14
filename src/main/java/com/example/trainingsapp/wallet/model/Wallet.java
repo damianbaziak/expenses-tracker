@@ -1,6 +1,6 @@
 package com.example.trainingsapp.wallet.model;
 
-import com.example.trainingsapp.financialtransaktion.FinancialTransaction;
+import com.example.trainingsapp.financialtransaktion.model.FinancialTransaction;
 import com.example.trainingsapp.user.model.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -28,15 +28,15 @@ public class Wallet {
     @Column(name = "creation_date")
     private Instant creationDate;
 
-    @OneToMany(mappedBy = "wallet")
+    @OneToMany(mappedBy = "wallet", cascade = CascadeType.ALL)
     private List<FinancialTransaction> financialTransactionList = new ArrayList<>();
 
     public Wallet() {
     }
 
     public Wallet(String name, User user) {
-        this.user = user;
         this.name = name;
+        this.user = user;
         this.creationDate = Instant.now();
     }
 
@@ -88,13 +88,4 @@ public class Wallet {
     public void setFinancialTransactionList(List<FinancialTransaction> financialTransactionList) {
         this.financialTransactionList = financialTransactionList;
     }
-
-    public void addFinancialTransakction(FinancialTransaction financialTransaction) {
-        this.financialTransactionList.add(financialTransaction);
-    }
-
-    public void removeFinancialTransaction(FinancialTransaction financialTransaction) {
-        this.financialTransactionList.remove(financialTransaction);
-    }
-
 }

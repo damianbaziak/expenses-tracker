@@ -1,5 +1,6 @@
 package com.example.trainingsapp.user.model;
 
+import com.example.trainingsapp.financialtransaktioncategory.model.FinancialTransactionCategory;
 import com.example.trainingsapp.wallet.model.Wallet;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -22,13 +23,16 @@ public class User {
     private String email;
     private String username;
     private String password;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Wallet> wallets = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<FinancialTransactionCategory> financialTransactionCategories;
 
     public User() {
     }
 
-    public User(Long id, String firstname, String lastname, int age, String email, String username, String password, List<Wallet> wallets) {
+    public User(Long id, String firstname, String lastname, int age, String email, String username, String password,
+                List<Wallet> wallets, List<FinancialTransactionCategory> financialTransactionCategories) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -37,6 +41,7 @@ public class User {
         this.username = username;
         this.password = password;
         this.wallets = wallets;
+        this.financialTransactionCategories = financialTransactionCategories;
     }
 
     public Long getId() {
@@ -93,5 +98,21 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Wallet> getWallets() {
+        return wallets;
+    }
+
+    public void setWallets(List<Wallet> wallets) {
+        this.wallets = wallets;
+    }
+
+    public List<FinancialTransactionCategory> getFinancialTransactionCategories() {
+        return financialTransactionCategories;
+    }
+
+    public void setFinancialTransactionCategories(List<FinancialTransactionCategory> financialTransactionCategories) {
+        this.financialTransactionCategories = financialTransactionCategories;
     }
 }
