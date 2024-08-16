@@ -1,6 +1,9 @@
 package com.example.trainingsapp.user.api.impl;
 
+import com.example.trainingsapp.financialtransaktion.model.FinancialTransaction;
+import com.example.trainingsapp.financialtransaktioncategory.model.FinancialTransactionCategory;
 import com.example.trainingsapp.user.api.UserRepository;
+import com.example.trainingsapp.user.api.dto.UserDTO;
 import com.example.trainingsapp.user.api.dto.UsernameUpdateDTO;
 import com.example.trainingsapp.user.model.User;
 import com.example.trainingsapp.wallet.model.Wallet;
@@ -20,7 +23,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class UserServiceImplTest {
-    // To pole służy do zarządzania zasobami, które muszą zostać zamknięte po zakończeniu testu. W kontekście Mockito, może być używane do automatycznego zamknięcia zasobów po zakończeniu testów, szczególnie przy użyciu MockitoAnnotations.openMocks(this).
+    // To pole służy do zarządzania zasobami, które muszą zostać zamknięte po zakończeniu testu. W kontekście Mockito,
+    // może być używane do automatycznego zamknięcia zasobów po zakończeniu testów, szczególnie przy użyciu MockitoAnnotations.openMocks(this).
     // Pozwala to na automatyczne wyczyszczenie mocków i uniknięcie wycieków pamięci po zakończeniu testów.
     AutoCloseable autoCloseable;
     User user;
@@ -34,9 +38,10 @@ class UserServiceImplTest {
         autoCloseable = MockitoAnnotations.openMocks(this);
 
         List<Wallet> wallets = new ArrayList<>();
+        List<FinancialTransactionCategory> financialTransactionCategories = new ArrayList<>();
 
         user = new User(1L, "damian", "baziak", 30, "damianbaziak@gmail.com",
-                "bazyl", "1234567890", wallets);
+                "bazyl", "1234567890", wallets, financialTransactionCategories);
 
 
     }
@@ -48,14 +53,17 @@ class UserServiceImplTest {
 
     @Test
     void TestGetUserById() {
+        // given
         mock(User.class);
         mock(UserRepository.class);
         when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(user));
 
-        Optional<User> result = userService.getUserById(1L);
+        // when
+        UserDTO result = userService.getUserById(1L);
 
-        assertThat(result).isPresent();
-        assertThat(result.get().getUsername()).isEqualTo(user.getUsername());
+        //then
+        assertThat(result.getFirstname()).isEqualTo(user.getFirstname());
+        assertThat(result.getEmail()).isEqualTo(user.getEmail());
     }
 
     @Test

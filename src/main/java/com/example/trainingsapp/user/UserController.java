@@ -3,6 +3,7 @@ package com.example.trainingsapp.user;
 import com.example.trainingsapp.user.api.UserService;
 import com.example.trainingsapp.user.api.dto.EmailUptadeDTO;
 import com.example.trainingsapp.user.api.dto.PasswordUptadeDTO;
+import com.example.trainingsapp.user.api.dto.UserDTO;
 import com.example.trainingsapp.user.api.dto.UsernameUpdateDTO;
 import com.example.trainingsapp.user.model.User;
 import jakarta.validation.Valid;
@@ -21,10 +22,8 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity findUserById(@PathVariable Long id) {
-        Optional<User> user = userService.getUserById(id);
-        if (!user.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with this id not exist");
-        }
+        UserDTO user = userService.getUserById(id);
+
         return ResponseEntity.ok(user);
     }
 

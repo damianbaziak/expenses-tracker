@@ -10,4 +10,6 @@ public interface WalletRepository extends CrudRepository<Wallet, Long> {
     Optional<Wallet> findByName(String name);
 
     List<Wallet> findAllByUserIdOrderByNameAsc(Long userId);
+
+    Optional<Wallet> findByIdAndUserId(Long walletId, Long userId);
 }

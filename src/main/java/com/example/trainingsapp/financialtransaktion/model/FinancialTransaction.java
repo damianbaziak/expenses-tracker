@@ -3,8 +3,6 @@ package com.example.trainingsapp.financialtransaktion.model;
 import com.example.trainingsapp.financialtransaktioncategory.model.FinancialTransactionCategory;
 import com.example.trainingsapp.wallet.model.Wallet;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -23,7 +21,7 @@ public class FinancialTransaction {
     @Column(name = "transaction_type", columnDefinition = "ENUM('INCOME', 'EXPENSE')")
     private FinancialTransactionType type;
 
-    @DecimalMin("0,0")
+    //@DecimalMin("0,0")
     private BigDecimal amount;
 
     @Column(name = "transaction_date")
@@ -32,7 +30,6 @@ public class FinancialTransaction {
     @ManyToOne(fetch = FetchType.LAZY)
     private FinancialTransactionCategory financialTransactionCategory;
 
-    @Size(max = 255)
     private String description;
 
     public FinancialTransaction() {

@@ -30,7 +30,7 @@ public class UserDTO {
     @NotBlank(message = "invalid password")
     private String password;
 
-    public UserDTO(String firstname, String lastname, int age, String email, String username, String password, String role) {
+    public UserDTO(String firstname, String lastname, int age, String email, String username, String password) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.age = age;

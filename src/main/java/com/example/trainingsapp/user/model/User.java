@@ -115,4 +115,6 @@ public class User {
     public void setFinancialTransactionCategories(List<FinancialTransactionCategory> financialTransactionCategories) {
         this.financialTransactionCategories = financialTransactionCategories;
     }
+
+
 }

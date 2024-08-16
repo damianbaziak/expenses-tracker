@@ -1,5 +1,6 @@
 package com.example.trainingsapp.user.api;
 
+import com.example.trainingsapp.financialtransaktioncategory.model.FinancialTransactionCategory;
 import com.example.trainingsapp.user.model.User;
 import com.example.trainingsapp.wallet.model.Wallet;
 import org.junit.jupiter.api.AfterEach;
@@ -25,8 +26,9 @@ public class UserRepositoryTest {
     @BeforeEach
     void setUp() {
         List<Wallet> wallets = new ArrayList<>();
+        List<FinancialTransactionCategory> financialTransactionCategories = new ArrayList<>();
         user = new User(1L, "damian", "baziak", 30, "damianbaziak@gmail.com",
-                "bazyl", "1234567890", wallets  );
+                "bazyl", "1234567890", wallets, financialTransactionCategories);
 
         userRepository.save(user);
     }

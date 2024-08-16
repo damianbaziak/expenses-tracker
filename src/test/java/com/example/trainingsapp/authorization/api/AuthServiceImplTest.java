@@ -41,7 +41,7 @@ class AuthServiceImplTest {
         userLoginDTO = new UserLoginDTO("damianbaziak@gmail.com", "1234567890");
 
         userDTO = new UserDTO ("damian", "baziak", 30, "damianbaziak@gmail.com",
-                "bazyl", "1234567890", "USER");
+                "bazyl", "1234567890");
 
         user = User.builder()
                 .firstname(userDTO.getFirstname())
