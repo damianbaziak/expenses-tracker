@@ -3,7 +3,6 @@ package com.example.trainingsapp.wallet.api;
 import com.example.trainingsapp.wallet.api.dto.WalletCreateDTO;
 import com.example.trainingsapp.wallet.api.dto.WalletDTO;
 import com.example.trainingsapp.wallet.api.dto.WalletUpdateDTO;
-import com.example.trainingsapp.wallet.model.Wallet;
 
 import java.util.List;
 

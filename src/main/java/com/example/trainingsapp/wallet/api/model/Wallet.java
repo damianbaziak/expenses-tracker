@@ -1,7 +1,7 @@
-package com.example.trainingsapp.wallet.model;
+package com.example.trainingsapp.wallet.api.model;
 
-import com.example.trainingsapp.financialtransaktion.model.FinancialTransaction;
-import com.example.trainingsapp.user.model.User;
+import com.example.trainingsapp.financialtransaktion.api.model.FinancialTransaction;
+import com.example.trainingsapp.user.api.model.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 

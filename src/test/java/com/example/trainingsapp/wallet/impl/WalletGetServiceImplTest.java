@@ -1,9 +1,9 @@
 package com.example.trainingsapp.wallet.impl;
 
-import com.example.trainingsapp.user.model.User;
+import com.example.trainingsapp.user.api.model.User;
 import com.example.trainingsapp.wallet.api.WalletRepository;
 import com.example.trainingsapp.wallet.api.dto.WalletDTO;
-import com.example.trainingsapp.wallet.model.Wallet;
+import com.example.trainingsapp.wallet.api.model.Wallet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

@@ -1,12 +1,14 @@
-package com.example.trainingsapp.financialtransaktion.model;
+package com.example.trainingsapp.financialtransaktion.api.model;
 
-import com.example.trainingsapp.financialtransaktioncategory.model.FinancialTransactionCategory;
-import com.example.trainingsapp.wallet.model.Wallet;
+import com.example.trainingsapp.financialtransaktioncategory.api.model.FinancialTransactionCategory;
+import com.example.trainingsapp.wallet.api.model.Wallet;
 import jakarta.persistence.*;
+import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
+@Builder
 @Entity
 @Table(name = "financial_transactions")
 public class FinancialTransaction {

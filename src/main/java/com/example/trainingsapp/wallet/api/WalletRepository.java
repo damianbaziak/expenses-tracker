@@ -1,6 +1,6 @@
 package com.example.trainingsapp.wallet.api;
 
-import com.example.trainingsapp.wallet.model.Wallet;
+import com.example.trainingsapp.wallet.api.model.Wallet;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

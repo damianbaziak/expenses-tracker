@@ -1,6 +1,6 @@
 package com.example.trainingsapp.user.api;
 
-import com.example.trainingsapp.user.model.User;
+import com.example.trainingsapp.user.api.model.User;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

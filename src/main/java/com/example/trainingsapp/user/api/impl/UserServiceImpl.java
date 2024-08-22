@@ -8,8 +8,7 @@ import com.example.trainingsapp.user.api.dto.EmailUptadeDTO;
 import com.example.trainingsapp.user.api.dto.PasswordUptadeDTO;
 import com.example.trainingsapp.user.api.dto.UserDTO;
 import com.example.trainingsapp.user.api.dto.UsernameUpdateDTO;
-import com.example.trainingsapp.user.model.User;
-import org.mapstruct.control.MappingControl;
+import com.example.trainingsapp.user.api.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

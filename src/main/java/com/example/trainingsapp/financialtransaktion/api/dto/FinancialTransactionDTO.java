@@ -1,6 +1,6 @@
 package com.example.trainingsapp.financialtransaktion.api.dto;
 
-import com.example.trainingsapp.financialtransaktion.model.FinancialTransactionType;
+import com.example.trainingsapp.financialtransaktion.api.model.FinancialTransactionType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.math.BigDecimal;

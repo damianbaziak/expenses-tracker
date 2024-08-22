@@ -8,7 +8,7 @@ import com.example.trainingsapp.general.exception.AppRuntimeException;
 import com.example.trainingsapp.general.exception.ErrorCode;
 import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.api.dto.UserDTO;
-import com.example.trainingsapp.user.model.User;
+import com.example.trainingsapp.user.api.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

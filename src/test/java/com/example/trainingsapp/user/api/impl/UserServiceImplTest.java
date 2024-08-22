@@ -1,12 +1,11 @@
 package com.example.trainingsapp.user.api.impl;
 
-import com.example.trainingsapp.financialtransaktion.model.FinancialTransaction;
-import com.example.trainingsapp.financialtransaktioncategory.model.FinancialTransactionCategory;
+import com.example.trainingsapp.financialtransaktioncategory.api.model.FinancialTransactionCategory;
 import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.api.dto.UserDTO;
 import com.example.trainingsapp.user.api.dto.UsernameUpdateDTO;
-import com.example.trainingsapp.user.model.User;
-import com.example.trainingsapp.wallet.model.Wallet;
+import com.example.trainingsapp.user.api.model.User;
+import com.example.trainingsapp.wallet.api.model.Wallet;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

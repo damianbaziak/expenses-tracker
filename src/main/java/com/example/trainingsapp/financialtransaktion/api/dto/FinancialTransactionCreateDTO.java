@@ -1,6 +1,6 @@
 package com.example.trainingsapp.financialtransaktion.api.dto;
 
-import com.example.trainingsapp.financialtransaktion.model.FinancialTransactionType;
+import com.example.trainingsapp.financialtransaktion.api.model.FinancialTransactionType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 
@@ -19,7 +19,7 @@ public class FinancialTransactionCreateDTO {
 
     @Digits(integer = 12, fraction = 2)
     @PositiveOrZero
-    private BigDecimal amout;
+    private BigDecimal amount;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
     private Instant date;
@@ -45,12 +45,12 @@ public class FinancialTransactionCreateDTO {
         this.description = description;
     }
 
-    public BigDecimal getAmout() {
-        return amout;
+    public BigDecimal getAmount() {
+        return amount;
     }
 
-    public void setAmout(BigDecimal amout) {
-        this.amout = amout;
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 
     public Instant getDate() {
@@ -83,12 +83,12 @@ public class FinancialTransactionCreateDTO {
         if (o == null || getClass() != o.getClass()) return false;
         FinancialTransactionCreateDTO that = (FinancialTransactionCreateDTO) o;
         return Objects.equals(walletId, that.walletId) && Objects.equals(description, that.description) && Objects.equals(
-                amout, that.amout) && Objects.equals(date, that.date) && type == that.type && Objects.equals(
+                amount, that.amount) && Objects.equals(date, that.date) && type == that.type && Objects.equals(
                 categoryId, that.categoryId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(walletId, description, amout, date, type, categoryId);
+        return Objects.hash(walletId, description, amount, date, type, categoryId);
     }
 }

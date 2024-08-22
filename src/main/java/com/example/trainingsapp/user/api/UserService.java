@@ -4,9 +4,7 @@ import com.example.trainingsapp.user.api.dto.EmailUptadeDTO;
 import com.example.trainingsapp.user.api.dto.PasswordUptadeDTO;
 import com.example.trainingsapp.user.api.dto.UserDTO;
 import com.example.trainingsapp.user.api.dto.UsernameUpdateDTO;
-import com.example.trainingsapp.user.model.User;
-
-import java.util.Optional;
+import com.example.trainingsapp.user.api.model.User;
 
 public interface UserService {
     UserDTO getUserById(Long id);

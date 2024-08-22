@@ -3,14 +3,14 @@ package com.example.trainingsapp.wallet.impl;
 import com.example.trainingsapp.general.exception.AppRuntimeException;
 import com.example.trainingsapp.general.exception.ErrorCode;
 import com.example.trainingsapp.user.api.UserRepository;
-import com.example.trainingsapp.user.model.User;
+import com.example.trainingsapp.user.api.model.User;
 import com.example.trainingsapp.wallet.api.WalletModelMapper;
 import com.example.trainingsapp.wallet.api.WalletRepository;
 import com.example.trainingsapp.wallet.api.WalletService;
 import com.example.trainingsapp.wallet.api.dto.WalletCreateDTO;
 import com.example.trainingsapp.wallet.api.dto.WalletDTO;
 import com.example.trainingsapp.wallet.api.dto.WalletUpdateDTO;
-import com.example.trainingsapp.wallet.model.Wallet;
+import com.example.trainingsapp.wallet.api.model.Wallet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

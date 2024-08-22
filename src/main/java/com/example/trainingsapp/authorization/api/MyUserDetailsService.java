@@ -1,7 +1,7 @@
 package com.example.trainingsapp.authorization.api;
 
 import com.example.trainingsapp.user.api.UserRepository;
-import com.example.trainingsapp.user.model.User;
+import com.example.trainingsapp.user.api.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

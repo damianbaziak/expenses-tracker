@@ -4,7 +4,7 @@ import com.example.trainingsapp.authorization.api.dto.UserLoginDTO;
 import com.example.trainingsapp.authorization.api.impl.AuthServiceImpl;
 import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.api.dto.UserDTO;
-import com.example.trainingsapp.user.model.User;
+import com.example.trainingsapp.user.api.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

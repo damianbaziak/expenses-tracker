@@ -1,7 +1,7 @@
 package com.example.trainingsapp.wallet;
 
 import com.example.trainingsapp.user.api.UserRepository;
-import com.example.trainingsapp.user.model.User;
+import com.example.trainingsapp.user.api.model.User;
 import com.example.trainingsapp.wallet.api.WalletService;
 import com.example.trainingsapp.wallet.api.dto.WalletCreateDTO;
 import com.example.trainingsapp.wallet.api.dto.WalletDTO;

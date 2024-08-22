@@ -1,8 +1,8 @@
 package com.example.trainingsapp.user.api;
 
-import com.example.trainingsapp.financialtransaktioncategory.model.FinancialTransactionCategory;
-import com.example.trainingsapp.user.model.User;
-import com.example.trainingsapp.wallet.model.Wallet;
+import com.example.trainingsapp.financialtransaktioncategory.api.model.FinancialTransactionCategory;
+import com.example.trainingsapp.user.api.model.User;
+import com.example.trainingsapp.wallet.api.model.Wallet;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
