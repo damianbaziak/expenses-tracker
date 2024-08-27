@@ -1,7 +1,7 @@
 package com.example.trainingsapp.financialtransaktioncategory.api.model;
 
-import com.example.trainingsapp.financialtransaktion.api.model.FinancialTransaction;
-import com.example.trainingsapp.financialtransaktion.api.model.FinancialTransactionType;
+import com.example.trainingsapp.financialtransaction.api.model.FinancialTransaction;
+import com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType;
 import com.example.trainingsapp.user.api.model.User;
 import jakarta.persistence.*;
 
@@ -16,6 +16,7 @@ public class FinancialTransactionCategory {
     private Long id;
     private String name;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "transaction_type", columnDefinition = "ENUM('INCOME', 'EXPENSE')")
     private FinancialTransactionType type;
 

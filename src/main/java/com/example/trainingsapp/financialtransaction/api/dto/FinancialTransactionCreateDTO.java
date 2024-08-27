@@ -1,6 +1,6 @@
-package com.example.trainingsapp.financialtransaktion.api.dto;
+package com.example.trainingsapp.financialtransaction.api.dto;
 
-import com.example.trainingsapp.financialtransaktion.api.model.FinancialTransactionType;
+import com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 
@@ -28,6 +28,15 @@ public class FinancialTransactionCreateDTO {
     private FinancialTransactionType type;
 
     private Long categoryId;
+
+    public FinancialTransactionCreateDTO(Long walletId, String description, BigDecimal amount, Instant date, FinancialTransactionType type, Long categoryId) {
+        this.walletId = walletId;
+        this.description = description;
+        this.amount = amount;
+        this.date = date;
+        this.type = type;
+        this.categoryId = categoryId;
+    }
 
     public Long getWalletId() {
         return walletId;

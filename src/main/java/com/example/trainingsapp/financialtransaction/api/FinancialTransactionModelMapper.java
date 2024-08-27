@@ -1,7 +1,7 @@
-package com.example.trainingsapp.financialtransaktion.api;
+package com.example.trainingsapp.financialtransaction.api;
 
-import com.example.trainingsapp.financialtransaktion.api.dto.FinancialTransactionDTO;
-import com.example.trainingsapp.financialtransaktion.api.model.FinancialTransaction;
+import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionDTO;
+import com.example.trainingsapp.financialtransaction.api.model.FinancialTransaction;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

@@ -13,25 +13,25 @@ public enum ErrorCode {
     W001("W001", "WALLET NOT_FOUND", 404),
     W002("W002", "USER IS NOT WALLET OWNER", 403);
 
-    private final String status;
-    private final String message;
-    private final Integer statusCode;
+    private final String businessStatus;
+    private final String businessMessage;
+    private final Integer businessStatusCode;
 
     ErrorCode(String status, String message, Integer statusCode) {
-        this.status = status;
-        this.message = message;
-        this.statusCode = statusCode;
+        this.businessStatus = status;
+        this.businessMessage = message;
+        this.businessStatusCode = statusCode;
     }
 
-    public String getStatus() {
-        return status;
+    public String getBusinessStatus() {
+        return businessStatus;
     }
 
-    public String getMessage() {
-        return message;
+    public String getBusinessMessage() {
+        return businessMessage;
     }
 
-    public Integer getStatusCode() {
-        return statusCode;
+    public Integer getBusinessStatusCode() {
+        return businessStatusCode;
     }
 }

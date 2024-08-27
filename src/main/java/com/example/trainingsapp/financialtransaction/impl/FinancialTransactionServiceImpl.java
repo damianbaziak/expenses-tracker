@@ -1,11 +1,11 @@
-package com.example.trainingsapp.financialtransaktion.impl;
+package com.example.trainingsapp.financialtransaction.impl;
 
-import com.example.trainingsapp.financialtransaktion.api.FinancialTransactionModelMapper;
-import com.example.trainingsapp.financialtransaktion.api.FinancialTransactionRepository;
-import com.example.trainingsapp.financialtransaktion.api.FinancialTransactionService;
-import com.example.trainingsapp.financialtransaktion.api.dto.FinancialTransactionCreateDTO;
-import com.example.trainingsapp.financialtransaktion.api.dto.FinancialTransactionDTO;
-import com.example.trainingsapp.financialtransaktion.api.model.FinancialTransaction;
+import com.example.trainingsapp.financialtransaction.api.FinancialTransactionModelMapper;
+import com.example.trainingsapp.financialtransaction.api.FinancialTransactionRepository;
+import com.example.trainingsapp.financialtransaction.api.FinancialTransactionService;
+import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionCreateDTO;
+import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionDTO;
+import com.example.trainingsapp.financialtransaction.api.model.FinancialTransaction;
 import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryRepository;
 import com.example.trainingsapp.financialtransaktioncategory.api.model.FinancialTransactionCategory;
 import com.example.trainingsapp.general.exception.AppRuntimeException;

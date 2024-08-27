@@ -11,6 +11,10 @@ public class PasswordUptadeDTO {
     @NotBlank(message = "invalid password")
     private String password;
 
+    public PasswordUptadeDTO(String password) {
+        this.password = password;
+    }
+
     public String getPassword() {
         return password;
     }

@@ -1,10 +1,8 @@
-package com.example.trainingsapp.financialtransaktion;
+package com.example.trainingsapp.financialtransaction;
 
-import com.example.trainingsapp.financialtransaktion.api.FinancialTransactionService;
-import com.example.trainingsapp.financialtransaktion.api.dto.FinancialTransactionCreateDTO;
-import com.example.trainingsapp.financialtransaktion.api.dto.FinancialTransactionDTO;
-import com.example.trainingsapp.general.exception.AppRuntimeException;
-import com.example.trainingsapp.general.exception.ErrorCode;
+import com.example.trainingsapp.financialtransaction.api.FinancialTransactionService;
+import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionCreateDTO;
+import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionDTO;
 import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.api.model.User;
 import jakarta.validation.Valid;

@@ -10,6 +10,10 @@ public class EmailUptadeDTO {
     @NotNull
     private String email;
 
+    public EmailUptadeDTO(String email) {
+        this.email = email;
+    }
+
     public String getEmail() {
         return email;
     }

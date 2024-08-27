@@ -1,4 +1,4 @@
-package com.example.trainingsapp.financialtransaktion.api.model;
+package com.example.trainingsapp.financialtransaction.api.model;
 
 import com.example.trainingsapp.financialtransaktioncategory.api.model.FinancialTransactionCategory;
 import com.example.trainingsapp.wallet.api.model.Wallet;
@@ -20,6 +20,14 @@ public class FinancialTransaction {
     @JoinColumn(name = "wallet_id")
     private Wallet wallet;
 
+    // This annotation is used to specify how an enum type should be stored in the database.
+    // EnumType.STRING indicates that the enum value will be stored as a string in the database. For example, if the enum
+    // value is INCOME, the corresponding value in the database will be the string "INCOME".
+    @Enumerated(EnumType.STRING)
+    // 'columnDefinition': This is used to define the column type in the database.
+    // The columnDefinition specifies that the transaction_type column should be an ENUM type with possible values 'INCOME' or 'EXPENSE'.
+    // Note that: columnDefinition is typically used to define the exact SQL fragment for the column, which can be useful for defining
+    // database-specific column types like ENUM.
     @Column(name = "transaction_type", columnDefinition = "ENUM('INCOME', 'EXPENSE')")
     private FinancialTransactionType type;
 
@@ -27,6 +35,7 @@ public class FinancialTransaction {
     private BigDecimal amount;
 
     @Column(name = "transaction_date")
+    //@DateTimeFormat(pattern = "yyyy-mm-dd hh-mm-ss")
     private Instant date;
 
     @ManyToOne(fetch = FetchType.LAZY)
