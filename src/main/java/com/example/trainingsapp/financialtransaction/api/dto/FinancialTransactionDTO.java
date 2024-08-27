@@ -96,4 +96,16 @@ public class FinancialTransactionDTO {
     public int hashCode() {
         return Objects.hash(id, amount, description, type, date, categoryId);
     }
+
+    @Override
+    public String toString() {
+        return "FinancialTransactionDTO{" +
+                "id=" + id +
+                ", amount=" + amount +
+                ", description='" + description + '\'' +
+                ", type=" + type +
+                ", date=" + date +
+                ", categoryId=" + categoryId +
+                '}';
+    }
 }

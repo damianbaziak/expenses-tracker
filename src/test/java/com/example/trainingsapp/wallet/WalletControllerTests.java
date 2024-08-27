@@ -49,11 +49,11 @@ class WalletControllerTests {
     private static final Instant DATE_2 = Instant.parse("2022-09-25T17:10:39.684145Z");
     private static final Instant DATE_3 = Instant.parse("2022-09-26T18:11:49.132454Z");
     @MockBean
-    MyUserDetailsService myUserDetailsService;
+    private MyUserDetailsService myUserDetailsService;
     @MockBean
-    JwtAuthorizationFilter jwtAuthorizationFilter;
+    private JwtAuthorizationFilter jwtAuthorizationFilter;
     @Autowired
-    ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
     @Autowired
     private MockMvc mockMvc;
     @MockBean

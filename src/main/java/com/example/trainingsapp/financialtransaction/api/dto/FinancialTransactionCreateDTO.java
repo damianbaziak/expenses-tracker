@@ -14,27 +14,30 @@ public class FinancialTransactionCreateDTO {
     @NotNull
     Long walletId;
 
-    @Size(max = 255)
-    private String description;
-
     @Digits(integer = 12, fraction = 2)
     @PositiveOrZero
     private BigDecimal amount;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
-    private Instant date;
+    @Size(max = 255)
+    private String description;
 
     @NotNull
     private FinancialTransactionType type;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
+    private Instant date;
+
     private Long categoryId;
 
-    public FinancialTransactionCreateDTO(Long walletId, String description, BigDecimal amount, Instant date, FinancialTransactionType type, Long categoryId) {
+    public FinancialTransactionCreateDTO() {
+    }
+
+    public FinancialTransactionCreateDTO(Long walletId, BigDecimal amount, String description, FinancialTransactionType type, Instant date, Long categoryId) {
         this.walletId = walletId;
-        this.description = description;
         this.amount = amount;
-        this.date = date;
+        this.description = description;
         this.type = type;
+        this.date = date;
         this.categoryId = categoryId;
     }
 
@@ -46,14 +49,6 @@ public class FinancialTransactionCreateDTO {
         this.walletId = walletId;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public BigDecimal getAmount() {
         return amount;
     }
@@ -62,12 +57,12 @@ public class FinancialTransactionCreateDTO {
         this.amount = amount;
     }
 
-    public Instant getDate() {
-        return date;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDate(Instant date) {
-        this.date = date;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public FinancialTransactionType getType() {
@@ -76,6 +71,14 @@ public class FinancialTransactionCreateDTO {
 
     public void setType(FinancialTransactionType type) {
         this.type = type;
+    }
+
+    public Instant getDate() {
+        return date;
+    }
+
+    public void setDate(Instant date) {
+        this.date = date;
     }
 
     public Long getCategoryId() {
@@ -91,13 +94,24 @@ public class FinancialTransactionCreateDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FinancialTransactionCreateDTO that = (FinancialTransactionCreateDTO) o;
-        return Objects.equals(walletId, that.walletId) && Objects.equals(description, that.description) && Objects.equals(
-                amount, that.amount) && Objects.equals(date, that.date) && type == that.type && Objects.equals(
-                categoryId, that.categoryId);
+        return Objects.equals(walletId, that.walletId) && Objects.equals(amount, that.amount) && Objects.equals(description, that.description) && type == that.type && Objects.equals(date, that.date) && Objects.equals(categoryId, that.categoryId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(walletId, description, amount, date, type, categoryId);
+        return Objects.hash(walletId, amount, description, type, date, categoryId);
+    }
+
+    @Override
+    public String toString() {
+        return "FinancialTransactionCreateDTO{" +
+                "walletId=" + walletId +
+                ", amount=" + amount +
+                ", description='" + description + '\'' +
+                ", type=" + type +
+                ", date=" + date +
+                ", categoryId=" + categoryId +
+                '}';
     }
 }
+

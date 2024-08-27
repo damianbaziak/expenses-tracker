@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/transactions")
 public class FinancialTransactionController {
@@ -28,8 +27,8 @@ public class FinancialTransactionController {
     UserRepository userRepository;
 
     @PostMapping()
-    public ResponseEntity createFinancialTransaction(@Valid @RequestBody FinancialTransactionCreateDTO
-                                                             financialTransactionCreateDTO, Principal principal) {
+    public ResponseEntity<FinancialTransactionDTO> createFinancialTransaction(
+            @Valid @RequestBody FinancialTransactionCreateDTO financialTransactionCreateDTO, Principal principal) {
         String email = principal.getName();
         Optional<User> user = userRepository.findByEmail(email);
         if (!user.isPresent()) {

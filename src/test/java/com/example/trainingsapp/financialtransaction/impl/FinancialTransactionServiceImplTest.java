@@ -208,8 +208,8 @@ class FinancialTransactionServiceImplTest {
     }
 
     public FinancialTransactionCreateDTO createFinancialTransactionCreateDTO() {
-        return new FinancialTransactionCreateDTO(ID_1L, DESCRIPTION, ONE, DATE_NOW,
-                EXPENSE, CATEGORY_ID);
+        return new FinancialTransactionCreateDTO(ID_1L, ONE, DESCRIPTION, EXPENSE,
+                DATE_NOW, CATEGORY_ID);
     }
 
     public FinancialTransactionDTO createFinancialTransactionDTO() {
