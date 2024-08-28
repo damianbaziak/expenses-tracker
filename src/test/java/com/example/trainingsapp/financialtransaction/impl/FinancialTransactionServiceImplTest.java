@@ -53,10 +53,11 @@ class FinancialTransactionServiceImplTest {
     private static final String DESCRIPTION = "Description";
     private static final Instant DATE_NOW = Instant.now();
     private static final Long CATEGORY_ID = 1L;
+    private static final Long WALLET_ID_1L = 1L ;
 
 
     @Mock
-    private FinancialTransactionRepository fTrepository;
+    private FinancialTransactionRepository ftRepository;
 
     @Mock
     private WalletRepository walletRepository;
@@ -71,6 +72,43 @@ class FinancialTransactionServiceImplTest {
     private FinancialTransactionServiceImpl financialTransactionService;
 
     @Test
+    @DisplayName("Should return financial transaction with valid parameters")
+    void CreateFinancialTransaction_ValidParameters_ReturnFinancialTransactionDTO() {
+        // given
+        User user = createUserForTest();
+
+        FinancialTransactionCreateDTO financialTransactionCreateDTO = createFinancialTransactionCreateDTO();
+
+        Wallet wallet = new Wallet();
+        when(walletRepository.findByIdAndUserId(any(), any())).thenReturn(Optional.of(wallet));
+
+        FinancialTransaction financialTransactionEntity = createFinancialTransactionEntity(ID_1L);
+        when(ftRepository.save(Mockito.any(FinancialTransaction.class))).thenReturn(financialTransactionEntity);
+
+        FinancialTransactionDTO financialTransactionDTO = createFinancialTransactionDTO();
+        when(financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(
+                any(FinancialTransaction.class))).thenReturn(financialTransactionDTO);
+
+        FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(EXPENSE, user);
+        when(financialTransactionCategoryRepository.findByIdAndUserId(any(), any())).thenReturn(
+                Optional.ofNullable(financialTransactionCategory));
+
+        // when
+        FinancialTransactionDTO result = financialTransactionService.createFinancialTransaction(
+                financialTransactionCreateDTO, user.getId());
+
+        // then
+        Assertions.assertAll(() -> assertEquals(financialTransactionDTO, result), () -> assertEquals(
+                financialTransactionDTO.getId(), result.getId()));
+        verify(ftRepository, atMostOnce()).save(any(FinancialTransaction.class));
+        verify(walletRepository, atMostOnce()).findByIdAndUserId(any(), any());
+        verify(financialTransactionModelMapper, atMostOnce()).mapFinancialTransactionEntityToFinancialTransactionDTO(
+                any(FinancialTransaction.class));
+        verify(financialTransactionCategoryRepository, atMostOnce()).findByIdAndUserId(any(), any());
+
+    }
+
+    @Test
     @DisplayName("Should throw an exception when category type doesn't match the category type")
     void CreateFinancialTransaction_TypeMismatchCategory_ThrowAppRuntimeException() {
         // given
@@ -81,7 +119,7 @@ class FinancialTransactionServiceImplTest {
         Wallet wallet = new Wallet();
         when(walletRepository.findByIdAndUserId(any(), any())).thenReturn(Optional.of(wallet));
         FinancialTransaction financialTransactionEntity = createFinancialTransactionEntity(ID_1L);
-        when(fTrepository.save(Mockito.any(FinancialTransaction.class))).thenReturn(financialTransactionEntity);
+        when(ftRepository.save(Mockito.any(FinancialTransaction.class))).thenReturn(financialTransactionEntity);
         FinancialTransactionDTO financialTransactionDTO = createFinancialTransactionDTO();
         when(financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(
                 any(FinancialTransaction.class))).thenReturn(financialTransactionDTO);
@@ -133,7 +171,7 @@ class FinancialTransactionServiceImplTest {
 
         FinancialTransaction financialTransactionEntity = createFinancialTransactionEntity(ID_1L);
         financialTransactionEntity.setDescription(EMPTY);
-        when(fTrepository.save(Mockito.any(FinancialTransaction.class))).thenReturn(financialTransactionEntity);
+        when(ftRepository.save(Mockito.any(FinancialTransaction.class))).thenReturn(financialTransactionEntity);
 
         FinancialTransactionDTO financialTransactionDTO = createFinancialTransactionDTO();
         financialTransactionDTO.setDescription(EMPTY);
@@ -152,7 +190,7 @@ class FinancialTransactionServiceImplTest {
         Assertions.assertAll(() -> assertEquals(EMPTY, financialTransactionDTO.getDescription()), () -> assertEquals(
                 financialTransactionDTO, result), () -> assertEquals(
                 financialTransactionDTO.getId(), result.getId()));
-        verify(fTrepository, atMostOnce()).save(any(FinancialTransaction.class));
+        verify(ftRepository, atMostOnce()).save(any(FinancialTransaction.class));
         verify(walletRepository, atMostOnce()).findByIdAndUserId(any(), any());
         verify(financialTransactionModelMapper, atMostOnce()).mapFinancialTransactionEntityToFinancialTransactionDTO(
                 any(FinancialTransaction.class));
@@ -160,43 +198,6 @@ class FinancialTransactionServiceImplTest {
 
     }
 
-
-    @Test
-    @DisplayName("Should return financial transaction with valid parameters")
-    void CreateFinancialTransaction_ValidParameters_ReturnFinancialTransactionDTO() {
-        // given
-        User user = createUserForTest();
-
-        FinancialTransactionCreateDTO financialTransactionCreateDTO = createFinancialTransactionCreateDTO();
-
-        Wallet wallet = new Wallet();
-        when(walletRepository.findByIdAndUserId(any(), any())).thenReturn(Optional.of(wallet));
-
-        FinancialTransaction financialTransactionEntity = createFinancialTransactionEntity(ID_1L);
-        when(fTrepository.save(Mockito.any(FinancialTransaction.class))).thenReturn(financialTransactionEntity);
-
-        FinancialTransactionDTO financialTransactionDTO = createFinancialTransactionDTO();
-        when(financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(
-                any(FinancialTransaction.class))).thenReturn(financialTransactionDTO);
-
-        FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(EXPENSE, user);
-        when(financialTransactionCategoryRepository.findByIdAndUserId(any(), any())).thenReturn(
-                Optional.ofNullable(financialTransactionCategory));
-
-        // when
-        FinancialTransactionDTO result = financialTransactionService.createFinancialTransaction(
-                financialTransactionCreateDTO, user.getId());
-
-        // then
-        Assertions.assertAll(() -> assertEquals(financialTransactionDTO, result), () -> assertEquals(
-                financialTransactionDTO.getId(), result.getId()));
-        verify(fTrepository, atMostOnce()).save(any(FinancialTransaction.class));
-        verify(walletRepository, atMostOnce()).findByIdAndUserId(any(), any());
-        verify(financialTransactionModelMapper, atMostOnce()).mapFinancialTransactionEntityToFinancialTransactionDTO(
-                any(FinancialTransaction.class));
-        verify(financialTransactionCategoryRepository, atMostOnce()).findByIdAndUserId(any(), any());
-
-    }
 
     public FinancialTransaction createFinancialTransactionEntity(Long financialTransactionId) {
         FinancialTransaction financialTransaction = new FinancialTransaction();
@@ -208,7 +209,7 @@ class FinancialTransactionServiceImplTest {
     }
 
     public FinancialTransactionCreateDTO createFinancialTransactionCreateDTO() {
-        return new FinancialTransactionCreateDTO(ID_1L, ONE, DESCRIPTION, EXPENSE,
+        return new FinancialTransactionCreateDTO(WALLET_ID_1L, ONE, DESCRIPTION, EXPENSE,
                 DATE_NOW, CATEGORY_ID);
     }
 

@@ -5,6 +5,7 @@ import com.example.trainingsapp.financialtransaction.api.FinancialTransactionRep
 import com.example.trainingsapp.financialtransaction.api.FinancialTransactionService;
 import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionCreateDTO;
 import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionDTO;
+import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionUpdateDTO;
 import com.example.trainingsapp.financialtransaction.api.model.FinancialTransaction;
 import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryRepository;
 import com.example.trainingsapp.financialtransaktioncategory.api.model.FinancialTransactionCategory;
@@ -12,10 +13,12 @@ import com.example.trainingsapp.general.exception.AppRuntimeException;
 import com.example.trainingsapp.general.exception.ErrorCode;
 import com.example.trainingsapp.wallet.api.WalletRepository;
 import com.example.trainingsapp.wallet.api.model.Wallet;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
 @Service
 public class FinancialTransactionServiceImpl implements FinancialTransactionService {
     @Autowired
@@ -50,6 +53,37 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(
                 savedFinancialTransaction);
 
+    }
+
+    @Override
+    @Transactional
+    public FinancialTransactionDTO updateFinancialTransaction(Long financialTransactionId,
+                                                              FinancialTransactionUpdateDTO financialTransactionUpdateDTO, Long userId) {
+        FinancialTransaction financialTransaction = financialTransactionRepository.findById(financialTransactionId)
+                .orElseThrow(() -> new AppRuntimeException(ErrorCode.FT001, String.format(
+                        "Financial transaction with this id: %d not exist", financialTransactionId)));
+
+        if (financialTransactionUpdateDTO.getCategoryId() != null) {
+            FinancialTransactionCategory financialTransactionCategory = findFinancialTransactionCategory(
+                    financialTransactionUpdateDTO.getCategoryId(), userId);
+
+            if (financialTransactionUpdateDTO.getType() != financialTransactionCategory.getType()) {
+                throw new AppRuntimeException(ErrorCode.FT002, String.format(
+                        "Financial transaction type: %s does not match financial category type: %s",
+                        financialTransactionUpdateDTO.getType(), financialTransactionCategory.getType()));
+            }
+
+            financialTransaction.setFinancialTransactionCategory(financialTransactionCategory);
+        }
+        financialTransaction.setAmount(financialTransactionUpdateDTO.getAmount());
+        financialTransaction.setDescription(financialTransactionUpdateDTO.getDescription());
+        financialTransaction.setDate(financialTransactionUpdateDTO.getDate());
+        financialTransaction.setType(financialTransactionUpdateDTO.getType());
+
+        FinancialTransaction updatedFinancialTransaction = financialTransactionRepository.save(financialTransaction);
+
+        return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(
+                updatedFinancialTransaction);
     }
 
     private FinancialTransactionCategory findFinancialTransactionCategory(Long categoryId, Long userId) {
