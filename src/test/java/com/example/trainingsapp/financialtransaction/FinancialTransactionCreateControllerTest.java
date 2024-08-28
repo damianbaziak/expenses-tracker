@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.Optional;
@@ -32,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = FinancialTransactionController.class)
 @AutoConfigureMockMvc(addFilters = false)
-class FinancialTransactionCreateControllerTest {
+public class FinancialTransactionCreateControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -40,11 +41,11 @@ class FinancialTransactionCreateControllerTest {
     @MockBean
     private UserRepository userRepository;
     @Autowired
-    ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
     @MockBean
-    JwtAuthorizationFilter jwtAuthorizationFilter;
+    private JwtAuthorizationFilter jwtAuthorizationFilter;
     @MockBean
-    MyUserDetailsService myUserDetailsService;
+    private MyUserDetailsService myUserDetailsService;
 
     private static final Long ID_1L = 1L;
     private static final Long USER_ID_1L = 1L;
@@ -52,17 +53,18 @@ class FinancialTransactionCreateControllerTest {
     private static final String DESCRIPTION = "Example description";
     private static final Long CATEGORY_ID = 1L;
     private static final Instant DATE_NOW = Instant.now();
+    private static final BigDecimal negativeAmount = BigDecimal.valueOf(-100.00);
+    private static final BigDecimal wrongFormatAmount = BigDecimal.valueOf(98.3974932);
     private static final Long WALLET_ID_1 = 1L;
 
 
+    // TEST FAILS. TEST RETURNS STATUS CREATED - 201 BUT DOES NOT RETURN FINANCIAL STATUS AS A BODY.
     @Test
     @DisplayName("Should return financial transaction and status 201-Created")
-    void createFinancialTransaction_transactionCreated_shouldReturnFinancialTransactionAndStatusCreated() throws Exception {
+    void createFinancialTransaction_validData_shouldReturnFinancialTransactionAndStatusCreated() throws Exception {
         // given
+        User user = createUserForTest();
         FinancialTransactionCreateDTO financialTransactionCreateDTO = createFinancialTransactionCreateDTO();
-        User user = new User();
-        user.setId(USER_ID_1L);
-        user.setEmail(USER_EMAIL);
         FinancialTransactionDTO financialTransactionDTO = createFinancialTransactionDTO();
 
         when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
@@ -76,7 +78,6 @@ class FinancialTransactionCreateControllerTest {
                 .characterEncoding("UTF-8")
                 .principal(() -> USER_EMAIL));
 
-
         // then
         resultActions.andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", CoreMatchers.is(ID_1L.intValue())))
@@ -84,12 +85,85 @@ class FinancialTransactionCreateControllerTest {
                 .andExpect(jsonPath("$.type", CoreMatchers.is(EXPENSE)));
     }
 
-    public FinancialTransactionCreateDTO createFinancialTransactionCreateDTO() {
+    @Test
+    @DisplayName("Should return bad request status when financialTransactionType is null")
+    void createFinancialTransaction_FinancialTransactionTypeNull_shouldReturnStatusBadRequest() throws Exception {
+        // given
+        FinancialTransactionCreateDTO financialTransactionCreateDTO = createFinancialTransactionCreateDTO();
+        financialTransactionCreateDTO.setType(null);
+        User user = createUserForTest();
+        FinancialTransactionDTO financialTransactionDTO = createFinancialTransactionDTO();
+
+        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+
+        // when
+        ResultActions resultActions = mockMvc.perform(post("/api/transactions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(financialTransactionCreateDTO)))
+                .characterEncoding("UTF-8")
+                .principal(() -> USER_EMAIL));
+
+        // then
+        resultActions.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Should return bad request status when amount is negative")
+    void createFinancialTransaction_negativeAmount_shouldReturnStatusBadRequest() throws Exception {
+        // given
+        FinancialTransactionCreateDTO financialTransactionCreateDTO = createFinancialTransactionCreateDTO();
+        financialTransactionCreateDTO.setAmount(negativeAmount);
+        User user = createUserForTest();
+        FinancialTransactionDTO financialTransactionDTO = createFinancialTransactionDTO();
+
+        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+
+        // when
+        ResultActions resultActions = mockMvc.perform(post("/api/transactions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(financialTransactionCreateDTO)))
+                .characterEncoding("UTF-8")
+                .principal(() -> USER_EMAIL));
+
+        // then
+        resultActions.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Should return bad request status when amount format is wrong")
+    void createFinancialTransaction_wrongFormatAmount_shouldReturnStatusBadRequest() throws Exception {
+        // given
+        FinancialTransactionCreateDTO financialTransactionCreateDTO = createFinancialTransactionCreateDTO();
+        financialTransactionCreateDTO.setAmount(wrongFormatAmount);
+        User user = createUserForTest();
+        FinancialTransactionDTO financialTransactionDTO = createFinancialTransactionDTO();
+
+        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+
+        // when
+        ResultActions resultActions = mockMvc.perform(post("/api/transactions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(financialTransactionCreateDTO)))
+                .characterEncoding("UTF-8")
+                .principal(() -> USER_EMAIL));
+
+        // then
+        resultActions.andExpect(status().isBadRequest());
+    }
+
+    private FinancialTransactionCreateDTO createFinancialTransactionCreateDTO() {
         return new FinancialTransactionCreateDTO(WALLET_ID_1, ONE, DESCRIPTION, EXPENSE,
                 DATE_NOW, CATEGORY_ID);
     }
 
-    public FinancialTransactionDTO createFinancialTransactionDTO() {
+    private FinancialTransactionDTO createFinancialTransactionDTO() {
         return new FinancialTransactionDTO(ID_1L, ONE, DESCRIPTION, EXPENSE, DATE_NOW, CATEGORY_ID);
+    }
+
+    private User createUserForTest() {
+        return User.builder()
+                .id(USER_ID_1L)
+                .email(USER_EMAIL)
+                .build();
     }
 }
