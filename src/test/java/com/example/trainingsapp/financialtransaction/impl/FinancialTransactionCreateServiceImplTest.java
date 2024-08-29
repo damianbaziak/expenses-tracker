@@ -1,5 +1,6 @@
 package com.example.trainingsapp.financialtransaction.impl;
 
+import com.example.trainingsapp.TestUtils;
 import com.example.trainingsapp.financialtransaction.api.FinancialTransactionModelMapper;
 import com.example.trainingsapp.financialtransaction.api.FinancialTransactionRepository;
 import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionCreateDTO;
@@ -74,7 +75,7 @@ class FinancialTransactionCreateServiceImplTest {
     @DisplayName("Should return financial transaction with valid parameters")
     void CreateFinancialTransaction_ValidParameters_ReturnFinancialTransactionDTO() {
         // given
-        User user = createUserForTest();
+        User user = TestUtils.createUserForTest();
 
         FinancialTransactionCreateDTO financialTransactionCreateDTO = createFinancialTransactionCreateDTO();
 
@@ -112,7 +113,7 @@ class FinancialTransactionCreateServiceImplTest {
     @DisplayName("Should throw an exception when category type doesn't match the category type")
     void CreateFinancialTransaction_TypeMismatchCategory_ThrowAppRuntimeException() {
         // given
-        User user = createUserForTest();
+        User user = TestUtils.createUserForTest();
 
         FinancialTransactionCreateDTO financialTransactionCreateDTO = createFinancialTransactionCreateDTO();
 
@@ -134,6 +135,7 @@ class FinancialTransactionCreateServiceImplTest {
 
         // then
         assertEquals(ErrorCode.FT002.getBusinessStatusCode(), exception.getStatusCode());
+        assertEquals(ErrorCode.FT002.getBusinessMessage(), exception.getMessage());
 
     }
 
@@ -141,7 +143,7 @@ class FinancialTransactionCreateServiceImplTest {
     @DisplayName("Shouldn't create financial transaction without existing wallet and throw an exception")
     void CreateFinancialTransaction_WalletNotExist_ThrowAppRuntimeException() {
         // given
-        User user = createUserForTest();
+        User user = TestUtils.createUserForTest();
 
         FinancialTransactionCreateDTO financialTransactionCreateDTO = createFinancialTransactionCreateDTO();
 
@@ -161,7 +163,7 @@ class FinancialTransactionCreateServiceImplTest {
     @DisplayName("Should create financial transaction with empty description")
     void CreateFinancialTransaction_EmptyDescription_ReturnFinancialTransactionDTOWithEmptyDescription() {
         // given
-        User user = createUserForTest();
+        User user = TestUtils.createUserForTest();
 
         FinancialTransactionCreateDTO financialTransactionCreateDTO = createFinancialTransactionCreateDTO();
         financialTransactionCreateDTO.setDescription(EMPTY);
@@ -223,10 +225,5 @@ class FinancialTransactionCreateServiceImplTest {
         return new FinancialTransactionCategory(ID_1L, "Example Category Name", type, null, DATE_NOW, user);
 
     }
-
-    private User createUserForTest() {
-        return User.builder().id(1L).build();
-    }
-
 
 }

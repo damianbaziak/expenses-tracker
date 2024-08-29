@@ -1,5 +1,6 @@
 package com.example.trainingsapp.financialtransaction;
 
+import com.example.trainingsapp.TestUtils;
 import com.example.trainingsapp.authorization.JwtAuthorizationFilter;
 import com.example.trainingsapp.authorization.api.MyUserDetailsService;
 import com.example.trainingsapp.financialtransaction.api.FinancialTransactionService;
@@ -24,6 +25,7 @@ import java.time.Instant;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.example.trainingsapp.TestUtils.createUserForTest;
 import static com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType.EXPENSE;
 import static java.math.BigDecimal.ONE;
 import static org.mockito.Mockito.when;
@@ -63,11 +65,12 @@ public class FinancialTransactionCreateControllerTest {
     @DisplayName("Should return financial transaction and status 201-Created")
     void createFinancialTransaction_validData_shouldReturnFinancialTransactionAndStatusCreated() throws Exception {
         // given
-        User user = createUserForTest();
+        User user = TestUtils.createUserForTest();
         FinancialTransactionCreateDTO financialTransactionCreateDTO = createFinancialTransactionCreateDTO();
         FinancialTransactionDTO financialTransactionDTO = createFinancialTransactionDTO();
 
         when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+
         when(financialTransactionService.createFinancialTransaction(financialTransactionCreateDTO, USER_ID_1L))
                 .thenReturn(financialTransactionDTO);
 
@@ -91,7 +94,7 @@ public class FinancialTransactionCreateControllerTest {
         // given
         FinancialTransactionCreateDTO financialTransactionCreateDTO = createFinancialTransactionCreateDTO();
         financialTransactionCreateDTO.setType(null);
-        User user = createUserForTest();
+        User user = TestUtils.createUserForTest();
         FinancialTransactionDTO financialTransactionDTO = createFinancialTransactionDTO();
 
         when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
@@ -113,7 +116,7 @@ public class FinancialTransactionCreateControllerTest {
         // given
         FinancialTransactionCreateDTO financialTransactionCreateDTO = createFinancialTransactionCreateDTO();
         financialTransactionCreateDTO.setAmount(negativeAmount);
-        User user = createUserForTest();
+        User user = TestUtils.createUserForTest();
         FinancialTransactionDTO financialTransactionDTO = createFinancialTransactionDTO();
 
         when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
@@ -135,7 +138,7 @@ public class FinancialTransactionCreateControllerTest {
         // given
         FinancialTransactionCreateDTO financialTransactionCreateDTO = createFinancialTransactionCreateDTO();
         financialTransactionCreateDTO.setAmount(wrongFormatAmount);
-        User user = createUserForTest();
+        User user = TestUtils.createUserForTest();
         FinancialTransactionDTO financialTransactionDTO = createFinancialTransactionDTO();
 
         when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
@@ -160,10 +163,4 @@ public class FinancialTransactionCreateControllerTest {
         return new FinancialTransactionDTO(ID_1L, ONE, DESCRIPTION, EXPENSE, DATE_NOW, CATEGORY_ID);
     }
 
-    private User createUserForTest() {
-        return User.builder()
-                .id(USER_ID_1L)
-                .email(USER_EMAIL)
-                .build();
-    }
 }
