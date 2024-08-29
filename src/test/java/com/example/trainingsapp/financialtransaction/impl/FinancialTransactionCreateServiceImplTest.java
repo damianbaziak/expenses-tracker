@@ -30,7 +30,6 @@ import java.util.Optional;
 import static com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType.EXPENSE;
 import static com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType.INCOME;
 import static java.math.BigDecimal.ONE;
-import static java.math.BigDecimal.TWO;
 import static org.apache.logging.log4j.util.Strings.EMPTY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -48,12 +47,12 @@ import static org.mockito.Mockito.*;
 // The extension also supports other Mockito annotations like @Captor (for capturing method arguments) and @Spy (for partial mocking of real objects).
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class FinancialTransactionServiceImplTest {
+class FinancialTransactionCreateServiceImplTest {
     private static final Long ID_1L = 1L;
     private static final String DESCRIPTION = "Description";
     private static final Instant DATE_NOW = Instant.now();
     private static final Long CATEGORY_ID = 1L;
-    private static final Long WALLET_ID_1L = 1L ;
+    private static final Long WALLET_ID_1L = 1L;
 
 
     @Mock
@@ -98,8 +97,9 @@ class FinancialTransactionServiceImplTest {
                 financialTransactionCreateDTO, user.getId());
 
         // then
-        Assertions.assertAll(() -> assertEquals(financialTransactionDTO, result), () -> assertEquals(
-                financialTransactionDTO.getId(), result.getId()));
+        Assertions.assertAll(
+                () -> assertEquals(financialTransactionDTO, result),
+                () -> assertEquals(financialTransactionDTO.getId(), result.getId()));
         verify(ftRepository, atMostOnce()).save(any(FinancialTransaction.class));
         verify(walletRepository, atMostOnce()).findByIdAndUserId(any(), any());
         verify(financialTransactionModelMapper, atMostOnce()).mapFinancialTransactionEntityToFinancialTransactionDTO(
@@ -187,9 +187,10 @@ class FinancialTransactionServiceImplTest {
                 financialTransactionCreateDTO, user.getId());
 
         // then
-        Assertions.assertAll(() -> assertEquals(EMPTY, financialTransactionDTO.getDescription()), () -> assertEquals(
-                financialTransactionDTO, result), () -> assertEquals(
-                financialTransactionDTO.getId(), result.getId()));
+        Assertions.assertAll(
+                () -> assertEquals(EMPTY, financialTransactionDTO.getDescription()),
+                () -> assertEquals(financialTransactionDTO, result),
+                () -> assertEquals(financialTransactionDTO.getId(), result.getId()));
         verify(ftRepository, atMostOnce()).save(any(FinancialTransaction.class));
         verify(walletRepository, atMostOnce()).findByIdAndUserId(any(), any());
         verify(financialTransactionModelMapper, atMostOnce()).mapFinancialTransactionEntityToFinancialTransactionDTO(
@@ -199,30 +200,31 @@ class FinancialTransactionServiceImplTest {
     }
 
 
-    public FinancialTransaction createFinancialTransactionEntity(Long financialTransactionId) {
+    private FinancialTransaction createFinancialTransactionEntity(Long financialTransactionId) {
         FinancialTransaction financialTransaction = new FinancialTransaction();
         financialTransaction.setId(financialTransactionId);
+        financialTransaction.setAmount(ONE);
         financialTransaction.setType(INCOME);
-        financialTransaction.setAmount(TWO);
+        financialTransaction.setDescription(DESCRIPTION);
         financialTransaction.setDate(Instant.parse("2024-01-01T00:00:00Z"));
         return financialTransaction;
     }
 
-    public FinancialTransactionCreateDTO createFinancialTransactionCreateDTO() {
+    private FinancialTransactionCreateDTO createFinancialTransactionCreateDTO() {
         return new FinancialTransactionCreateDTO(WALLET_ID_1L, ONE, DESCRIPTION, EXPENSE,
                 DATE_NOW, CATEGORY_ID);
     }
 
-    public FinancialTransactionDTO createFinancialTransactionDTO() {
+    private FinancialTransactionDTO createFinancialTransactionDTO() {
         return new FinancialTransactionDTO(ID_1L, ONE, DESCRIPTION, EXPENSE, DATE_NOW, CATEGORY_ID);
     }
 
-    public FinancialTransactionCategory createFinancialTransactionCategory(FinancialTransactionType type, User user) {
+    private FinancialTransactionCategory createFinancialTransactionCategory(FinancialTransactionType type, User user) {
         return new FinancialTransactionCategory(ID_1L, "Example Category Name", type, null, DATE_NOW, user);
 
     }
 
-    public User createUserForTest() {
+    private User createUserForTest() {
         return User.builder().id(1L).build();
     }
 

@@ -2,7 +2,6 @@ package com.example.trainingsapp.financialtransaction.impl;
 
 import com.example.trainingsapp.financialtransaction.api.FinancialTransactionModelMapper;
 import com.example.trainingsapp.financialtransaction.api.FinancialTransactionRepository;
-import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionCreateDTO;
 import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionDTO;
 import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionUpdateDTO;
 import com.example.trainingsapp.financialtransaction.api.model.FinancialTransaction;
@@ -10,7 +9,6 @@ import com.example.trainingsapp.financialtransaction.api.model.FinancialTransact
 import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryRepository;
 import com.example.trainingsapp.financialtransaktioncategory.api.model.FinancialTransactionCategory;
 import com.example.trainingsapp.user.api.model.User;
-import com.example.trainingsapp.wallet.api.model.Wallet;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,77 +42,77 @@ public class FinancialTransactionUpdateServiceImplTest {
     private static final Long NEW_CATEGORY_ID = 2L;
 
     @Mock
-    FinancialTransactionRepository ftRepository;
+    private FinancialTransactionRepository ftRepository;
 
     @Mock
-    FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
+    private FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
 
     @Mock
-    FinancialTransactionModelMapper financialTransactionModelMapper;
+    private FinancialTransactionModelMapper financialTransactionModelMapper;
 
     @InjectMocks
-    FinancialTransactionServiceImpl financialTransactionService;
+    private FinancialTransactionServiceImpl financialTransactionService;
 
 
     @Test
-    @DisplayName("Should return financial transaction DTO with updated parameters and status OK")
+    @DisplayName("Should return financial transaction with updated parameters and status OK")
     void updateFinancialTransaction_ValidParameters_returnFinancialTransactionDTO() {
         // given
         User user = createUserForTest();
-
         FinancialTransactionUpdateDTO financialTransactionUpdateDTO = createFinancialTransactionUpdateDTO();
 
         FinancialTransaction financialTransactionEntity = createFinancialTransactionEntity(ID_1L);
-        when(ftRepository.save(Mockito.any(FinancialTransaction.class))).thenReturn(financialTransactionEntity);
-
-        FinancialTransactionDTO financialTransactionDTO = createFinancialTransactionDTO();
-        when(financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(
-                any(FinancialTransaction.class))).thenReturn(financialTransactionDTO);
+        Long financialTransactionId = financialTransactionEntity.getId();
+        when(ftRepository.findByIdAndWalletUserId(financialTransactionId, user.getId())).thenReturn(
+                Optional.of(financialTransactionEntity));
 
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(EXPENSE, user);
         when(financialTransactionCategoryRepository.findByIdAndUserId(any(), any())).thenReturn(
                 Optional.ofNullable(financialTransactionCategory));
 
+        FinancialTransactionDTO financialTransactionDTO = new FinancialTransactionDTO(
+                ID_1L, TEN, NEW_DESCRIPTION, INCOME, NEW_DATE, NEW_CATEGORY_ID);
+        when(financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(
+                any(FinancialTransaction.class))).thenReturn(financialTransactionDTO);
+
         // when
-        FinancialTransactionDTO result = financialTransactionService.createFinancialTransaction(
-                financialTransactionCreateDTO, user.getId());
+        FinancialTransactionDTO result = financialTransactionService.updateFinancialTransaction
+                (financialTransactionId, financialTransactionUpdateDTO, user.getId());
 
         // then
-        Assertions.assertAll(() -> assertEquals(financialTransactionDTO, result), () -> assertEquals(
-                financialTransactionDTO.getId(), result.getId()));
-        verify(fTrepository, atMostOnce()).save(any(FinancialTransaction.class));
-        verify(walletRepository, atMostOnce()).findByIdAndUserId(any(), any());
+        Assertions.assertAll(
+                () -> assertEquals(financialTransactionDTO, result),
+                () -> assertEquals(financialTransactionDTO.getId(), result.getId()),
+                () -> assertEquals(financialTransactionDTO.getAmount(), result.getAmount()));
+        verify(ftRepository, atMostOnce()).save(any(FinancialTransaction.class));
         verify(financialTransactionModelMapper, atMostOnce()).mapFinancialTransactionEntityToFinancialTransactionDTO(
                 any(FinancialTransaction.class));
         verify(financialTransactionCategoryRepository, atMostOnce()).findByIdAndUserId(any(), any());
 
     }
 
-    public FinancialTransaction createFinancialTransactionEntity(Long financialTransactionId) {
+    private FinancialTransaction createFinancialTransactionEntity(Long financialTransactionId) {
         FinancialTransaction financialTransaction = new FinancialTransaction();
         financialTransaction.setId(financialTransactionId);
-        financialTransaction.setType(INCOME);
-        financialTransaction.setAmount(TWO);
+        financialTransaction.setAmount(ONE);
+        financialTransaction.setDescription(DESCRIPTION);
+        financialTransaction.setType(EXPENSE);
         financialTransaction.setDate(Instant.now());
         return financialTransaction;
     }
 
 
-    public FinancialTransactionUpdateDTO createFinancialTransactionUpdateDTO() {
-        return new FinancialTransactionUpdateDTO(TEN, NEW_DESCRIPTION, INCOME,
+    private FinancialTransactionUpdateDTO createFinancialTransactionUpdateDTO() {
+        return new FinancialTransactionUpdateDTO(TEN, NEW_DESCRIPTION, EXPENSE,
                 NEW_DATE, NEW_CATEGORY_ID);
     }
 
-    public FinancialTransactionDTO createFinancialTransactionDTO() {
-        return new FinancialTransactionDTO(ID_1L, ONE, DESCRIPTION, EXPENSE, DATE_NOW, CATEGORY_ID);
-    }
-
-    public FinancialTransactionCategory createFinancialTransactionCategory(FinancialTransactionType type, User user) {
+    private FinancialTransactionCategory createFinancialTransactionCategory(FinancialTransactionType type, User user) {
         return new FinancialTransactionCategory(ID_1L, "Example Category Name", type, null, DATE_NOW, user);
 
     }
 
-    public User createUserForTest() {
+    private User createUserForTest() {
         return User.builder().id(1L).build();
     }
 }

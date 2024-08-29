@@ -28,10 +28,10 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     private WalletRepository walletRepository;
 
     @Autowired
-    FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
+    private FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
 
     @Autowired
-    FinancialTransactionModelMapper financialTransactionModelMapper;
+    private FinancialTransactionModelMapper financialTransactionModelMapper;
 
     @Override
     public FinancialTransactionDTO createFinancialTransaction(
@@ -57,11 +57,12 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
 
     @Override
     @Transactional
-    public FinancialTransactionDTO updateFinancialTransaction(Long financialTransactionId,
-                                                              FinancialTransactionUpdateDTO financialTransactionUpdateDTO, Long userId) {
-        FinancialTransaction financialTransaction = financialTransactionRepository.findById(financialTransactionId)
-                .orElseThrow(() -> new AppRuntimeException(ErrorCode.FT001, String.format(
-                        "Financial transaction with this id: %d not exist", financialTransactionId)));
+    public FinancialTransactionDTO updateFinancialTransaction(
+            Long financialTransactionId, FinancialTransactionUpdateDTO financialTransactionUpdateDTO, Long userId) {
+
+        FinancialTransaction financialTransaction = financialTransactionRepository.findByIdAndWalletUserId(
+                financialTransactionId, userId).orElseThrow(() -> new AppRuntimeException(ErrorCode.FT001, String.format(
+                "Financial transaction with this id: %d not exist", financialTransactionId)));
 
         if (financialTransactionUpdateDTO.getCategoryId() != null) {
             FinancialTransactionCategory financialTransactionCategory = findFinancialTransactionCategory(
@@ -80,10 +81,10 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         financialTransaction.setDate(financialTransactionUpdateDTO.getDate());
         financialTransaction.setType(financialTransactionUpdateDTO.getType());
 
-        FinancialTransaction updatedFinancialTransaction = financialTransactionRepository.save(financialTransaction);
+        //FinancialTransaction updatedFinancialTransaction = financialTransactionRepository.save(financialTransaction);
 
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(
-                updatedFinancialTransaction);
+                financialTransaction);
     }
 
     private FinancialTransactionCategory findFinancialTransactionCategory(Long categoryId, Long userId) {
