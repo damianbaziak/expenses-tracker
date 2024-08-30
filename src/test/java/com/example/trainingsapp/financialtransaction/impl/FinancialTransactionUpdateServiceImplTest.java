@@ -41,7 +41,7 @@ public class FinancialTransactionUpdateServiceImplTest {
     private static final String DESCRIPTION = "Description";
     private static final String NEW_DESCRIPTION = "Updated description";
     private static final Instant DATE_NOW = Instant.now();
-    private static final Instant NEW_DATE = Instant.parse("2030-12-22T14:30:00.500Z");
+    private static final Instant NEW_DATE = Instant.parse("2024-12-22T14:30:00.500Z");
     private static final Long NEW_CATEGORY_ID = 2L;
 
     @Mock
@@ -52,9 +52,6 @@ public class FinancialTransactionUpdateServiceImplTest {
 
     @Mock
     private FinancialTransactionModelMapper financialTransactionModelMapper;
-
-    @Mock
-    private ErrorCode errorCode;
 
     @InjectMocks
     private FinancialTransactionServiceImpl financialTransactionService;
@@ -67,10 +64,9 @@ public class FinancialTransactionUpdateServiceImplTest {
         User user = TestUtils.createUserForTest();
         FinancialTransactionUpdateDTO financialTransactionUpdateDTO = createFinancialTransactionUpdateDTO();
 
-        FinancialTransaction financialTransactionEntity = createFinancialTransactionEntity(ID_1L);
-        Long financialTransactionId = financialTransactionEntity.getId();
-        when(ftRepository.findByIdAndWalletUserId(financialTransactionId, user.getId())).thenReturn(
-                Optional.of(financialTransactionEntity));
+        FinancialTransaction financialTransaction = createEntityFinancialTransaction(ID_1L);
+        when(ftRepository.findByIdAndWalletUserId(ID_1L, user.getId())).thenReturn(
+                Optional.of(financialTransaction));
 
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(EXPENSE, user);
         when(financialTransactionCategoryRepository.findByIdAndUserId(any(), any())).thenReturn(
@@ -79,21 +75,21 @@ public class FinancialTransactionUpdateServiceImplTest {
         FinancialTransactionDTO financialTransactionDTO = new FinancialTransactionDTO(
                 ID_1L, TEN, NEW_DESCRIPTION, INCOME, NEW_DATE, NEW_CATEGORY_ID);
         when(financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(
-                any(FinancialTransaction.class))).thenReturn(financialTransactionDTO);
+                financialTransaction)).thenReturn(financialTransactionDTO);
 
         // when
         FinancialTransactionDTO result = financialTransactionService.updateFinancialTransaction
-                (financialTransactionId, financialTransactionUpdateDTO, user.getId());
+                (ID_1L, financialTransactionUpdateDTO, user.getId());
 
         // then
         Assertions.assertAll(
                 () -> assertEquals(financialTransactionDTO, result),
                 () -> assertEquals(financialTransactionDTO.getId(), result.getId()),
                 () -> assertEquals(financialTransactionDTO.getAmount(), result.getAmount()));
-        verify(ftRepository, atMostOnce()).save(any(FinancialTransaction.class));
-        verify(financialTransactionModelMapper, atMostOnce()).mapFinancialTransactionEntityToFinancialTransactionDTO(
-                any(FinancialTransaction.class));
+        verify(ftRepository, atMostOnce()).save(any());
         verify(financialTransactionCategoryRepository, atMostOnce()).findByIdAndUserId(any(), any());
+        verify(financialTransactionModelMapper, atMostOnce())
+                .mapFinancialTransactionEntityToFinancialTransactionDTO(any());
 
     }
 
@@ -114,20 +110,19 @@ public class FinancialTransactionUpdateServiceImplTest {
         // then
         assertEquals(ErrorCode.FT001.getBusinessMessage(), result.getMessage());
         assertEquals(ErrorCode.FT001.getBusinessStatusCode(), result.getStatusCode());
-        verify(financialTransactionModelMapper, never()).mapFinancialTransactionEntityToFinancialTransactionDTO(
-                any(FinancialTransaction.class));
+        verify(financialTransactionModelMapper, never()).mapFinancialTransactionEntityToFinancialTransactionDTO(any());
         verify(financialTransactionCategoryRepository, never()).findByIdAndUserId(any(), any());
 
     }
 
 
-    private FinancialTransaction createFinancialTransactionEntity(Long financialTransactionId) {
+    private FinancialTransaction createEntityFinancialTransaction(Long financialTransactionId) {
         FinancialTransaction financialTransaction = new FinancialTransaction();
         financialTransaction.setId(financialTransactionId);
         financialTransaction.setAmount(ONE);
         financialTransaction.setDescription(DESCRIPTION);
-        financialTransaction.setType(EXPENSE);
-        financialTransaction.setDate(Instant.now());
+        financialTransaction.setType(INCOME);
+        financialTransaction.setDate(DATE_NOW);
         return financialTransaction;
     }
 

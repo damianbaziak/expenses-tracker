@@ -206,9 +206,9 @@ class FinancialTransactionCreateServiceImplTest {
         FinancialTransaction financialTransaction = new FinancialTransaction();
         financialTransaction.setId(financialTransactionId);
         financialTransaction.setAmount(ONE);
-        financialTransaction.setType(INCOME);
+        financialTransaction.setType(EXPENSE);
         financialTransaction.setDescription(DESCRIPTION);
-        financialTransaction.setDate(Instant.parse("2024-01-01T00:00:00Z"));
+        financialTransaction.setDate(DATE_NOW);
         return financialTransaction;
     }
 

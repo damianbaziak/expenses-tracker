@@ -36,10 +36,10 @@ public class FinancialTransactionController {
         }
         Long userID = user.get().getId();
 
-        FinancialTransactionDTO createdTransaction =
+        FinancialTransactionDTO financialTransactionDTO =
                 financialTransactionService.createFinancialTransaction(financialTransactionCreateDTO, userID);
 
-        return new ResponseEntity<>(createdTransaction, HttpStatus.CREATED);
+        return new ResponseEntity<>(financialTransactionDTO, HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
@@ -52,10 +52,10 @@ public class FinancialTransactionController {
         }
         Long userID = user.get().getId();
 
-        FinancialTransactionDTO updatedTransaction = financialTransactionService.updateFinancialTransaction(
+        FinancialTransactionDTO financialTransactionDTO = financialTransactionService.updateFinancialTransaction(
                         id, financialTransactionUpdateDTO, userID);
 
-        return new ResponseEntity<>(updatedTransaction, HttpStatus.OK);
+        return new ResponseEntity<>(financialTransactionDTO, HttpStatus.OK);
 
     }
 

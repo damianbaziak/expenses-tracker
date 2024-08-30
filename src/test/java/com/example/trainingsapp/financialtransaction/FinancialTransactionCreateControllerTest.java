@@ -25,7 +25,6 @@ import java.time.Instant;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.example.trainingsapp.TestUtils.createUserForTest;
 import static com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType.EXPENSE;
 import static java.math.BigDecimal.ONE;
 import static org.mockito.Mockito.when;
@@ -54,13 +53,12 @@ public class FinancialTransactionCreateControllerTest {
     private static final String USER_EMAIL = "user@example@email.com";
     private static final String DESCRIPTION = "Example description";
     private static final Long CATEGORY_ID = 1L;
-    private static final Instant DATE_NOW = Instant.now();
+    private static final Instant DATE = Instant.parse("2024-12-22T14:30:00.500Z");
     private static final BigDecimal negativeAmount = BigDecimal.valueOf(-100.00);
-    private static final BigDecimal wrongFormatAmount = BigDecimal.valueOf(98.3974932);
+    private static final BigDecimal invalidAmountFormat = BigDecimal.valueOf(98.3974932);
     private static final Long WALLET_ID_1 = 1L;
 
 
-    // TEST FAILS. TEST RETURNS STATUS CREATED - 201 BUT DOES NOT RETURN FINANCIAL STATUS AS A BODY.
     @Test
     @DisplayName("Should return financial transaction and status 201-Created")
     void createFinancialTransaction_validData_shouldReturnFinancialTransactionAndStatusCreated() throws Exception {
@@ -85,7 +83,7 @@ public class FinancialTransactionCreateControllerTest {
         resultActions.andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", CoreMatchers.is(ID_1L.intValue())))
                 .andExpect(jsonPath("$.description", CoreMatchers.is(DESCRIPTION)))
-                .andExpect(jsonPath("$.type", CoreMatchers.is(EXPENSE)));
+                .andExpect(jsonPath("$.type", CoreMatchers.is(EXPENSE.name())));
     }
 
     @Test
@@ -95,7 +93,6 @@ public class FinancialTransactionCreateControllerTest {
         FinancialTransactionCreateDTO financialTransactionCreateDTO = createFinancialTransactionCreateDTO();
         financialTransactionCreateDTO.setType(null);
         User user = TestUtils.createUserForTest();
-        FinancialTransactionDTO financialTransactionDTO = createFinancialTransactionDTO();
 
         when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
 
@@ -117,7 +114,6 @@ public class FinancialTransactionCreateControllerTest {
         FinancialTransactionCreateDTO financialTransactionCreateDTO = createFinancialTransactionCreateDTO();
         financialTransactionCreateDTO.setAmount(negativeAmount);
         User user = TestUtils.createUserForTest();
-        FinancialTransactionDTO financialTransactionDTO = createFinancialTransactionDTO();
 
         when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
 
@@ -133,13 +129,12 @@ public class FinancialTransactionCreateControllerTest {
     }
 
     @Test
-    @DisplayName("Should return bad request status when amount format is wrong")
-    void createFinancialTransaction_wrongFormatAmount_shouldReturnStatusBadRequest() throws Exception {
+    @DisplayName("Should return bad request status when the amount format is invalid")
+    void createFinancialTransaction_invalidAmountFormat_shouldReturnStatusBadRequest() throws Exception {
         // given
         FinancialTransactionCreateDTO financialTransactionCreateDTO = createFinancialTransactionCreateDTO();
-        financialTransactionCreateDTO.setAmount(wrongFormatAmount);
+        financialTransactionCreateDTO.setAmount(invalidAmountFormat);
         User user = TestUtils.createUserForTest();
-        FinancialTransactionDTO financialTransactionDTO = createFinancialTransactionDTO();
 
         when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
 
@@ -156,11 +151,11 @@ public class FinancialTransactionCreateControllerTest {
 
     private FinancialTransactionCreateDTO createFinancialTransactionCreateDTO() {
         return new FinancialTransactionCreateDTO(WALLET_ID_1, ONE, DESCRIPTION, EXPENSE,
-                DATE_NOW, CATEGORY_ID);
+                DATE, CATEGORY_ID);
     }
 
     private FinancialTransactionDTO createFinancialTransactionDTO() {
-        return new FinancialTransactionDTO(ID_1L, ONE, DESCRIPTION, EXPENSE, DATE_NOW, CATEGORY_ID);
+        return new FinancialTransactionDTO(ID_1L, ONE, DESCRIPTION, EXPENSE, DATE, CATEGORY_ID);
     }
 
 }
