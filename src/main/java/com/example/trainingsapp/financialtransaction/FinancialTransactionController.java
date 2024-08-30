@@ -15,7 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/transactions")
 public class FinancialTransactionController {
@@ -42,9 +44,29 @@ public class FinancialTransactionController {
         return new ResponseEntity<>(financialTransactionDTO, HttpStatus.CREATED);
     }
 
+    @GetMapping()
+    public ResponseEntity<List<FinancialTransactionDTO>> getFinancialTransactionsByWalletId(
+            @RequestParam @Min(1) @NotNull Long walletId, Principal principal) {
+        String email = principal.getName();
+        Optional<User> user = userRepository.findByEmail(email);
+        if (!user.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        Long userID = user.get().getId();
+
+        List<FinancialTransactionDTO> financialTransactionDTOS = financialTransactionService
+                .getFinancialTransactionsByWalletId(walletId, userID);
+
+        return new ResponseEntity<>(financialTransactionDTOS, HttpStatus.OK);
+
+
+    }
+
+
     @PatchMapping("/{id}")
-    public ResponseEntity<FinancialTransactionDTO> updateFinancialTransaction(@Min(1) @NotNull @PathVariable Long id,
-                                                                              @Valid @RequestBody FinancialTransactionUpdateDTO financialTransactionUpdateDTO, Principal principal) {
+    public ResponseEntity<FinancialTransactionDTO> updateTransactionById(
+            @Min(1) @NotNull @PathVariable Long id,
+            @Valid @RequestBody FinancialTransactionUpdateDTO financialTransactionUpdateDTO, Principal principal) {
         String email = principal.getName();
         Optional<User> user = userRepository.findByEmail(email);
         if (!user.isPresent()) {
@@ -53,13 +75,11 @@ public class FinancialTransactionController {
         Long userID = user.get().getId();
 
         FinancialTransactionDTO financialTransactionDTO = financialTransactionService.updateFinancialTransaction(
-                        id, financialTransactionUpdateDTO, userID);
+                id, financialTransactionUpdateDTO, userID);
 
         return new ResponseEntity<>(financialTransactionDTO, HttpStatus.OK);
 
     }
-
-
 
 
 }

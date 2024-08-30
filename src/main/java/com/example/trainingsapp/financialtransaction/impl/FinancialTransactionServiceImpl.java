@@ -17,7 +17,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class FinancialTransactionServiceImpl implements FinancialTransactionService {
@@ -52,6 +56,18 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
 
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(
                 savedFinancialTransaction);
+
+    }
+
+    @Override
+    public List<FinancialTransactionDTO> getFinancialTransactionsByWalletId(Long walletId, Long userId) {
+        Wallet wallet = walletRepository.findByIdAndUserId(walletId, userId).orElseThrow(() ->
+                new AppRuntimeException(ErrorCode.W001, String.format("Wallet with this id: %d not exist", walletId)));
+
+        return financialTransactionRepository.findAllByWalletIdAndWalletUserIdOrderByDateDesc(walletId, userId).stream()
+                .map(financialTransaction -> financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(financialTransaction))
+                .toList();
+
 
     }
 
