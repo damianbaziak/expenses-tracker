@@ -36,7 +36,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class FinancialTransactionUpdateServiceImplTest {
+class FinancialTransactionUpdateServiceImplTest {
     private static final Long ID_1L = 1L;
     private static final String DESCRIPTION = "Description";
     private static final String NEW_DESCRIPTION = "Updated description";
@@ -58,7 +58,7 @@ public class FinancialTransactionUpdateServiceImplTest {
 
 
     @Test
-    @DisplayName("Should return financial transaction with updated parameters and status OK")
+    @DisplayName("Should return financial transaction with updated parameters")
     void updateFinancialTransaction_validParameters_returnFinancialTransactionDTO() {
         // given
         User user = TestUtils.createUserForTest();

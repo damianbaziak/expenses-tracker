@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = FinancialTransactionController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class FinancialTransactionCreateControllerTest {
+class FinancialTransactionCreateControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
