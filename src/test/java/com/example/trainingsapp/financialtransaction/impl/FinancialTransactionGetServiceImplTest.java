@@ -61,7 +61,8 @@ class FinancialTransactionGetServiceImplTest {
 
         when(walletRepository.findByIdAndUserId(WALLET_ID_1L, user.getId())).thenReturn(Optional.of(wallet));
         when(ftRepository.findAllByWalletIdAndWalletUserIdOrderByDateDesc(WALLET_ID_1L, user.getId())).thenReturn(ftList);
-        when(financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(any(FinancialTransaction.class)))
+        when(financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(
+                any(FinancialTransaction.class)))
                 .thenAnswer(invocation -> {
                     FinancialTransaction transaction = invocation.getArgument(0);
                     return new FinancialTransactionDTO(transaction.getId(), transaction.getAmount(), transaction.getDescription(),
@@ -86,14 +87,10 @@ class FinancialTransactionGetServiceImplTest {
     }
 
         @Test
-        @DisplayName("Should throw an AppRuntimeException")
+        @DisplayName("Should throw an AppRuntimeException when wallet not exist")
         void getFinancialTransactionsByWalletId_walletNotExist_throwAppRuntimeException () {
             // given
             User user = TestUtils.createUserForTest();
-            Wallet wallet = TestUtils.createWalletForTest(user);
-
-            List<FinancialTransaction> ftList = TestUtils.createFinancialTransactionListForTest(
-                    3, wallet, EXPENSE);
 
             when(walletRepository.findByIdAndUserId(2L, user.getId())).thenReturn(Optional.empty());
 

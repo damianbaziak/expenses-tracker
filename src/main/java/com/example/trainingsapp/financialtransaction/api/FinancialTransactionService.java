@@ -14,4 +14,5 @@ public interface FinancialTransactionService {
             FinancialTransactionUpdateDTO financialTransactionUpdateDTO, Long userId);
 
     List<FinancialTransactionDTO> getFinancialTransactionsByWalletId(Long walletId, Long userId);
+    FinancialTransactionDTO findFinancialTransactionForUser(Long id, Long userId);
 }

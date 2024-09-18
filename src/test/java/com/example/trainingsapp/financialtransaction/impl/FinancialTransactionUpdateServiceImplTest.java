@@ -45,7 +45,7 @@ class FinancialTransactionUpdateServiceImplTest {
     private static final Long NEW_CATEGORY_ID = 2L;
 
     @Mock
-    private FinancialTransactionRepository ftRepository;
+    private FinancialTransactionRepository financialTransactionRepository;
 
     @Mock
     private FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
@@ -65,7 +65,7 @@ class FinancialTransactionUpdateServiceImplTest {
         FinancialTransactionUpdateDTO financialTransactionUpdateDTO = createFinancialTransactionUpdateDTO();
 
         FinancialTransaction financialTransaction = createEntityFinancialTransaction(ID_1L);
-        when(ftRepository.findByIdAndWalletUserId(ID_1L, user.getId())).thenReturn(
+        when(financialTransactionRepository.findByIdAndWalletUserId(ID_1L, user.getId())).thenReturn(
                 Optional.of(financialTransaction));
 
         FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(EXPENSE, user);
@@ -86,7 +86,7 @@ class FinancialTransactionUpdateServiceImplTest {
                 () -> assertEquals(financialTransactionDTO, result),
                 () -> assertEquals(financialTransactionDTO.getId(), result.getId()),
                 () -> assertEquals(financialTransactionDTO.getAmount(), result.getAmount()));
-        verify(ftRepository, atMostOnce()).save(any());
+        verify(financialTransactionRepository, atMostOnce()).save(any());
         verify(financialTransactionCategoryRepository, atMostOnce()).findByIdAndUserId(any(), any());
         verify(financialTransactionModelMapper, atMostOnce())
                 .mapFinancialTransactionEntityToFinancialTransactionDTO(any());
@@ -100,7 +100,7 @@ class FinancialTransactionUpdateServiceImplTest {
         User user = TestUtils.createUserForTest();
         FinancialTransactionUpdateDTO financialTransactionUpdateDTO = createFinancialTransactionUpdateDTO();
 
-        when(ftRepository.findByIdAndWalletUserId(any(), any())).thenReturn(Optional.empty());
+        when(financialTransactionRepository.findByIdAndWalletUserId(any(), any())).thenReturn(Optional.empty());
 
         // when
         AppRuntimeException result = assertThrows(AppRuntimeException.class,

@@ -62,7 +62,6 @@ public class FinancialTransactionController {
 
     }
 
-
     @PatchMapping("/{id}")
     public ResponseEntity<FinancialTransactionDTO> updateTransactionById(
             @Min(1) @NotNull @PathVariable Long id,
@@ -72,10 +71,27 @@ public class FinancialTransactionController {
         if (!user.isPresent()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        Long userID = user.get().getId();
+        Long userId = user.get().getId();
 
         FinancialTransactionDTO financialTransactionDTO = financialTransactionService.updateFinancialTransaction(
-                id, financialTransactionUpdateDTO, userID);
+                id, financialTransactionUpdateDTO, userId);
+
+        return new ResponseEntity<>(financialTransactionDTO, HttpStatus.OK);
+
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FinancialTransactionDTO> getTransactionById(
+            @Min(1) @NotNull @PathVariable Long id, Principal principal) {
+        String email = principal.getName();
+        Optional<User> user = userRepository.findByEmail(email);
+        if (!user.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        Long userId = user.get().getId();
+
+        FinancialTransactionDTO financialTransactionDTO = financialTransactionService.findFinancialTransactionForUser(
+                id, userId);
 
         return new ResponseEntity<>(financialTransactionDTO, HttpStatus.OK);
 

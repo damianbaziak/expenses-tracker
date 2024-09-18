@@ -48,7 +48,7 @@ public class TestUtils {
                     .type(type)
                     .amount(amount)
                     .date(Instant.now())
-                    .description(EXAMPLE_DESCRIPTION + 1)
+                    .description(EXAMPLE_DESCRIPTION + i)
                     .build()
             );
         }
@@ -65,7 +65,7 @@ public class TestUtils {
             list.add(new FinancialTransactionDTO(
                     i,
                     amount,
-                    EXAMPLE_DESCRIPTION + 1,
+                    EXAMPLE_DESCRIPTION + i,
                     type,
                     Instant.now(),
                     categoryId)

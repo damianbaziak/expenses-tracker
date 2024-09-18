@@ -103,6 +103,19 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
                 financialTransaction);
     }
 
+    @Override
+    public FinancialTransactionDTO findFinancialTransactionForUser(Long id, Long userId) {
+        Optional<FinancialTransaction> financialTransaction = financialTransactionRepository.findByIdAndWalletUserId(
+                id, userId);
+        if (financialTransaction.isEmpty()) {
+            throw new AppRuntimeException(ErrorCode.FT001, String.format(
+                    "Financial transaction with id: %d does not found", id));
+        }
+        FinancialTransaction existedTransaction = financialTransaction.get();
+        return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(
+                existedTransaction);
+    }
+
     private FinancialTransactionCategory findFinancialTransactionCategory(Long categoryId, Long userId) {
         if (categoryId != null) {
             Optional<FinancialTransactionCategory> ftCategory = financialTransactionCategoryRepository
