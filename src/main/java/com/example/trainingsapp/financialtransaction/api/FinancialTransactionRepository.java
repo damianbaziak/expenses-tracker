@@ -10,4 +10,6 @@ public interface FinancialTransactionRepository extends CrudRepository<Financial
     Optional<FinancialTransaction> findByIdAndWalletUserId(Long financialTransactionId, Long walletId);
 
     List<FinancialTransaction> findAllByWalletIdAndWalletUserIdOrderByDateDesc(Long walletId, Long userId);
+
+    boolean existsByIdAndWalletUserId(Long id, Long userId);
 }

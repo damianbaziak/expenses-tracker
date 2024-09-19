@@ -7,6 +7,8 @@ import com.example.trainingsapp.financialtransaction.api.FinancialTransactionRep
 import com.example.trainingsapp.financialtransaction.api.FinancialTransactionService;
 import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionDTO;
 import com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType;
+import com.example.trainingsapp.general.exception.AppRuntimeException;
+import com.example.trainingsapp.general.exception.ErrorCode;
 import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.api.model.User;
 import com.example.trainingsapp.wallet.api.model.Wallet;
@@ -21,11 +23,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType.EXPENSE;
+import static com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType.INCOME;
+import static java.math.BigInteger.ONE;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -45,11 +51,13 @@ public class FinancialTransactionGetControllerTest {
     private static final String EXAMPLE_DESCRIPTION_1 = "Example description_1";
     private static final String EXAMPLE_DESCRIPTION_2 = "Example description_2";
     private static final String EXAMPLE_DESCRIPTION_3 = "Example description_3";
+    private static final Instant DATE_NOW = Instant.now();
 
     private static final Long CATEGORY_ID_1L = 1L;
     private static final Long WALLET_ID_1L = 1L;
     private static final Long USER_ID_1L = 1L;
-    private static final String USER_EMAIL = "user@example@email.com";
+    private static final String USER_EMAIL = "user.example@email.com";
+    private static final String EMAIL_UNAUTHORIZED = "unauthorized.principal@email.com";
     @Autowired
     MockMvc mockMvc;
 
@@ -114,15 +122,57 @@ public class FinancialTransactionGetControllerTest {
         // when
         ResultActions resultActions = mockMvc.perform(get("/api/transactions").param(
                         "walletId", String.valueOf(WALLET_ID_1L))
-                .principal(() -> USER_EMAIL))
-                .andDo(print());
+                .principal(() -> USER_EMAIL));
 
         // then
         resultActions.andExpect(status().isOk())
-                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()").value(0));
 
 
     }
 
+    @Test
+    @DisplayName("Should return financial transaction and status OK")
+    void getTransactionById_transactionExist_shouldReturnFinancialTransaction() throws Exception {
+        // given
+        User user = TestUtils.createUserForTest();
+        FinancialTransactionDTO financialTransactionDTO = TestUtils.createFinancialTransactionDTOForTest(INCOME);
+        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+        when(financialTransactionService.findFinancialTransactionForUser(ID_1, USER_ID_1L)).thenReturn(
+                financialTransactionDTO);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(get("/api/transactions/{id}", ID_1)
+                .principal(() -> USER_EMAIL));
+
+        // then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(ID_1))
+                .andExpect(jsonPath("$.amount").value(ONE))
+                .andExpect(jsonPath("$.type").value(String.valueOf(INCOME)))
+                .andExpect(jsonPath("$.categoryId").value(CATEGORY_ID_1L));
+
+    }
+
+    @Test
+    @DisplayName("Should return status 404 - not found when financial transaction ID not exist")
+    void getTransactionById_transactionNotExist_shouldReturnFinancialTransaction() throws Exception {
+        // given
+        User user = TestUtils.createUserForTest();
+        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+        doThrow(new AppRuntimeException(ErrorCode.FT001, "")).when(
+                financialTransactionService).findFinancialTransactionForUser(ID_1, USER_ID_1L);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(get("/api/transactions/{id}", ID_1)
+                .principal(() -> USER_EMAIL));
+
+        // then
+        resultActions.andExpect(status().isNotFound());
+
+    }
+
+
 }
+

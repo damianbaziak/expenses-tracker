@@ -4,16 +4,22 @@ import com.example.trainingsapp.financialtransaction.api.model.FinancialTransact
 import com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType;
 import com.example.trainingsapp.user.api.model.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import lombok.Builder;
 
 import java.time.Instant;
 import java.util.List;
 
 @Entity
 @Table(name = "financial_transactions_categories")
+@Builder
 public class FinancialTransactionCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
 
     @Enumerated(EnumType.STRING)

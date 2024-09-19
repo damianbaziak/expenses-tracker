@@ -8,6 +8,7 @@ import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.api.model.User;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -94,6 +95,21 @@ public class FinancialTransactionController {
                 id, userId);
 
         return new ResponseEntity<>(financialTransactionDTO, HttpStatus.OK);
+
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteTransactionById(@Min(1) @NotNull @PathVariable Long id, Principal principal) {
+        String email = principal.getName();
+        Optional<User> user = userRepository.findByEmail(email);
+        if (!user.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        Long userId = user.get().getId();
+
+        financialTransactionService.deleteTransaction(id, userId);
+
+        return new ResponseEntity<>("Transaction deleted successfully", HttpStatus.OK);
 
     }
 

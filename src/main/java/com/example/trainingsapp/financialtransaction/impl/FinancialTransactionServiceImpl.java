@@ -17,11 +17,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class FinancialTransactionServiceImpl implements FinancialTransactionService {
@@ -114,6 +111,15 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         FinancialTransaction existedTransaction = financialTransaction.get();
         return financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(
                 existedTransaction);
+    }
+
+    @Override
+    public void deleteTransaction(Long id, Long userId) {
+        if (financialTransactionRepository.existsByIdAndWalletUserId(id, userId)) {
+            financialTransactionRepository.deleteById(id);
+        } else
+            throw new AppRuntimeException(ErrorCode.FT001, String.format(
+                    "Financial transaction with this id: %d does not exist", id));
     }
 
     private FinancialTransactionCategory findFinancialTransactionCategory(Long categoryId, Long userId) {
