@@ -100,11 +100,10 @@ class FinancialTransactionGetServiceImplTest {
 
         when(walletRepository.findByIdAndUserId(2L, user.getId())).thenReturn(Optional.empty());
 
-        // when
+        // when and then
         AppRuntimeException result = assertThrows(AppRuntimeException.class,
                 () -> financialTransactionService.getFinancialTransactionsByWalletId(2L, user.getId()));
 
-        // then
         Assertions.assertEquals(ErrorCode.W001.getBusinessMessage(), result.getMessage());
         Assertions.assertEquals(ErrorCode.W001.getBusinessStatusCode(), result.getStatusCode());
         verify(financialTransactionRepository, never()).findAllByWalletIdAndWalletUserIdOrderByDateDesc(any(), any());

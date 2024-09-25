@@ -51,30 +51,25 @@ public class FinancialTransactionGetControllerTest {
     private static final String EXAMPLE_DESCRIPTION_1 = "Example description_1";
     private static final String EXAMPLE_DESCRIPTION_2 = "Example description_2";
     private static final String EXAMPLE_DESCRIPTION_3 = "Example description_3";
-    private static final Instant DATE_NOW = Instant.now();
 
     private static final Long CATEGORY_ID_1L = 1L;
     private static final Long WALLET_ID_1L = 1L;
     private static final Long USER_ID_1L = 1L;
-    private static final String USER_EMAIL = "user.example@email.com";
-    private static final String EMAIL_UNAUTHORIZED = "unauthorized.principal@email.com";
+    private static final String USER_EMAIL = "example@email.com";
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @MockBean
-    FinancialTransactionService financialTransactionService;
+    private FinancialTransactionService financialTransactionService;
 
     @MockBean
-    FinancialTransactionRepository financialTransactionRepository;
+    private JwtAuthorizationFilter jwtAuthorizationFilter;
 
     @MockBean
-    JwtAuthorizationFilter jwtAuthorizationFilter;
+    private MyUserDetailsService myUserDetailsService;
 
     @MockBean
-    MyUserDetailsService myUserDetailsService;
-
-    @MockBean
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Test
     @DisplayName("Should return status OK and all financial transactions list")

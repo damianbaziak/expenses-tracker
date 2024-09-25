@@ -17,7 +17,7 @@ import static java.math.BigDecimal.ONE;
 public class TestUtils {
 
     private static final Long USER_ID_1L = 1L;
-    private static final String USER_EMAIL = "user.example@email.com";
+    private static final String USER_EMAIL = "example@email.com";
     private static final Long WALLET_ID_1L = 1L;
     private static final String EXAMPLE_DESCRIPTION = "Example description_";
     private static final Long ID_1L = 1L;
@@ -46,6 +46,16 @@ public class TestUtils {
                 .creationDate(Instant.now())
                 .build();
 
+    }
+
+    public static FinancialTransaction createFinancialTransactionForTest(FinancialTransactionType type) {
+        return FinancialTransaction.builder()
+                .id(ID_1L)
+                .amount(ONE)
+                .description(EXAMPLE_DESCRIPTION)
+                .type(type)
+                .date(Instant.now())
+                .build();
     }
 
     public static FinancialTransaction createFinancialTransactionForTest(FinancialTransactionType type,

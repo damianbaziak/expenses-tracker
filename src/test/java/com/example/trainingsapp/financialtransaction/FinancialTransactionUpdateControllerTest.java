@@ -39,7 +39,7 @@ class FinancialTransactionUpdateControllerTest {
 
     private static final Long ID_1L = 1L;
     private static final Long USER_ID_1L = 1L;
-    private static final String USER_EMAIL = "user@example@email.com";
+    private static final String USER_EMAIL = "example@email.com";
     private static final String DESCRIPTION = "Description";
     private static final Instant DATE = Instant.parse("2024-12-22T14:30:00.500Z");
     private static final Long CATEGORY_ID = 2L;
