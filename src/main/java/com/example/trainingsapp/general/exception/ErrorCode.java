@@ -11,16 +11,18 @@ public enum ErrorCode {
     FTC001("FTC001", "FINANCIAL_TRANSACTION_CATEGORY_NOT_FOUND", 404),
 
     W001("W001", "WALLET NOT_FOUND", 404),
-    W002("W002", "USER IS NOT WALLET OWNER", 403);
+    W002("W002", "USER IS NOT WALLET OWNER", 403),
+
+    TEA003("TEA003", "VALIDATION_FAILED", 400);
 
     private final String businessStatus;
     private final String businessMessage;
-    private final Integer businessStatusCode;
+    private final Integer httpStatusCode;
 
     ErrorCode(String status, String message, Integer statusCode) {
         this.businessStatus = status;
         this.businessMessage = message;
-        this.businessStatusCode = statusCode;
+        this.httpStatusCode = statusCode;
     }
 
     public String getBusinessStatus() {
@@ -31,7 +33,7 @@ public enum ErrorCode {
         return businessMessage;
     }
 
-    public Integer getBusinessStatusCode() {
-        return businessStatusCode;
+    public Integer getHttpStatusCode() {
+        return httpStatusCode;
     }
 }

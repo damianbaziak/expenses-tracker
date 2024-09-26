@@ -134,7 +134,7 @@ class FinancialTransactionCreateServiceImplTest {
                 financialTransactionService.createFinancialTransaction(financialTransactionCreateDTO, user.getId()));
 
         // then
-        assertEquals(ErrorCode.FT002.getBusinessStatusCode(), exception.getStatusCode());
+        assertEquals(ErrorCode.FT002.getHttpStatusCode(), exception.getHttpStatusCode());
         assertEquals(ErrorCode.FT002.getBusinessMessage(), exception.getMessage());
 
     }
@@ -154,7 +154,7 @@ class FinancialTransactionCreateServiceImplTest {
                 financialTransactionService.createFinancialTransaction(financialTransactionCreateDTO, user.getId()));
 
         // then
-        assertEquals(ErrorCode.W001.getBusinessStatusCode(), exception.getStatusCode());
+        assertEquals(ErrorCode.W001.getHttpStatusCode(), exception.getHttpStatusCode());
         verify(walletRepository, never()).save(any());
 
     }

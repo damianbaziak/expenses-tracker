@@ -59,7 +59,7 @@ class FinancialTransactionDeleteServiceImplTest {
                 () -> financialTransactionService.deleteTransaction(TRANSACTION_ID_1L, user.getId()));
 
         Assertions.assertEquals(ErrorCode.FT001.getBusinessMessage(), result.getMessage());
-        Assertions.assertEquals(ErrorCode.FT001.getBusinessStatusCode(), result.getStatusCode());
+        Assertions.assertEquals(ErrorCode.FT001.getHttpStatusCode(), result.getHttpStatusCode());
         verify(financialTransactionRepository, times(1)).existsByIdAndWalletUserId(
                 TRANSACTION_ID_1L, user.getId());
         verify(financialTransactionRepository, never()).deleteById(any());

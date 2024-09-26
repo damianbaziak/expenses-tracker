@@ -9,6 +9,7 @@ import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactio
 import com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType;
 import com.example.trainingsapp.general.exception.AppRuntimeException;
 import com.example.trainingsapp.general.exception.ErrorCode;
+import com.example.trainingsapp.general.exception.ErrorStrategy;
 import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.api.model.User;
 import com.example.trainingsapp.wallet.api.model.Wallet;
@@ -18,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -39,7 +42,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@WebMvcTest(FinancialTransactionController.class)
+@WebMvcTest(controllers = FinancialTransactionController.class, includeFilters = @ComponentScan.Filter(
+        type = FilterType.ASSIGNABLE_TYPE, classes = {ErrorStrategy.class}))
 @AutoConfigureMockMvc(addFilters = false)
 public class FinancialTransactionGetControllerTest {
     private static final Long ID_1 = 1L;
