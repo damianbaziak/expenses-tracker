@@ -4,9 +4,6 @@ import com.example.trainingsapp.financialtransaction.api.model.FinancialTransact
 import com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType;
 import com.example.trainingsapp.user.api.model.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 import java.time.Instant;
@@ -94,5 +91,5 @@ public class FinancialTransactionCategory {
     public void setUser(User user) {
         this.user = user;
     }
-    
+
 }

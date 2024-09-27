@@ -102,8 +102,6 @@ class FinancialTransactionDeleteControllerTest {
         // given
         User user = TestUtils.createUserForTest();
         when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
-        //doThrow(ConstraintViolationException.class).when(
-        //        financialTransactionService).deleteTransaction(TRANSACTION_ID_1, user.getId());
 
         // when
         ResultActions result = mockMvc.perform(delete("/api/transactions/{id}", ID_0)
@@ -114,6 +112,7 @@ class FinancialTransactionDeleteControllerTest {
         result.andExpectAll(
                 MockMvcResultMatchers.status().isBadRequest(),
                 MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()),
+                MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()),
                 MockMvcResultMatchers.jsonPath("$.statusCode").value(ErrorCode.TEA003.getHttpStatusCode()));
     }
 }
