@@ -1,5 +1,7 @@
 package com.example.trainingsapp.financialtransaktioncategory.impl;
 
+import com.example.trainingsapp.financialtransaction.api.FinancialTransactionRepository;
+import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionCategoryDetailedDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryModelMapper;
 import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryRepository;
 import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryService;
@@ -13,17 +15,21 @@ import com.example.trainingsapp.user.api.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
+import java.math.BigInteger;
 
 @Service
 public class FinancialTransactionCategoryServiceImpl implements FinancialTransactionCategoryService {
+    private final String CATEGORY_WITH_ID_NOT_FOUND_FOR_USER =
+            "Financial transaction category with id: %d not found for user";
 
     @Autowired
-    FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
+    private FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    FinancialTransactionCategoryModelMapper modelMapper;
+    private FinancialTransactionCategoryModelMapper financialCategoryModelMapper;
+    @Autowired
+    private FinancialTransactionRepository financialTransactionRepository;
 
     @Override
     public FinancialTransactionCategoryDTO createCategory(
@@ -34,15 +40,30 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
                 .builder()
                 .name(categoryCreateDTO.getName())
                 .type(categoryCreateDTO.getType())
-                .creationDate(Instant.now())
                 .user(userForCategory)
                 .build();
         FinancialTransactionCategory transactionCategory =
                 financialTransactionCategoryRepository.save(financialTransactionCategory);
 
-        return modelMapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(
+        return financialCategoryModelMapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(
                 transactionCategory);
 
+    }
+
+    @Override
+    public FinancialTransactionCategoryDetailedDTO findFinancialTransactionCategoryForUser(Long categoryId, Long userID) {
+        FinancialTransactionCategory financialTransactionCategory = financialTransactionCategoryRepository
+                .findByIdAndUserId(categoryId, userID).orElseThrow(() -> new AppRuntimeException(ErrorCode.FTC001,
+                        String.format(CATEGORY_WITH_ID_NOT_FOUND_FOR_USER, categoryId)));
+
+        BigInteger numberOfFinancialTransactions = financialTransactionRepository
+                .countFinancialTransactionsByFinancialTransactionCategoryId(categoryId);
+
+        FinancialTransactionCategoryDTO financialTransactionCategoryDTO = financialCategoryModelMapper
+                .mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(financialTransactionCategory);
+
+        return new FinancialTransactionCategoryDetailedDTO(
+                financialTransactionCategoryDTO, numberOfFinancialTransactions);
     }
 
     public User getUserByUserId(Long userId) {

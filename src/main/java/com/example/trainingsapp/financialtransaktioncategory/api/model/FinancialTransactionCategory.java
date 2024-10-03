@@ -29,6 +29,7 @@ public class FinancialTransactionCategory {
     @Column(name = "creation_date")
     private Instant creationDate;
 
+    @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
     User user;
 
@@ -91,5 +92,11 @@ public class FinancialTransactionCategory {
     public void setUser(User user) {
         this.user = user;
     }
+
+    @PrePersist
+    protected void onCreate() {
+        creationDate = Instant.now();
+    }
+
 
 }
