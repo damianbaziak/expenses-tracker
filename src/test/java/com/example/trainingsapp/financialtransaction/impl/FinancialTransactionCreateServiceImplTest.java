@@ -72,8 +72,8 @@ class FinancialTransactionCreateServiceImplTest {
     private FinancialTransactionServiceImpl financialTransactionService;
 
     @Test
-    @DisplayName("Should return financial transaction with valid parameters")
-    void CreateFinancialTransaction_ValidParameters_ReturnFinancialTransactionDTO() {
+    @DisplayName("Should returns financial transaction for valid parameters")
+    void CreateFinancialTransaction_ValidParameters_ReturnFinancialTransaction() {
         // given
         User user = TestUtils.createUserForTest();
 

@@ -1,6 +1,4 @@
-package com.example.trainingsapp.financialtransaction.api.dto;
-
-import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryDTO;
+package com.example.trainingsapp.financialtransaktioncategory.api.dto;
 
 import java.math.BigInteger;
 

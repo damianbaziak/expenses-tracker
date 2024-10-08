@@ -1,6 +1,6 @@
 package com.example.trainingsapp.financialtransaktioncategory;
 
-import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionCategoryDetailedDTO;
+import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryDetailedDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryService;
 import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryCreateDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryDTO;
@@ -49,7 +49,7 @@ public class FinancialTransactionCategoryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<FinancialTransactionCategoryDetailedDTO> getFinancialCategoryById(
-            @NotNull @Min(1) Long id, Principal principal) {
+            @NotNull @Min(1) @PathVariable Long id, Principal principal) {
         String email = principal.getName();
         Optional<User> user = userRepository.findByEmail(email);
         if (!user.isPresent()) {

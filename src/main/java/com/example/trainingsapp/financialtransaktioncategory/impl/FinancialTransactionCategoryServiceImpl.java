@@ -1,7 +1,7 @@
 package com.example.trainingsapp.financialtransaktioncategory.impl;
 
 import com.example.trainingsapp.financialtransaction.api.FinancialTransactionRepository;
-import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionCategoryDetailedDTO;
+import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryDetailedDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryModelMapper;
 import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryRepository;
 import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryService;

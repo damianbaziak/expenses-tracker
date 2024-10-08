@@ -3,6 +3,8 @@ package com.example.trainingsapp;
 import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionDTO;
 import com.example.trainingsapp.financialtransaction.api.model.FinancialTransaction;
 import com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType;
+import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryCreateDTO;
+import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.model.FinancialTransactionCategory;
 import com.example.trainingsapp.user.api.model.User;
 import com.example.trainingsapp.wallet.api.model.Wallet;
@@ -114,13 +116,18 @@ public class TestUtils {
     }
 
     public static FinancialTransactionCategory createFinancialTransactionCategoryForTest(
-            String name, FinancialTransactionType type, User user) {
+            String name, FinancialTransactionType type) {
         return FinancialTransactionCategory.builder()
                 .id(ID_1L)
                 .name(name)
                 .type(type)
                 .creationDate(Instant.now())
-                .user(user)
                 .build();
+    }
+
+    public static FinancialTransactionCategoryDTO createFinancialTransactionCategoryDTOForTest(
+            String name, FinancialTransactionType type, Long userId) {
+        return new FinancialTransactionCategoryDTO(ID_1L, name, type, Instant.now(), userId);
+
     }
 }

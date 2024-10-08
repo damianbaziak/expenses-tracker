@@ -35,7 +35,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class FinancialTransactionGetServiceImplTest {
+class FinancialTransactionFindServiceImplTest {
     private static final Long ID_1L = 1L;
     private static final Long WALLET_ID_1L = 1L;
     private static final Long USER_ID_1L = 1L;
@@ -55,7 +55,7 @@ class FinancialTransactionGetServiceImplTest {
 
     @Test
     @DisplayName("Should return financial transactions DTOs")
-    void getFinancialTransactionsByWalletId_transactionsExist_returnFinancialTransactionDTOs() {
+    void findFinancialTransactionsByWalletId_transactionsExist_returnFinancialTransactionDTOs() {
         // given
         User user = TestUtils.createUserForTest();
         Wallet wallet = TestUtils.createWalletForTest(user);
@@ -76,7 +76,7 @@ class FinancialTransactionGetServiceImplTest {
                 });
 
         // when
-        List<FinancialTransactionDTO> result = financialTransactionService.getFinancialTransactionsByWalletId(
+        List<FinancialTransactionDTO> result = financialTransactionService.findFinancialTransactionsByWalletId(
                 WALLET_ID_1L, ID_1L);
 
         // then
@@ -94,7 +94,7 @@ class FinancialTransactionGetServiceImplTest {
 
     @Test
     @DisplayName("Should throw an AppRuntimeException when wallet not exist")
-    void getFinancialTransactionsByWalletId_walletNotExist_throwAppRuntimeException() {
+    void findFinancialTransactionsByWalletId_walletNotExist_throwAppRuntimeException() {
         // given
         User user = TestUtils.createUserForTest();
 
@@ -102,7 +102,7 @@ class FinancialTransactionGetServiceImplTest {
 
         // when and then
         AppRuntimeException result = assertThrows(AppRuntimeException.class,
-                () -> financialTransactionService.getFinancialTransactionsByWalletId(2L, user.getId()));
+                () -> financialTransactionService.findFinancialTransactionsByWalletId(2L, user.getId()));
 
         Assertions.assertEquals(ErrorCode.W001.getBusinessMessage(), result.getMessage());
         Assertions.assertEquals(ErrorCode.W001.getHttpStatusCode(), result.getHttpStatusCode());
@@ -111,7 +111,7 @@ class FinancialTransactionGetServiceImplTest {
 
     @Test
     @DisplayName("Should return an empty List when there are no financial transactions in the wallet")
-    void getFinancialTransactionsByWalletId_noFinancialTransactions_returnEmptyList() {
+    void findFinancialTransactionsByWalletId_noFinancialTransactions_returnEmptyList() {
         // given
         User user = TestUtils.createUserForTest();
         Wallet wallet = TestUtils.createWalletForTest(user);
@@ -121,7 +121,7 @@ class FinancialTransactionGetServiceImplTest {
                 WALLET_ID_1L, user.getId())).thenReturn(Collections.emptyList());
 
         // when
-        List<FinancialTransactionDTO> result = financialTransactionService.getFinancialTransactionsByWalletId(
+        List<FinancialTransactionDTO> result = financialTransactionService.findFinancialTransactionsByWalletId(
                 WALLET_ID_1L, ID_1L);
 
         // then
@@ -131,12 +131,11 @@ class FinancialTransactionGetServiceImplTest {
 
     @Test
     @DisplayName("Should retrieve transaction by ID and walletUserId")
-    void getFinancialTransactionForUser_whenTransactionExist_shouldReturnTransactionAndStatusOk() {
+    void findFinancialTransactionForUser_whenTransactionExist_shouldReturnTransactionAndStatusOk() {
         // given
-        User user = TestUtils.createUserForTest();
         FinancialTransactionDTO financialTransactionDTO = TestUtils.createFinancialTransactionDTOForTest(INCOME);
         FinancialTransactionCategory financialTransactionCategory = TestUtils.createFinancialTransactionCategoryForTest(
-                EXAMPLE_NAME, INCOME, user);
+                EXAMPLE_NAME, INCOME);
         FinancialTransaction financialTransaction = TestUtils.createFinancialTransactionForTest(
                 INCOME, financialTransactionCategory);
 
@@ -160,9 +159,8 @@ class FinancialTransactionGetServiceImplTest {
 
     @Test
     @DisplayName("Should throw AppRuntimeException when transaction not exist")
-    void getFinancialTransactionForUser_whenTransactionNotExist_shouldThrowAppRuntimeException() {
+    void findFinancialTransactionForUser_whenTransactionNotExist_shouldThrowAppRuntimeException() {
         // given
-        User user = TestUtils.createUserForTest();
         when(financialTransactionRepository.findByIdAndWalletUserId(ID_1L, USER_ID_1L)).thenReturn(Optional.empty());
 
         // when and then

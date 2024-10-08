@@ -57,7 +57,7 @@ public class FinancialTransactionController {
         Long userID = user.get().getId();
 
         List<FinancialTransactionDTO> financialTransactionDTOS = financialTransactionService
-                .getFinancialTransactionsByWalletId(walletId, userID);
+                .findFinancialTransactionsByWalletId(walletId, userID);
 
         return new ResponseEntity<>(financialTransactionDTOS, HttpStatus.OK);
 

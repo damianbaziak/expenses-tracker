@@ -28,7 +28,7 @@ public class Wallet {
     @Column(name = "creation_date")
     private Instant creationDate;
 
-    @OneToMany(mappedBy = "wallet", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "wallet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FinancialTransaction> financialTransactionList = new ArrayList<>();
 
     public Wallet() {

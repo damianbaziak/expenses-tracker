@@ -23,7 +23,7 @@ public class FinancialTransactionCategory {
     @Column(name = "transaction_type", columnDefinition = "ENUM('INCOME', 'EXPENSE')")
     private FinancialTransactionType type;
 
-    @OneToMany(mappedBy = "financialTransactionCategory", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "financialTransactionCategory", fetch = FetchType.LAZY)
     private List<FinancialTransaction> financialTransactions;
 
     @Column(name = "creation_date")

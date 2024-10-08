@@ -3,16 +3,13 @@ package com.example.trainingsapp.financialtransaction;
 import com.example.trainingsapp.TestUtils;
 import com.example.trainingsapp.authorization.JwtAuthorizationFilter;
 import com.example.trainingsapp.authorization.api.MyUserDetailsService;
-import com.example.trainingsapp.financialtransaction.api.FinancialTransactionRepository;
 import com.example.trainingsapp.financialtransaction.api.FinancialTransactionService;
 import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionDTO;
-import com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType;
 import com.example.trainingsapp.general.exception.AppRuntimeException;
 import com.example.trainingsapp.general.exception.ErrorCode;
 import com.example.trainingsapp.general.exception.ErrorStrategy;
 import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.api.model.User;
-import com.example.trainingsapp.wallet.api.model.Wallet;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +18,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -84,7 +79,7 @@ public class FinancialTransactionGetControllerTest {
                 3, EXPENSE, CATEGORY_ID_1L);
 
         when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
-        when(financialTransactionService.getFinancialTransactionsByWalletId(WALLET_ID_1L, USER_ID_1L))
+        when(financialTransactionService.findFinancialTransactionsByWalletId(WALLET_ID_1L, USER_ID_1L))
                 .thenReturn(financialTransactionDTOS);
 
         // when
@@ -115,7 +110,7 @@ public class FinancialTransactionGetControllerTest {
         User user = TestUtils.createUserForTest();
 
         when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
-        when(financialTransactionService.getFinancialTransactionsByWalletId(WALLET_ID_1L, USER_ID_1L))
+        when(financialTransactionService.findFinancialTransactionsByWalletId(WALLET_ID_1L, USER_ID_1L))
                 .thenReturn(Collections.emptyList());
 
         // when

@@ -11,7 +11,7 @@ import java.util.Objects;
 public class FinancialTransactionCategoryCreateDTO {
     @NotBlank
     @Size(max = 30, message = "Name size too long")
-    @Pattern(regexp = "^\\w+$")
+    @Pattern(regexp = "^[\\w\\s]+$")
     private String name;
     @NotNull
     private FinancialTransactionType type;
@@ -19,7 +19,7 @@ public class FinancialTransactionCategoryCreateDTO {
     public FinancialTransactionCategoryCreateDTO() {
     }
 
-    public FinancialTransactionCategoryCreateDTO(String name, FinancialTransactionType type, Long userId) {
+    public FinancialTransactionCategoryCreateDTO(String name, FinancialTransactionType type) {
         this.name = name;
         this.type = type;
     }

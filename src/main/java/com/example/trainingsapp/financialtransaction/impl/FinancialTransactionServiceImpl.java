@@ -57,7 +57,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     }
 
     @Override
-    public List<FinancialTransactionDTO> getFinancialTransactionsByWalletId(Long walletId, Long userId) {
+    public List<FinancialTransactionDTO> findFinancialTransactionsByWalletId(Long walletId, Long userId) {
         Wallet wallet = walletRepository.findByIdAndUserId(walletId, userId).orElseThrow(() ->
                 new AppRuntimeException(ErrorCode.W001, String.format("Wallet with this id: %d not exist", walletId)));
 
