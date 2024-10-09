@@ -39,7 +39,6 @@ class FinancialTransactionFindServiceImplTest {
     private static final Long ID_1L = 1L;
     private static final Long WALLET_ID_1L = 1L;
     private static final Long USER_ID_1L = 1L;
-    private static final String EXAMPLE_NAME = "Example name";
 
     @Mock
     private FinancialTransactionRepository financialTransactionRepository;
@@ -135,7 +134,7 @@ class FinancialTransactionFindServiceImplTest {
         // given
         FinancialTransactionDTO financialTransactionDTO = TestUtils.createFinancialTransactionDTOForTest(INCOME);
         FinancialTransactionCategory financialTransactionCategory = TestUtils.createFinancialTransactionCategoryForTest(
-                EXAMPLE_NAME, INCOME);
+                INCOME);
         FinancialTransaction financialTransaction = TestUtils.createFinancialTransactionForTest(
                 INCOME, financialTransactionCategory);
 

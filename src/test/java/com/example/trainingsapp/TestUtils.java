@@ -3,7 +3,6 @@ package com.example.trainingsapp;
 import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionDTO;
 import com.example.trainingsapp.financialtransaction.api.model.FinancialTransaction;
 import com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType;
-import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryCreateDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.model.FinancialTransactionCategory;
 import com.example.trainingsapp.user.api.model.User;
@@ -22,6 +21,7 @@ public class TestUtils {
     private static final String USER_EMAIL = "example@email.com";
     private static final Long WALLET_ID_1L = 1L;
     private static final String EXAMPLE_DESCRIPTION = "Example description_";
+    private static final String EXEMPLE_CATEGORY_NAME = "Example category name";
     private static final Long ID_1L = 1L;
     private static final Long CATEGORY_ID = 1L;
 
@@ -115,19 +115,18 @@ public class TestUtils {
 
     }
 
-    public static FinancialTransactionCategory createFinancialTransactionCategoryForTest(
-            String name, FinancialTransactionType type) {
+    public static FinancialTransactionCategory createFinancialTransactionCategoryForTest(FinancialTransactionType type) {
         return FinancialTransactionCategory.builder()
                 .id(ID_1L)
-                .name(name)
+                .name(EXEMPLE_CATEGORY_NAME)
                 .type(type)
                 .creationDate(Instant.now())
                 .build();
     }
 
     public static FinancialTransactionCategoryDTO createFinancialTransactionCategoryDTOForTest(
-            String name, FinancialTransactionType type, Long userId) {
-        return new FinancialTransactionCategoryDTO(ID_1L, name, type, Instant.now(), userId);
+            FinancialTransactionType type, Long userId) {
+        return new FinancialTransactionCategoryDTO(ID_1L, EXEMPLE_CATEGORY_NAME, type, Instant.now(), userId);
 
     }
 }

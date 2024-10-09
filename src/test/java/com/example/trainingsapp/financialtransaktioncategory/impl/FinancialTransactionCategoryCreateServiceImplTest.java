@@ -1,13 +1,13 @@
 package com.example.trainingsapp.financialtransaktioncategory.impl;
 
 import com.example.trainingsapp.TestUtils;
-import com.example.trainingsapp.financialtransaction.api.FinancialTransactionRepository;
-import com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType;
 import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryModelMapper;
 import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryRepository;
 import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryCreateDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.model.FinancialTransactionCategory;
+import com.example.trainingsapp.general.exception.AppRuntimeException;
+import com.example.trainingsapp.general.exception.ErrorCode;
 import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.api.model.User;
 import org.junit.jupiter.api.Assertions;
@@ -43,16 +43,16 @@ class FinancialTransactionCategoryCreateServiceImplTest {
 
     @Test
     @DisplayName("Should returns financial transaction category for valid parameters")
-    void createCategory_withValidData_shouldReturnsFinancialTransactionCategory() {
+    void createCategory_withValidParameters_shouldReturnsFinancialTransactionCategory() {
         // given
         FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO =
                 new FinancialTransactionCategoryCreateDTO(EXAMPLE_CATEGORY_NAME, EXPENSE);
 
         FinancialTransactionCategory financialTransactionCategoryEntity =
-                TestUtils.createFinancialTransactionCategoryForTest(EXAMPLE_CATEGORY_NAME, EXPENSE);
+                TestUtils.createFinancialTransactionCategoryForTest(EXPENSE);
 
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO
-                = TestUtils.createFinancialTransactionCategoryDTOForTest(EXAMPLE_CATEGORY_NAME, EXPENSE, USER_ID_1L);
+                = TestUtils.createFinancialTransactionCategoryDTOForTest(EXPENSE, USER_ID_1L);
 
         when(financialTransactionCategoryRepository.save(
                 any(FinancialTransactionCategory.class))).thenReturn(financialTransactionCategoryEntity);
@@ -77,6 +77,27 @@ class FinancialTransactionCategoryCreateServiceImplTest {
                 cat.getName().equals(EXAMPLE_CATEGORY_NAME) &&
                         cat.getType().equals(EXPENSE)));
         verify(financialTransactionCategoryModelMapper, times(1))
+                .mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(
+                        any(FinancialTransactionCategory.class));
+    }
+
+    @Test
+    @DisplayName("Should returns an AppRuntimeException")
+    void createCategory_userNotFound_shouldReturnsAppRuntimeException() {
+        // given
+        FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO =
+                new FinancialTransactionCategoryCreateDTO(EXAMPLE_CATEGORY_NAME, EXPENSE);
+        when(userRepository.findById(USER_ID_1L)).thenReturn(Optional.empty());
+
+        // when and then
+        AppRuntimeException result = Assertions.assertThrows(AppRuntimeException.class, () ->
+                financialTransactionCategoryService.createCategory(financialTransactionCategoryCreateDTO, USER_ID_1L));
+
+        Assertions.assertAll(
+                () -> assertEquals(ErrorCode.U003.getHttpStatusCode(), result.getHttpStatusCode()),
+                () -> assertEquals(ErrorCode.U003.getBusinessMessage(), result.getMessage()));
+        verify(financialTransactionCategoryRepository, never()).save(any(FinancialTransactionCategory.class));
+        verify(financialTransactionCategoryModelMapper, never())
                 .mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(
                         any(FinancialTransactionCategory.class));
     }
