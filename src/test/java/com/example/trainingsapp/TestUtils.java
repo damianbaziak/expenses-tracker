@@ -21,7 +21,7 @@ public class TestUtils {
     private static final String USER_EMAIL = "example@email.com";
     private static final Long WALLET_ID_1L = 1L;
     private static final String EXAMPLE_DESCRIPTION = "Example description_";
-    private static final String EXEMPLE_CATEGORY_NAME = "Example category name";
+    private static final String EXAMPLE_CATEGORY_NAME = "Example category name";
     private static final Long ID_1L = 1L;
     private static final Long CATEGORY_ID = 1L;
 
@@ -118,7 +118,7 @@ public class TestUtils {
     public static FinancialTransactionCategory createFinancialTransactionCategoryForTest(FinancialTransactionType type) {
         return FinancialTransactionCategory.builder()
                 .id(ID_1L)
-                .name(EXEMPLE_CATEGORY_NAME)
+                .name(EXAMPLE_CATEGORY_NAME)
                 .type(type)
                 .creationDate(Instant.now())
                 .build();
@@ -126,7 +126,7 @@ public class TestUtils {
 
     public static FinancialTransactionCategoryDTO createFinancialTransactionCategoryDTOForTest(
             FinancialTransactionType type, Long userId) {
-        return new FinancialTransactionCategoryDTO(ID_1L, EXEMPLE_CATEGORY_NAME, type, Instant.now(), userId);
+        return new FinancialTransactionCategoryDTO(ID_1L, EXAMPLE_CATEGORY_NAME, type, Instant.now(), userId);
 
     }
 }

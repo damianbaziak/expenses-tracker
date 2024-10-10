@@ -2,10 +2,13 @@ package com.example.trainingsapp.financialtransaktioncategory;
 
 import com.example.trainingsapp.TestUtils;
 import com.example.trainingsapp.authorization.JwtAuthorizationFilter;
+import com.example.trainingsapp.authorization.WebSecurityConfiguration;
 import com.example.trainingsapp.authorization.api.MyUserDetailsService;
+import com.example.trainingsapp.authorization.webtoken.JwtService;
 import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryService;
 import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryCreateDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryDTO;
+import com.example.trainingsapp.financialtransaktioncategory.impl.FinancialTransactionCategoryServiceImpl;
 import com.example.trainingsapp.general.exception.ErrorStrategy;
 import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.api.model.User;
@@ -20,6 +23,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -29,30 +33,28 @@ import java.util.Optional;
 import static com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType.EXPENSE;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = FinancialTransactionCategoryController.class, includeFilters = @ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE, classes = {ErrorStrategy.class}))
-@AutoConfigureMockMvc(addFilters = false)
+@WebMvcTest(controllers = FinancialTransactionCategoryController.class,
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+                classes = {FinancialTransactionCategoryServiceImpl.class}),
+        includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+                classes = {
+                ErrorStrategy.class, WebSecurityConfiguration.class, MyUserDetailsService.class,
+                        JwtAuthorizationFilter.class, JwtService.class}))
 class FinancialTransactionCategoryCreateControllerTest {
 
     private static final Long ID_1L = 1L;
     private static final Long USER_ID_1L = 1L;
     private static final String USER_EMAIL = "example@email.com";
-    private static final String DESCRIPTION = "Example description";
     private static final String EXAMPLE_CATEGORY_NAME = "Example category name";
-    private static final Long CATEGORY_ID = 1L;
+    private static final String CATEGORY_NAME_TO_LONG = "sdfasdfas4353432523m45bn4m5nbmnbm2345234";
 
     @MockBean
     private FinancialTransactionCategoryService financialTransactionCategoryService;
     @MockBean
     private UserRepository userRepository;
-    @MockBean
-    private MyUserDetailsService myUserDetailsService;
-    @MockBean
-    private JwtAuthorizationFilter jwtAuthorizationFilter;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -60,6 +62,7 @@ class FinancialTransactionCategoryCreateControllerTest {
 
 
     @Test
+    @WithMockUser(username = USER_EMAIL)
     @DisplayName("Should returns status created - 201 and financial transaction category")
     void createCategory_forValidParameters_shouldReturnsFTCDTO() throws Exception {
         // given
@@ -77,11 +80,10 @@ class FinancialTransactionCategoryCreateControllerTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/categories")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(Objects.requireNonNull(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO)))
-                        .principal(() -> USER_EMAIL)
-                        .characterEncoding("UTF-8"))
-                .andDo(print());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO)))
+                //.principal(() -> USER_EMAIL)
+                .characterEncoding("UTF-8"));
 
         // then
         resultActions.andExpect(status().isCreated())
@@ -91,5 +93,75 @@ class FinancialTransactionCategoryCreateControllerTest {
 
 
     }
+
+    @Test
+    @WithMockUser(username = USER_EMAIL)
+    @DisplayName("Should returns bad request status when financialTransactionType is null")
+    void createCategory_financialTransactionTypeNull_shouldReturnsStatusBadRequest() throws Exception {
+        // given
+        User user = TestUtils.createUserForTest();
+
+        FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO
+                = new FinancialTransactionCategoryCreateDTO(EXAMPLE_CATEGORY_NAME, null);
+
+        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+
+        // when
+        ResultActions resultActions = mockMvc.perform(post("/api/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO)))
+                .characterEncoding("UTF-8")
+                .principal(() -> USER_EMAIL));
+
+        // then
+        resultActions.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(username = USER_EMAIL)
+    @DisplayName("Should returns bad request status when name is blank")
+    void createCategory_fieldNameBlank_shouldReturnsStatusBadRequest() throws Exception {
+        // given
+        User user = TestUtils.createUserForTest();
+
+        FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO
+                = new FinancialTransactionCategoryCreateDTO("   ", EXPENSE);
+
+        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+
+        // when
+        ResultActions resultActions = mockMvc.perform(post("/api/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO)))
+                .characterEncoding("UTF-8")
+                .principal(() -> USER_EMAIL));
+
+        // then
+        resultActions.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(username = USER_EMAIL)
+    @DisplayName("Should returns bad request status when name is to long")
+    void createCategory_nameToLong_shouldReturnsStatusBadRequest() throws Exception {
+        // given
+        User user = TestUtils.createUserForTest();
+
+        FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO
+                = new FinancialTransactionCategoryCreateDTO(CATEGORY_NAME_TO_LONG, EXPENSE);
+
+        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+
+        // when
+        ResultActions resultActions = mockMvc.perform(post("/api/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO)))
+                .characterEncoding("UTF-8")
+                .principal(() -> USER_EMAIL));
+
+        // then
+        resultActions.andExpect(status().isBadRequest());
+    }
+
 
 }
