@@ -17,7 +17,6 @@ import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
@@ -41,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 classes = {FinancialTransactionCategoryServiceImpl.class}),
         includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
                 classes = {
-                ErrorStrategy.class, WebSecurityConfiguration.class, MyUserDetailsService.class,
+                        ErrorStrategy.class, WebSecurityConfiguration.class, MyUserDetailsService.class,
                         JwtAuthorizationFilter.class, JwtService.class}))
 class FinancialTransactionCategoryCreateControllerTest {
 
@@ -50,7 +49,6 @@ class FinancialTransactionCategoryCreateControllerTest {
     private static final String USER_EMAIL = "example@email.com";
     private static final String EXAMPLE_CATEGORY_NAME = "Example category name";
     private static final String CATEGORY_NAME_TO_LONG = "sdfasdfas4353432523m45bn4m5nbmnbm2345234";
-
     @MockBean
     private FinancialTransactionCategoryService financialTransactionCategoryService;
     @MockBean
