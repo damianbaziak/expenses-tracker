@@ -29,12 +29,9 @@ import java.util.Optional;
 import static com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType.EXPENSE;
 import static com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType.INCOME;
 import static java.math.BigInteger.ONE;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @WebMvcTest(controllers = FinancialTransactionController.class, includeFilters = @ComponentScan.Filter(
@@ -150,12 +147,12 @@ public class FinancialTransactionGetControllerTest {
     }
 
     @Test
-    @DisplayName("Should return status 404 - not found when financial transaction ID not exist")
-    void getTransactionById_transactionNotExist_shouldReturnFinancialTransaction() throws Exception {
+    @DisplayName("Should return status 404 - not found when financial transaction with given ID not exist")
+    void getTransactionById_transactionNotExist_shouldReturnsStatusNotFound() throws Exception {
         // given
         User user = TestUtils.createUserForTest();
         when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
-        doThrow(new AppRuntimeException(ErrorCode.FT001, "")).when(
+        doThrow(new AppRuntimeException(ErrorCode.FT001, "Transaction not found")).when(
                 financialTransactionService).findFinancialTransactionForUser(ID_1, USER_ID_1L);
 
         // when
@@ -163,7 +160,11 @@ public class FinancialTransactionGetControllerTest {
                 .principal(() -> USER_EMAIL));
 
         // then
-        resultActions.andExpect(status().isNotFound());
+        resultActions
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Transaction not found"));
+        verify(financialTransactionService, times(1))
+                .findFinancialTransactionForUser(ID_1, USER_ID_1L);
 
     }
 

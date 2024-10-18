@@ -9,6 +9,7 @@ import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTr
 import com.example.trainingsapp.financialtransaktioncategory.api.model.FinancialTransactionCategory;
 import com.example.trainingsapp.general.exception.AppRuntimeException;
 import com.example.trainingsapp.general.exception.ErrorCode;
+import com.example.trainingsapp.user.api.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +30,8 @@ class FinancialTransactionCategoryFindServiceImplTest {
 
     private static final Long USER_ID_1L = 1L;
     private static final Long CATEGORY_ID_1L = 1L;
-
+    @Mock
+    UserRepository userRepository;
     @Mock
     private FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
     @InjectMocks
@@ -38,7 +40,6 @@ class FinancialTransactionCategoryFindServiceImplTest {
     private FinancialTransactionRepository financialTransactionRepository;
     @Mock
     private FinancialTransactionCategoryModelMapper financialTransactionCategoryModelMapper;
-
 
     @Test
     @DisplayName("Should returns financial transaction category detailed DTO")
@@ -96,6 +97,5 @@ class FinancialTransactionCategoryFindServiceImplTest {
                 .mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(
                         any(FinancialTransactionCategory.class));
     }
-
 }
 
