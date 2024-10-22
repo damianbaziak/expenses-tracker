@@ -11,6 +11,7 @@ import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTr
 import com.example.trainingsapp.financialtransaktioncategory.impl.FinancialTransactionCategoryServiceImpl;
 import com.example.trainingsapp.general.exception.ErrorStrategy;
 import com.example.trainingsapp.user.api.UserRepository;
+import com.example.trainingsapp.user.api.UserService;
 import com.example.trainingsapp.user.api.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
@@ -27,7 +28,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import static com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType.EXPENSE;
 import static org.mockito.Mockito.when;
@@ -52,6 +52,8 @@ class FinancialTransactionCategoryCreateControllerTest {
     @MockBean
     private FinancialTransactionCategoryService financialTransactionCategoryService;
     @MockBean
+    private UserService userService;
+    @MockBean
     private UserRepository userRepository;
     @Autowired
     private MockMvc mockMvc;
@@ -65,7 +67,7 @@ class FinancialTransactionCategoryCreateControllerTest {
     void createCategory_forValidParameters_shouldReturnsFTCDTO() throws Exception {
         // given
         User user = TestUtils.createUserForTest();
-        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
 
         FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO =
                 new FinancialTransactionCategoryCreateDTO(EXAMPLE_CATEGORY_NAME, EXPENSE);
@@ -102,7 +104,7 @@ class FinancialTransactionCategoryCreateControllerTest {
         FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO
                 = new FinancialTransactionCategoryCreateDTO(EXAMPLE_CATEGORY_NAME, null);
 
-        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
 
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/categories")
@@ -125,7 +127,7 @@ class FinancialTransactionCategoryCreateControllerTest {
         FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO
                 = new FinancialTransactionCategoryCreateDTO("   ", EXPENSE);
 
-        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
 
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/categories")
@@ -148,7 +150,7 @@ class FinancialTransactionCategoryCreateControllerTest {
         FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO
                 = new FinancialTransactionCategoryCreateDTO(CATEGORY_NAME_TO_LONG, EXPENSE);
 
-        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
 
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/categories")

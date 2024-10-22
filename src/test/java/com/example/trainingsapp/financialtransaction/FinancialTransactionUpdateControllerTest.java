@@ -2,44 +2,49 @@ package com.example.trainingsapp.financialtransaction;
 
 import com.example.trainingsapp.TestUtils;
 import com.example.trainingsapp.authorization.JwtAuthorizationFilter;
+import com.example.trainingsapp.authorization.WebSecurityConfiguration;
 import com.example.trainingsapp.authorization.api.MyUserDetailsService;
+import com.example.trainingsapp.authorization.webtoken.JwtService;
 import com.example.trainingsapp.financialtransaction.api.FinancialTransactionService;
 import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionDTO;
 import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionUpdateDTO;
+import com.example.trainingsapp.financialtransaction.impl.FinancialTransactionServiceImpl;
 import com.example.trainingsapp.general.exception.ErrorStrategy;
 import com.example.trainingsapp.user.api.UserRepository;
+import com.example.trainingsapp.user.api.UserService;
 import com.example.trainingsapp.user.api.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Objects;
-import java.util.Optional;
 
 import static com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType.INCOME;
 import static java.math.BigDecimal.TEN;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = FinancialTransactionController.class, includeFilters = @ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE, classes = {ErrorStrategy.class}
-))
-@AutoConfigureMockMvc(addFilters = false)
+@WebMvcTest(controllers = FinancialTransactionController.class,
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+                classes = {FinancialTransactionServiceImpl.class}),
+        includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+                classes = {
+                        ErrorStrategy.class, WebSecurityConfiguration.class, MyUserDetailsService.class,
+                        JwtAuthorizationFilter.class, JwtService.class}))
 class FinancialTransactionUpdateControllerTest {
 
     private static final Long ID_1L = 1L;
@@ -51,20 +56,19 @@ class FinancialTransactionUpdateControllerTest {
     private static final BigDecimal negativeAmount = BigDecimal.valueOf(-100.00);
     private static final BigDecimal invalidAmountFormat = BigDecimal.valueOf(98.3974932);
 
-    @Autowired
-    private MockMvc mockMvc;
     @MockBean
     private FinancialTransactionService financialTransactionService;
     @MockBean
     private UserRepository userRepository;
+    @MockBean
+    private UserService userService;
+    @Autowired
+    private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-    @MockBean
-    private JwtAuthorizationFilter jwtAuthorizationFilter;
-    @MockBean
-    private MyUserDetailsService myUserDetailsService;
 
     @Test
+    @WithMockUser(username = USER_EMAIL)
     @DisplayName("Should return status OK and financial transaction")
     void updateFinancialTransaction_validData_shouldReturnFinancialTransactionAndStatusOK() throws Exception {
         // given
@@ -74,7 +78,7 @@ class FinancialTransactionUpdateControllerTest {
         FinancialTransactionDTO ftDTO = new FinancialTransactionDTO(
                 ID_1L, TEN, DESCRIPTION, INCOME, DATE, CATEGORY_ID);
 
-        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
 
         when(financialTransactionService.updateFinancialTransaction(ID_1L, ftUpdateDTO, USER_ID_1L)).thenReturn(ftDTO);
 
@@ -82,8 +86,7 @@ class FinancialTransactionUpdateControllerTest {
         ResultActions resultActions = mockMvc.perform(patch("/api/transactions/{1}", ID_1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(ftUpdateDTO)))
-                .characterEncoding("UTF-8")
-                .principal(() -> USER_EMAIL)).andDo(print());
+                .characterEncoding("UTF-8"));
 
         // then
         resultActions.andExpect(status().isOk())
@@ -94,6 +97,7 @@ class FinancialTransactionUpdateControllerTest {
     }
 
     @Test
+    @WithMockUser(username = USER_EMAIL)
     @DisplayName("Should return bad request status when financialTransactionType is null")
     void updateFinancialTransaction_financialTransactionTypeNull_shouldReturnStatusBadRequest() throws Exception {
         // given
@@ -101,20 +105,20 @@ class FinancialTransactionUpdateControllerTest {
         financialTransactionUpdateDTO.setType(null);
         User user = TestUtils.createUserForTest();
 
-        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
 
         // when
         ResultActions resultActions = mockMvc.perform(patch("/api/transactions/{id}", ID_1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(financialTransactionUpdateDTO)))
-                .characterEncoding("UTF-8")
-                .principal(() -> USER_EMAIL));
+                .characterEncoding("UTF-8"));
 
         // then
         resultActions.andExpect(status().isBadRequest());
     }
 
     @Test
+    @WithMockUser(username = USER_EMAIL)
     @DisplayName("Should return bad request status when the amount format is invalid")
     void updateFinancialTransaction_invalidAmountFormat_shouldReturnStatusBadRequest() throws Exception {
         // given
@@ -122,20 +126,20 @@ class FinancialTransactionUpdateControllerTest {
         financialTransactionUpdateDTO.setAmount(invalidAmountFormat);
         User user = TestUtils.createUserForTest();
 
-        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
 
         // when
         ResultActions resultActions = mockMvc.perform(patch("/api/transactions/{id}", ID_1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(financialTransactionUpdateDTO)))
-                .characterEncoding("UTF-8")
-                .principal(() -> USER_EMAIL));
+                .characterEncoding("UTF-8"));
 
         // then
         resultActions.andExpect(status().isBadRequest());
     }
 
     @Test
+    @WithMockUser(username = USER_EMAIL)
     @DisplayName("Should return bad request status when amount is negative")
     void updateFinancialTransaction_negativeAmount_shouldReturnStatusBadRequest() throws Exception {
         // given
@@ -143,14 +147,13 @@ class FinancialTransactionUpdateControllerTest {
         financialTransactionUpdateDTO.setAmount(negativeAmount);
         User user = TestUtils.createUserForTest();
 
-        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
 
         // when
         ResultActions resultActions = mockMvc.perform(patch("/api/transactions/{id}", ID_1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(financialTransactionUpdateDTO)))
-                .characterEncoding("UTF-8")
-                .principal(() -> USER_EMAIL));
+                .characterEncoding("UTF-8"));
 
         // then
         resultActions.andExpect(status().isBadRequest());

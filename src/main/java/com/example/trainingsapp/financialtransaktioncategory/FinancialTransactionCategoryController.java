@@ -1,10 +1,10 @@
 package com.example.trainingsapp.financialtransaktioncategory;
 
-import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryDetailedDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryService;
 import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryCreateDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryDTO;
-import com.example.trainingsapp.user.api.UserRepository;
+import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryDetailedDTO;
+import com.example.trainingsapp.user.api.UserService;
 import com.example.trainingsapp.user.api.model.User;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -16,7 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Optional;
+import java.util.List;
 
 @Validated
 @RestController
@@ -24,24 +24,20 @@ import java.util.Optional;
 public class FinancialTransactionCategoryController {
 
     @Autowired
-    UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
-    FinancialTransactionCategoryService financialTransactionCategoryService;
-
+    private FinancialTransactionCategoryService financialTransactionCategoryService;
 
     @PostMapping()
     public ResponseEntity<FinancialTransactionCategoryDTO> createCategory(
             @Valid @RequestBody FinancialTransactionCategoryCreateDTO categoryCreateDTO, Principal principal) {
         String email = principal.getName();
-        Optional<User> user = userRepository.findByEmail(email);
-        if (!user.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        Long userID = user.get().getId();
+        User user = userService.findUserByEmail(email);
+        Long userId = user.getId();
 
         FinancialTransactionCategoryDTO categoryDTO =
-                financialTransactionCategoryService.createCategory(categoryCreateDTO, userID);
+                financialTransactionCategoryService.createCategory(categoryCreateDTO, userId);
 
         return new ResponseEntity<>(categoryDTO, HttpStatus.CREATED);
 
@@ -51,11 +47,8 @@ public class FinancialTransactionCategoryController {
     public ResponseEntity<FinancialTransactionCategoryDetailedDTO> getFinancialCategoryById(
             @NotNull @Min(1) @PathVariable Long id, Principal principal) {
         String email = principal.getName();
-        Optional<User> user = userRepository.findByEmail(email);
-        if (!user.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        Long userID = user.get().getId();
+        User user = userService.findUserByEmail(email);
+        Long userID = user.getId();
 
         FinancialTransactionCategoryDetailedDTO categoryDetailedDTO = financialTransactionCategoryService
                 .findFinancialTransactionCategoryForUser(id, userID);
@@ -63,4 +56,17 @@ public class FinancialTransactionCategoryController {
         return new ResponseEntity<>(categoryDetailedDTO, HttpStatus.OK);
 
     }
+
+
+    @GetMapping()
+    public ResponseEntity<List<FinancialTransactionCategoryDTO>> getFinancialTransactionCategories(
+            Principal principal) {
+        String email = principal.getName();
+        User user = userService.findUserByEmail(email);
+        Long userID = user.getId();
+
+    }
+
+
+
 }

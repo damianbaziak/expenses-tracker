@@ -31,7 +31,7 @@ class FinancialTransactionCategoryFindServiceImplTest {
     private static final Long USER_ID_1L = 1L;
     private static final Long CATEGORY_ID_1L = 1L;
     @Mock
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Mock
     private FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
     @InjectMocks

@@ -15,5 +15,7 @@ public interface UserService {
 
     User updatePassword(Long id, PasswordUptadeDTO passwordUptadeDto);
 
+    User findUserByEmail(String email);
+
 
 }

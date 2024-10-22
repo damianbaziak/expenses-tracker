@@ -4,7 +4,7 @@ import com.example.trainingsapp.financialtransaction.api.FinancialTransactionSer
 import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionCreateDTO;
 import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionDTO;
 import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionUpdateDTO;
-import com.example.trainingsapp.user.api.UserRepository;
+import com.example.trainingsapp.user.api.UserService;
 import com.example.trainingsapp.user.api.model.User;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @Validated
 @RestController
@@ -28,20 +27,17 @@ public class FinancialTransactionController {
     FinancialTransactionService financialTransactionService;
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     @PostMapping()
     public ResponseEntity<FinancialTransactionDTO> createFinancialTransaction(
             @Valid @RequestBody FinancialTransactionCreateDTO financialTransactionCreateDTO, Principal principal) {
         String email = principal.getName();
-        Optional<User> user = userRepository.findByEmail(email);
-        if (!user.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        Long userID = user.get().getId();
+        User user = userService.findUserByEmail(email);
+        Long userId = user.getId();
 
         FinancialTransactionDTO financialTransactionDTO =
-                financialTransactionService.createFinancialTransaction(financialTransactionCreateDTO, userID);
+                financialTransactionService.createFinancialTransaction(financialTransactionCreateDTO, userId);
 
         return new ResponseEntity<>(financialTransactionDTO, HttpStatus.CREATED);
     }
@@ -50,14 +46,11 @@ public class FinancialTransactionController {
     public ResponseEntity<List<FinancialTransactionDTO>> getFinancialTransactionsByWalletId(
             @RequestParam @Min(1) @NotNull Long walletId, Principal principal) {
         String email = principal.getName();
-        Optional<User> user = userRepository.findByEmail(email);
-        if (!user.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        Long userID = user.get().getId();
+        User user = userService.findUserByEmail(email);
+        Long userId = user.getId();
 
         List<FinancialTransactionDTO> financialTransactionDTOS = financialTransactionService
-                .findFinancialTransactionsByWalletId(walletId, userID);
+                .findFinancialTransactionsByWalletId(walletId, userId);
 
         return new ResponseEntity<>(financialTransactionDTOS, HttpStatus.OK);
 
@@ -69,11 +62,8 @@ public class FinancialTransactionController {
             @Min(1) @NotNull @PathVariable Long id,
             @Valid @RequestBody FinancialTransactionUpdateDTO financialTransactionUpdateDTO, Principal principal) {
         String email = principal.getName();
-        Optional<User> user = userRepository.findByEmail(email);
-        if (!user.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        Long userId = user.get().getId();
+        User user = userService.findUserByEmail(email);
+        Long userId = user.getId();
 
         FinancialTransactionDTO financialTransactionDTO = financialTransactionService.updateFinancialTransaction(
                 id, financialTransactionUpdateDTO, userId);
@@ -86,11 +76,8 @@ public class FinancialTransactionController {
     public ResponseEntity<FinancialTransactionDTO> getTransactionById(
             @Min(1) @NotNull @PathVariable Long id, Principal principal) {
         String email = principal.getName();
-        Optional<User> user = userRepository.findByEmail(email);
-        if (!user.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        Long userId = user.get().getId();
+        User user = userService.findUserByEmail(email);
+        Long userId = user.getId();
 
         FinancialTransactionDTO financialTransactionDTO = financialTransactionService.findFinancialTransactionForUser(
                 id, userId);
@@ -102,11 +89,8 @@ public class FinancialTransactionController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteTransactionById(@Min(1) @NotNull @PathVariable Long id, Principal principal) {
         String email = principal.getName();
-        Optional<User> user = userRepository.findByEmail(email);
-        if (!user.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        Long userId = user.get().getId();
+        User user = userService.findUserByEmail(email);
+        Long userId = user.getId();
 
         financialTransactionService.deleteTransaction(id, userId);
 

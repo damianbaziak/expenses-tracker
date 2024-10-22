@@ -6,12 +6,10 @@ import com.example.trainingsapp.financialtransaction.api.FinancialTransactionRep
 import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionCreateDTO;
 import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionDTO;
 import com.example.trainingsapp.financialtransaction.api.model.FinancialTransaction;
-import com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType;
 import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryRepository;
 import com.example.trainingsapp.financialtransaktioncategory.api.model.FinancialTransactionCategory;
 import com.example.trainingsapp.general.exception.AppRuntimeException;
 import com.example.trainingsapp.general.exception.ErrorCode;
-import com.example.trainingsapp.user.api.model.User;
 import com.example.trainingsapp.wallet.api.WalletRepository;
 import com.example.trainingsapp.wallet.api.model.Wallet;
 import org.junit.jupiter.api.Assertions;
@@ -177,7 +175,7 @@ class FinancialTransactionCreateServiceImplTest {
                 any(FinancialTransaction.class))).thenReturn(financialTransactionDTO);
 
         FinancialTransactionCategory financialTransactionCategory = TestUtils.createFinancialTransactionCategoryForTest(
-        EXPENSE);
+                EXPENSE);
         when(financialTransactionCategoryRepository.findByIdAndUserId(any(), any())).thenReturn(
                 Optional.ofNullable(financialTransactionCategory));
 

@@ -1,7 +1,6 @@
 package com.example.trainingsapp.financialtransaction.impl;
 
 
-
 import com.example.trainingsapp.TestUtils;
 import com.example.trainingsapp.financialtransaction.api.FinancialTransactionRepository;
 import com.example.trainingsapp.general.exception.AppRuntimeException;

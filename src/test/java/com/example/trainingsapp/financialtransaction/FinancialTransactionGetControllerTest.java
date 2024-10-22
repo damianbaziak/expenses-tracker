@@ -2,29 +2,32 @@ package com.example.trainingsapp.financialtransaction;
 
 import com.example.trainingsapp.TestUtils;
 import com.example.trainingsapp.authorization.JwtAuthorizationFilter;
+import com.example.trainingsapp.authorization.WebSecurityConfiguration;
 import com.example.trainingsapp.authorization.api.MyUserDetailsService;
+import com.example.trainingsapp.authorization.webtoken.JwtService;
 import com.example.trainingsapp.financialtransaction.api.FinancialTransactionService;
 import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionDTO;
+import com.example.trainingsapp.financialtransaction.impl.FinancialTransactionServiceImpl;
 import com.example.trainingsapp.general.exception.AppRuntimeException;
 import com.example.trainingsapp.general.exception.ErrorCode;
 import com.example.trainingsapp.general.exception.ErrorStrategy;
 import com.example.trainingsapp.user.api.UserRepository;
+import com.example.trainingsapp.user.api.UserService;
 import com.example.trainingsapp.user.api.model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType.EXPENSE;
 import static com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType.INCOME;
@@ -33,11 +36,14 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
-@WebMvcTest(controllers = FinancialTransactionController.class, includeFilters = @ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE, classes = {ErrorStrategy.class}))
-@AutoConfigureMockMvc(addFilters = false)
-public class FinancialTransactionGetControllerTest {
+@WebMvcTest(controllers = FinancialTransactionController.class,
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+                classes = {FinancialTransactionServiceImpl.class}),
+        includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+                classes = {
+                        ErrorStrategy.class, WebSecurityConfiguration.class, MyUserDetailsService.class,
+                        JwtAuthorizationFilter.class, JwtService.class}))
+class FinancialTransactionGetControllerTest {
     private static final Long ID_1 = 1L;
     private static final Long ID_2 = 2L;
     private static final Long ID_3 = 3L;
@@ -59,15 +65,13 @@ public class FinancialTransactionGetControllerTest {
     private FinancialTransactionService financialTransactionService;
 
     @MockBean
-    private JwtAuthorizationFilter jwtAuthorizationFilter;
-
-    @MockBean
-    private MyUserDetailsService myUserDetailsService;
-
-    @MockBean
     private UserRepository userRepository;
 
+    @MockBean
+    private UserService userService;
+
     @Test
+    @WithMockUser(username = USER_EMAIL)
     @DisplayName("Should return status OK and all financial transactions list")
     void getFinancialTransactionsByWalletId_transactionsExist_shouldReturnFinancialTransactionsList() throws Exception {
         // given
@@ -75,14 +79,13 @@ public class FinancialTransactionGetControllerTest {
         List<FinancialTransactionDTO> financialTransactionDTOS = TestUtils.createFinancialTransactionDTOListForTest(
                 3, EXPENSE, CATEGORY_ID_1L);
 
-        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
         when(financialTransactionService.findFinancialTransactionsByWalletId(WALLET_ID_1L, USER_ID_1L))
                 .thenReturn(financialTransactionDTOS);
 
         // when
         ResultActions resultActions = mockMvc.perform(get("/api/transactions").param(
-                        "walletId", String.valueOf(WALLET_ID_1L))
-                .principal(() -> USER_EMAIL));
+                "walletId", String.valueOf(WALLET_ID_1L)));
 
         // then
         resultActions.andExpect(status().isOk())
@@ -101,19 +104,19 @@ public class FinancialTransactionGetControllerTest {
     }
 
     @Test
+    @WithMockUser(username = USER_EMAIL)
     @DisplayName("Should return an empty list and status OK when there are no financial transactions in the wallet")
     void getFinancialTransactionsByWalletId_noFinancialTransactionsExist_shouldReturnEmptyList() throws Exception {
         // given
         User user = TestUtils.createUserForTest();
 
-        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
         when(financialTransactionService.findFinancialTransactionsByWalletId(WALLET_ID_1L, USER_ID_1L))
                 .thenReturn(Collections.emptyList());
 
         // when
         ResultActions resultActions = mockMvc.perform(get("/api/transactions").param(
-                        "walletId", String.valueOf(WALLET_ID_1L))
-                .principal(() -> USER_EMAIL));
+                "walletId", String.valueOf(WALLET_ID_1L)));
 
         // then
         resultActions.andExpect(status().isOk())
@@ -123,18 +126,18 @@ public class FinancialTransactionGetControllerTest {
     }
 
     @Test
+    @WithMockUser(username = USER_EMAIL)
     @DisplayName("Should return financial transaction and status OK")
     void getTransactionById_transactionExist_shouldReturnFinancialTransaction() throws Exception {
         // given
         User user = TestUtils.createUserForTest();
         FinancialTransactionDTO financialTransactionDTO = TestUtils.createFinancialTransactionDTOForTest(INCOME);
-        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
         when(financialTransactionService.findFinancialTransactionForUser(ID_1, USER_ID_1L)).thenReturn(
                 financialTransactionDTO);
 
         // when
-        ResultActions resultActions = mockMvc.perform(get("/api/transactions/{id}", ID_1)
-                .principal(() -> USER_EMAIL));
+        ResultActions resultActions = mockMvc.perform(get("/api/transactions/{id}", ID_1));
 
         // then
         resultActions
@@ -147,17 +150,17 @@ public class FinancialTransactionGetControllerTest {
     }
 
     @Test
+    @WithMockUser(username = USER_EMAIL)
     @DisplayName("Should return status 404 - not found when financial transaction with given ID not exist")
     void getTransactionById_transactionNotExist_shouldReturnsStatusNotFound() throws Exception {
         // given
         User user = TestUtils.createUserForTest();
-        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
         doThrow(new AppRuntimeException(ErrorCode.FT001, "Transaction not found")).when(
                 financialTransactionService).findFinancialTransactionForUser(ID_1, USER_ID_1L);
 
         // when
-        ResultActions resultActions = mockMvc.perform(get("/api/transactions/{id}", ID_1)
-                .principal(() -> USER_EMAIL));
+        ResultActions resultActions = mockMvc.perform(get("/api/transactions/{id}", ID_1));
 
         // then
         resultActions

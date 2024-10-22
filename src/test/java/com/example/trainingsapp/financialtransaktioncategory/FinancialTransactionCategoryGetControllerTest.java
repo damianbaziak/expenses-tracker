@@ -12,6 +12,7 @@ import com.example.trainingsapp.general.exception.AppRuntimeException;
 import com.example.trainingsapp.general.exception.ErrorCode;
 import com.example.trainingsapp.general.exception.ErrorStrategy;
 import com.example.trainingsapp.user.api.UserRepository;
+import com.example.trainingsapp.user.api.UserService;
 import com.example.trainingsapp.user.api.model.User;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +29,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.math.BigInteger;
 import java.time.Instant;
-import java.util.Optional;
 
 import static com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType.EXPENSE;
 import static org.mockito.Mockito.*;
@@ -47,13 +47,15 @@ class FinancialTransactionCategoryGetControllerTest {
     private static final String EXAMPLE_CATEGORY_NAME = "Example category name";
 
     @MockBean
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @MockBean
-    FinancialTransactionCategoryService financialTransactionCategoryService;
+    private UserService userService;
+    @MockBean
+    private FinancialTransactionCategoryService financialTransactionCategoryService;
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
     @MockBean
-    ErrorStrategy errorStrategy;
+    private ErrorStrategy errorStrategy;
 
     @Test
     @DisplayName("Should returns financial transaction category detailed DTO and status OK when category exists")
@@ -61,7 +63,7 @@ class FinancialTransactionCategoryGetControllerTest {
     void getFinancialCategoryById_categoryExist_returnsFTCategoryDetailedDTO() throws Exception {
         // given
         User user = TestUtils.createUserForTest();
-        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
 
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO =
                 TestUtils.createFinancialTransactionCategoryDTOForTest(EXPENSE, USER_ID_1L);
@@ -98,7 +100,7 @@ class FinancialTransactionCategoryGetControllerTest {
     void getFinancialCategoryById_categoryNotExist_returnsNotFound() throws Exception {
         // given
         User user = TestUtils.createUserForTest();
-        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
 
         doThrow(new AppRuntimeException(ErrorCode.FTC001, "Category not found")).when(financialTransactionCategoryService)
                 .findFinancialTransactionCategoryForUser(CATEGORY_ID_1L, USER_ID_1L);

@@ -77,6 +77,12 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.save(existingUser);
     }
+
+    @Override
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new AppRuntimeException(ErrorCode.U003,
+                String.format("User with this email: %s doesn't exist", email)));
+    }
 }
 
 
