@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.util.List;
 
 @Service
 public class FinancialTransactionCategoryServiceImpl implements FinancialTransactionCategoryService {
@@ -64,6 +65,19 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
 
         return new FinancialTransactionCategoryDetailedDTO(
                 financialTransactionCategoryDTO, numberOfFinancialTransactions);
+    }
+
+    @Override
+    public List<FinancialTransactionCategoryDTO> findFinancialTransactionCategories(Long userId) {
+        List<FinancialTransactionCategory> financialTransactionCategoryList =
+        financialTransactionCategoryRepository.findAllByUserId(userId);
+
+        return financialTransactionCategoryList.stream()
+                .map(financialTransactionCategory -> new FinancialTransactionCategoryDTO(
+                        financialTransactionCategory.getId(), financialTransactionCategory.getName(),
+                        financialTransactionCategory.getType(), financialTransactionCategory.getCreationDate(),
+                        financialTransactionCategory.getUser().getId()))
+                .toList();
     }
 
     public User getUserByUserId(Long userId) {

@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FinancialTransactionCategoryRepository extends CrudRepository<FinancialTransactionCategory, Long> {
-    List<FinancialTransactionCategory> findAllByUserIdOrderByName(Long userId);
+    List<FinancialTransactionCategory> findAllByUserId(Long userId);
     Optional<FinancialTransactionCategory> findByIdAndUserId(Long id, Long userId);
 }

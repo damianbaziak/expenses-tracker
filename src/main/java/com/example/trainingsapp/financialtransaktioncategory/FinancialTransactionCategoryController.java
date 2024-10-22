@@ -48,10 +48,10 @@ public class FinancialTransactionCategoryController {
             @NotNull @Min(1) @PathVariable Long id, Principal principal) {
         String email = principal.getName();
         User user = userService.findUserByEmail(email);
-        Long userID = user.getId();
+        Long userId = user.getId();
 
         FinancialTransactionCategoryDetailedDTO categoryDetailedDTO = financialTransactionCategoryService
-                .findFinancialTransactionCategoryForUser(id, userID);
+                .findFinancialTransactionCategoryForUser(id, userId);
 
         return new ResponseEntity<>(categoryDetailedDTO, HttpStatus.OK);
 
@@ -63,7 +63,12 @@ public class FinancialTransactionCategoryController {
             Principal principal) {
         String email = principal.getName();
         User user = userService.findUserByEmail(email);
-        Long userID = user.getId();
+        Long userId = user.getId();
+
+        List<FinancialTransactionCategoryDTO> financialTransactionCategoryDTOList =
+                financialTransactionCategoryService.findFinancialTransactionCategories(userId);
+
+        return new ResponseEntity<>(financialTransactionCategoryDTOList, HttpStatus.OK);
 
     }
 
