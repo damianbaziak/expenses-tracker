@@ -29,8 +29,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.math.BigInteger;
 import java.time.Instant;
+import java.util.List;
 
 import static com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType.EXPENSE;
+import static java.util.Collections.emptyList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -41,10 +43,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 classes = {JwtService.class, MyUserDetailsService.class, JwtAuthorizationFilter.class,}))
 class FinancialTransactionCategoryGetControllerTest {
     private static final Long CATEGORY_ID_1L = 1L;
+    private static final Long CATEGORY_ID_2L = 2L;
+    private static final Long CATEGORY_ID_3L = 3L;
     private static final Long USER_ID_1L = 1L;
     private static final String USER_EMAIL = "example@email.com";
     private static final Instant DATE = Instant.parse("2024-12-22T14:30:00.500Z");
     private static final String EXAMPLE_CATEGORY_NAME = "Example category name";
+    private static final String EXAMPLE_CATEGORY_NAME_1 = "Example category name_1";
+    private static final String EXAMPLE_CATEGORY_NAME_2 = "Example category name_2";
+    private static final String EXAMPLE_CATEGORY_NAME_3 = "Example category name_3";
 
     @MockBean
     private UserRepository userRepository;
@@ -152,6 +159,56 @@ class FinancialTransactionCategoryGetControllerTest {
         verify(financialTransactionCategoryService, times(0))
                 .findFinancialTransactionCategoryForUser(0L, USER_ID_1L);
 
+    }
+
+    @Test
+    @WithMockUser(username = USER_EMAIL)
+    @DisplayName("Should returns status OK and financial transaction categories list")
+    void getFinancialTransactionCategories_categoriesExist_returnsCategoriesList() throws Exception {
+        // given
+        User user = TestUtils.createUserForTest();
+        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
+
+        List<FinancialTransactionCategoryDTO> financialTransactionCategoryDTOList =
+                TestUtils.createFinancialTransactionCategoryDTOListForTest(3, EXPENSE, USER_ID_1L);
+        when(financialTransactionCategoryService.findFinancialTransactionCategories(USER_ID_1L)).thenReturn(
+                financialTransactionCategoryDTOList);
+
+        // when
+        ResultActions result = mockMvc.perform(MockMvcRequestBuilders.get("/api/categories"));
+
+        // then
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(financialTransactionCategoryDTOList.size()))
+                .andExpect(jsonPath("$[0].id").value(CATEGORY_ID_1L))
+                .andExpect(jsonPath("$[1].id").value(CATEGORY_ID_2L))
+                .andExpect(jsonPath("$[2].id").value(CATEGORY_ID_3L))
+                .andExpect(jsonPath("$[0].name").value(EXAMPLE_CATEGORY_NAME_1))
+                .andExpect(jsonPath("$[1].name").value(EXAMPLE_CATEGORY_NAME_2))
+                .andExpect(jsonPath("$[2].name").value(EXAMPLE_CATEGORY_NAME_3));
+        verify(financialTransactionCategoryService, times(1)).findFinancialTransactionCategories(
+                USER_ID_1L);
+    }
+
+    @Test
+    @WithMockUser(username = USER_EMAIL)
+    @DisplayName("Should returns status OK and an empty List when no categories exist")
+    void getFinancialTransactionCategories_noCategoriesExist_returnsEmptyList() throws Exception {
+        // given
+        User user = TestUtils.createUserForTest();
+        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
+
+        when(financialTransactionCategoryService.findFinancialTransactionCategories(USER_ID_1L)).thenReturn(
+                emptyList());
+
+        // when
+        ResultActions result = mockMvc.perform(MockMvcRequestBuilders.get("/api/categories"));
+
+        // then
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(0));
+        verify(financialTransactionCategoryService, times(1)).findFinancialTransactionCategories(
+                USER_ID_1L);
     }
 
 

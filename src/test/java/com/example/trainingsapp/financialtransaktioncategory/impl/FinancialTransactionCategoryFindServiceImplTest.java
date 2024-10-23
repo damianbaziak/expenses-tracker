@@ -10,6 +10,8 @@ import com.example.trainingsapp.financialtransaktioncategory.api.model.Financial
 import com.example.trainingsapp.general.exception.AppRuntimeException;
 import com.example.trainingsapp.general.exception.ErrorCode;
 import com.example.trainingsapp.user.api.UserRepository;
+import com.example.trainingsapp.user.api.model.User;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Optional;
 
 import static com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType.EXPENSE;
@@ -30,6 +33,11 @@ class FinancialTransactionCategoryFindServiceImplTest {
 
     private static final Long USER_ID_1L = 1L;
     private static final Long CATEGORY_ID_1L = 1L;
+    private static final Long CATEGORY_ID_2L = 2L;
+    private static final Long CATEGORY_ID_3L = 3L;
+    private static final String EXAMPLE_CATEGORY_NAME_1 = "Example category name_1";
+    private static final String EXAMPLE_CATEGORY_NAME_2 = "Example category name_2";
+    private static final String EXAMPLE_CATEGORY_NAME_3 = "Example category name_3";
     @Mock
     private UserRepository userRepository;
     @Mock
@@ -96,6 +104,44 @@ class FinancialTransactionCategoryFindServiceImplTest {
         verify(financialTransactionCategoryModelMapper, times(0))
                 .mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(
                         any(FinancialTransactionCategory.class));
+    }
+
+    @Test
+    @DisplayName("Should return a list of FinancialTransactionCategoryDTOs")
+    void findFinancialTransactionCategories_categoriesExist_shouldReturnCategoriesDTOsList() {
+        // given
+        User user = TestUtils.createUserForTest();
+
+        List<FinancialTransactionCategory> financialTransactionCategories =
+                TestUtils.createFinancialTransactionCategoryListForTest(3, EXPENSE, user);
+        when(financialTransactionCategoryRepository.findAllByUserId(USER_ID_1L)).thenReturn(
+                financialTransactionCategories);
+
+        List<FinancialTransactionCategoryDTO> financialTransactionCategoryDTOList =
+                TestUtils.createFinancialTransactionCategoryDTOListForTest(3, EXPENSE, USER_ID_1L);
+
+        // when
+        List<FinancialTransactionCategoryDTO> result =
+                financialTransactionCategoryService.findFinancialTransactionCategories(USER_ID_1L);
+
+        // then
+        Assertions.assertAll(
+                () -> assertThat(result).isNotNull(),
+                () -> assertThat(result).containsExactlyInAnyOrderElementsOf(financialTransactionCategoryDTOList));
+
+        /*
+                () -> assertThat(result.get(0).getId()).isEqualTo(CATEGORY_ID_1L),
+                () -> assertThat(result.get(1).getId()).isEqualTo(CATEGORY_ID_2L),
+                () -> assertThat(result.get(2).getId()).isEqualTo(CATEGORY_ID_3L),
+                () -> assertThat(result.get(0).getName()).isEqualTo(EXAMPLE_CATEGORY_NAME_1),
+                () -> assertThat(result.get(1).getName()).isEqualTo(EXAMPLE_CATEGORY_NAME_2),
+                () -> assertThat(result.get(2).getName()).isEqualTo(EXAMPLE_CATEGORY_NAME_3));
+
+        */
+
+
+
+
     }
 }
 

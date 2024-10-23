@@ -21,9 +21,10 @@ public class TestUtils {
     private static final String USER_EMAIL = "example@email.com";
     private static final Long WALLET_ID_1L = 1L;
     private static final String EXAMPLE_DESCRIPTION = "Example description_";
-    private static final String EXAMPLE_CATEGORY_NAME = "Example category name";
+    private static final String EXAMPLE_CATEGORY_NAME = "Example category name_";
     private static final Long ID_1L = 1L;
     private static final Long CATEGORY_ID = 1L;
+    private static final Instant DATE_NOW = Instant.now();
 
 
     public static User createUserForTest() {
@@ -129,4 +130,37 @@ public class TestUtils {
         return new FinancialTransactionCategoryDTO(ID_1L, EXAMPLE_CATEGORY_NAME, type, Instant.now(), userId);
 
     }
+
+    public static List<FinancialTransactionCategory> createFinancialTransactionCategoryListForTest(
+            int count, FinancialTransactionType type, User user) {
+        ArrayList<FinancialTransactionCategory> list = new ArrayList<>();
+        for (long i = 1; i <= count; i++) {
+            list.add(FinancialTransactionCategory.builder()
+                    .id(i)
+                    .name(EXAMPLE_CATEGORY_NAME + i)
+                    .type(type)
+                    .creationDate(DATE_NOW)
+                    .user(user)
+                    .build()
+            );
+        }
+        return list;
+
+    }
+
+    public static List<FinancialTransactionCategoryDTO> createFinancialTransactionCategoryDTOListForTest(
+            int count, FinancialTransactionType type, Long userId) {
+        ArrayList<FinancialTransactionCategoryDTO> list = new ArrayList<>();
+        for (long i = 1; i <= count; i++) {
+            list.add(new FinancialTransactionCategoryDTO(
+                    i,
+                    EXAMPLE_CATEGORY_NAME + i,
+                    type,
+                    DATE_NOW,
+                    userId
+            ));
+        }
+        return list;
+    }
+
 }
