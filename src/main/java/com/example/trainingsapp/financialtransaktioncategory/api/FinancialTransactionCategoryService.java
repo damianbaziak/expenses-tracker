@@ -1,10 +1,9 @@
 package com.example.trainingsapp.financialtransaktioncategory.api;
 
-import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryDetailedDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryCreateDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryDTO;
+import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryDetailedDTO;
 
-import java.security.Principal;
 import java.util.List;
 
 public interface FinancialTransactionCategoryService {

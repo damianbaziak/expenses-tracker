@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 class FinancialTransactionCategoryCreateServiceImplTest {
 
     private static final Long USER_ID_1L = 1L;
-    private static final String EXAMPLE_CATEGORY_NAME = "Example category name";
+    private static final String EXAMPLE_CATEGORY_NAME = "Example category name_";
 
     @Mock
     private FinancialTransactionCategoryRepository financialTransactionCategoryRepository;

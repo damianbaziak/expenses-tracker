@@ -20,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,8 +39,6 @@ class FinancialTransactionCategoryFindServiceImplTest {
     private static final String EXAMPLE_CATEGORY_NAME_1 = "Example category name_1";
     private static final String EXAMPLE_CATEGORY_NAME_2 = "Example category name_2";
     private static final String EXAMPLE_CATEGORY_NAME_3 = "Example category name_3";
-    @Mock
-    private UserRepository userRepository;
     @Mock
     private FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
     @InjectMocks
@@ -127,7 +126,9 @@ class FinancialTransactionCategoryFindServiceImplTest {
         // then
         Assertions.assertAll(
                 () -> assertThat(result).isNotNull(),
-                () -> assertThat(result).containsExactlyInAnyOrderElementsOf(financialTransactionCategoryDTOList));
+                () -> assertThat(result).containsExactlyInAnyOrderElementsOf(financialTransactionCategoryDTOList),
+                () -> verify(financialTransactionCategoryRepository, times(1)).findAllByUserId(
+                        USER_ID_1L));
 
         /*
                 () -> assertThat(result.get(0).getId()).isEqualTo(CATEGORY_ID_1L),
@@ -139,7 +140,24 @@ class FinancialTransactionCategoryFindServiceImplTest {
 
         */
 
+    }
 
+    @Test
+    @DisplayName("Should return an empty List when no categories exist")
+    void findFinancialTransactionCategories_noCategoriesExist_shouldReturnEmptyList() {
+        // given
+        when(financialTransactionCategoryRepository.findAllByUserId(USER_ID_1L)).thenReturn(
+                Collections.emptyList());
+
+        // when
+        List<FinancialTransactionCategoryDTO> result =
+                financialTransactionCategoryService.findFinancialTransactionCategories(USER_ID_1L);
+
+        // then
+        Assertions.assertAll(
+                () -> assertThat(result).isEmpty(),
+                () -> verify(financialTransactionCategoryRepository, times(1)).findAllByUserId(
+                        USER_ID_1L));
 
 
     }

@@ -47,7 +47,7 @@ class FinancialTransactionCategoryCreateControllerTest {
     private static final Long ID_1L = 1L;
     private static final Long USER_ID_1L = 1L;
     private static final String USER_EMAIL = "example@email.com";
-    private static final String EXAMPLE_CATEGORY_NAME = "Example category name";
+    private static final String EXAMPLE_CATEGORY_NAME = "Example category name_";
     private static final String CATEGORY_NAME_TO_LONG = "sdfasdfas4353432523m45bn4m5nbmnbm2345234";
     @MockBean
     private FinancialTransactionCategoryService financialTransactionCategoryService;

@@ -48,7 +48,7 @@ class FinancialTransactionCategoryGetControllerTest {
     private static final Long USER_ID_1L = 1L;
     private static final String USER_EMAIL = "example@email.com";
     private static final Instant DATE = Instant.parse("2024-12-22T14:30:00.500Z");
-    private static final String EXAMPLE_CATEGORY_NAME = "Example category name";
+    private static final String EXAMPLE_CATEGORY_NAME = "Example category name_";
     private static final String EXAMPLE_CATEGORY_NAME_1 = "Example category name_1";
     private static final String EXAMPLE_CATEGORY_NAME_2 = "Example category name_2";
     private static final String EXAMPLE_CATEGORY_NAME_3 = "Example category name_3";
