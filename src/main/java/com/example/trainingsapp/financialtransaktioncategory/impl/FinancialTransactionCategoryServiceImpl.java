@@ -1,17 +1,19 @@
 package com.example.trainingsapp.financialtransaktioncategory.impl;
 
 import com.example.trainingsapp.financialtransaction.api.FinancialTransactionRepository;
-import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryDetailedDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryModelMapper;
 import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryRepository;
 import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryService;
 import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryCreateDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryDTO;
+import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryDetailedDTO;
+import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryUpdateDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.model.FinancialTransactionCategory;
 import com.example.trainingsapp.general.exception.AppRuntimeException;
 import com.example.trainingsapp.general.exception.ErrorCode;
 import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.api.model.User;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,7 +72,7 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
     @Override
     public List<FinancialTransactionCategoryDTO> findFinancialTransactionCategories(Long userId) {
         List<FinancialTransactionCategory> financialTransactionCategoryList =
-        financialTransactionCategoryRepository.findAllByUserId(userId);
+                financialTransactionCategoryRepository.findAllByUserId(userId);
 
         return financialTransactionCategoryList.stream()
                 .map(financialTransactionCategory -> new FinancialTransactionCategoryDTO(
@@ -78,6 +80,38 @@ public class FinancialTransactionCategoryServiceImpl implements FinancialTransac
                         financialTransactionCategory.getType(), financialTransactionCategory.getCreationDate(),
                         financialTransactionCategory.getUser().getId()))
                 .toList();
+    }
+
+    @Override
+    @Transactional
+    public FinancialTransactionCategoryDTO updateFinancialTransactionCategory(
+            Long categoryId, FinancialTransactionCategoryUpdateDTO categoryUpdateDTO, Long userId) {
+
+        FinancialTransactionCategory financialTransactionCategory =
+                financialTransactionCategoryRepository.findByIdAndUserId(categoryId, userId).orElseThrow(
+                        () -> new AppRuntimeException(ErrorCode.FTC001, CATEGORY_WITH_ID_NOT_FOUND_FOR_USER));
+
+        User user = getUserByUserId(userId);
+
+        financialTransactionCategory.setName(categoryUpdateDTO.getName());
+        financialTransactionCategory.setType(categoryUpdateDTO.getType());
+        financialTransactionCategory.setUser(user);
+
+        return financialCategoryModelMapper.mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(
+                financialTransactionCategory
+        );
+
+
+    }
+
+    @Override
+    public void deleteCategory(Long categoryId, Long userId) {
+        if (financialTransactionCategoryRepository.existsByIdAndUserId(categoryId, userId)) {
+            financialTransactionCategoryRepository.deleteById(categoryId);
+        } else {
+            throw new AppRuntimeException(ErrorCode.FTC001,
+                    String.format(CATEGORY_WITH_ID_NOT_FOUND_FOR_USER, categoryId));
+        }
     }
 
     public User getUserByUserId(Long userId) {

@@ -82,7 +82,6 @@ class FinancialTransactionCategoryCreateControllerTest {
         ResultActions resultActions = mockMvc.perform(post("/api/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO)))
-                //.principal(() -> USER_EMAIL)
                 .characterEncoding("UTF-8"));
 
         // then

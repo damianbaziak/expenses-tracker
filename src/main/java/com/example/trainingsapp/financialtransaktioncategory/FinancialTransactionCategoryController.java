@@ -4,6 +4,7 @@ import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransa
 import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryCreateDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryDetailedDTO;
+import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryUpdateDTO;
 import com.example.trainingsapp.user.api.UserService;
 import com.example.trainingsapp.user.api.model.User;
 import jakarta.validation.Valid;
@@ -69,6 +70,37 @@ public class FinancialTransactionCategoryController {
                 financialTransactionCategoryService.findFinancialTransactionCategories(userId);
 
         return new ResponseEntity<>(financialTransactionCategoryDTOList, HttpStatus.OK);
+
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<FinancialTransactionCategoryDTO> updateFinancialTransactionCategory(
+            @NotNull @Min(1) @PathVariable Long id,
+            @RequestBody FinancialTransactionCategoryUpdateDTO categoryUpdateDTO,
+            Principal principal) {
+        String email = principal.getName();
+        User user = userService.findUserByEmail(email);
+        Long userId = user.getId();
+
+        FinancialTransactionCategoryDTO financialTransactionCategoryDTO =
+                financialTransactionCategoryService.updateFinancialTransactionCategory(
+                        id, categoryUpdateDTO, userId);
+
+        return new ResponseEntity<>(financialTransactionCategoryDTO, HttpStatus.OK);
+
+    }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteFinancialTransactionCategoryById(
+            @NotNull @Min(1) @PathVariable Long id, Principal principal) {
+        String email = principal.getName();
+        User user = userService.findUserByEmail(email);
+        Long userId = user.getId();
+
+        financialTransactionCategoryService.deleteCategory(id, userId);
+
+        return new ResponseEntity<>("Financial transaction category deleted successfully", HttpStatus.OK);
 
     }
 

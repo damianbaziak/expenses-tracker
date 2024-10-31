@@ -1,13 +1,12 @@
-package com.example.trainingsapp.financialtransaction;
+package com.example.trainingsapp.financialtransaktioncategory;
 
 import com.example.trainingsapp.TestUtils;
 import com.example.trainingsapp.authorization.JwtAuthorizationFilter;
 import com.example.trainingsapp.authorization.WebSecurityConfiguration;
 import com.example.trainingsapp.authorization.api.MyUserDetailsService;
 import com.example.trainingsapp.authorization.webtoken.JwtService;
-import com.example.trainingsapp.financialtransaction.api.FinancialTransactionRepository;
-import com.example.trainingsapp.financialtransaction.api.FinancialTransactionService;
-import com.example.trainingsapp.financialtransaction.impl.FinancialTransactionServiceImpl;
+import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryService;
+import com.example.trainingsapp.financialtransaktioncategory.impl.FinancialTransactionCategoryServiceImpl;
 import com.example.trainingsapp.general.exception.AppRuntimeException;
 import com.example.trainingsapp.general.exception.ErrorCode;
 import com.example.trainingsapp.general.exception.ErrorStrategy;
@@ -28,88 +27,85 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = FinancialTransactionController.class,
+@WebMvcTest(controllers = FinancialTransactionCategoryController.class,
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
-                classes = {FinancialTransactionServiceImpl.class}),
+                classes = {FinancialTransactionCategoryServiceImpl.class}),
         includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
                 classes = {
                         ErrorStrategy.class, WebSecurityConfiguration.class, MyUserDetailsService.class,
                         JwtAuthorizationFilter.class, JwtService.class}))
-class FinancialTransactionDeleteControllerTest {
-    private static final Long TRANSACTION_ID_1 = 1L;
-    private static final Long ID_0 = 0L;
+class FinancialTransactionCategoryDeleteControllerTest {
+    private static final Long ID_1L = 1L;
+    private static final Long ID_0L = 0L;
+    private static final Long USER_ID_1L = 1L;
     private static final String USER_EMAIL = "example@email.com";
-    @Autowired
-    private MockMvc mockMvc;
     @MockBean
-    private FinancialTransactionRepository financialTransactionRepository;
-    @MockBean
-    private UserRepository userRepository;
+    private FinancialTransactionCategoryService financialTransactionCategoryService;
     @MockBean
     private UserService userService;
     @MockBean
-    private FinancialTransactionService financialTransactionService;
+    UserRepository userRepository;
+    @Autowired
+    private MockMvc mockMvc;
 
     @Test
+    @DisplayName("Should returns status OK and String as a body when category deleted correctly")
     @WithMockUser(username = USER_EMAIL)
-    @DisplayName("Should return status OK and a String as a body when transaction deleted correctly")
-    void deleteTransactionById_correctDeletion_shouldReturnStatusOKAndStringAsBody() throws Exception {
+    void deleteFinancialTransactionCategory_correctDeletion() throws Exception {
         // given
         User user = TestUtils.createUserForTest();
         when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
 
-        doNothing().when(financialTransactionService).deleteTransaction(TRANSACTION_ID_1, user.getId());
+        doNothing().when(financialTransactionCategoryService).deleteCategory(ID_1L, USER_ID_1L);
 
         // when
-        ResultActions resultActions = mockMvc.perform(delete("/api/transactions/{id}", TRANSACTION_ID_1));
+        ResultActions result = mockMvc.perform(delete("/api/categories/{id}", ID_1L));
 
         // then
-        resultActions
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("Transaction deleted successfully"));
-        verify(financialTransactionService, times(1)).deleteTransaction(
-                TRANSACTION_ID_1, user.getId());
+        result
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        "Financial transaction category deleted successfully"));
+        verify(financialTransactionCategoryService, times(1)).deleteCategory(1L, 1L);
     }
 
     @Test
     @WithMockUser(username = USER_EMAIL)
-    @DisplayName("Should return status 404 when financial transaction ID not exist")
-    void deleteTransactionById_transactionNotExist_shouldReturnStatusNotFound() throws Exception {
+    @DisplayName("Should return status 404 when category ID not exist")
+    void deleteCategoryById_categoryNotExist_shouldReturnStatusNotFound() throws Exception {
         // given
         User user = TestUtils.createUserForTest();
         when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
 
-        doThrow(new AppRuntimeException(ErrorCode.FT001, "Transaction not found")).when(
-                financialTransactionService).deleteTransaction(TRANSACTION_ID_1, user.getId());
+        doThrow(new AppRuntimeException(ErrorCode.FTC001, "Category not found")).when(
+                financialTransactionCategoryService).deleteCategory(ID_1L, USER_ID_1L);
 
         // when
-        ResultActions result = mockMvc.perform(delete("/api/transactions/{id}", TRANSACTION_ID_1));
+        ResultActions result = mockMvc.perform(delete("/api/categories/{id}", ID_1L));
 
         // then
         result
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.content().string("Transaction not found"));
+                .andExpect(MockMvcResultMatchers.content().string("Category not found"));
     }
 
     @Test
     @WithMockUser(username = USER_EMAIL)
-    @DisplayName("Should return bad request status when financial transaction ID is zero")
-    void deleteTransactionById_transactionIdIsZero_shouldReturnStatusBadRequest() throws Exception {
+    @DisplayName("Should return bad request status when category ID is zero")
+    void deleteCategoryById_categoryIdIsZero_shouldReturnBadRequestStatus() throws Exception {
         // given
         User user = TestUtils.createUserForTest();
         when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
 
         // when
-        ResultActions result = mockMvc.perform(delete("/api/transactions/{id}", ID_0));
+        ResultActions result = mockMvc.perform(delete("/api/categories/{id}", ID_0L));
 
         // then
         result.andExpectAll(
                 MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()),
                 MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.TEA003.getBusinessStatus()),
+                MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.TEA003.getBusinessMessage()),
                 MockMvcResultMatchers.jsonPath("$.statusCode").value(ErrorCode.TEA003.getHttpStatusCode()));
     }
 }
-
