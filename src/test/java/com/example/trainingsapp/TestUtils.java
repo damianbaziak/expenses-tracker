@@ -57,7 +57,7 @@ public class TestUtils {
                 .amount(ONE)
                 .description(EXAMPLE_DESCRIPTION)
                 .type(type)
-                .date(Instant.now())
+                .date(DATE_NOW)
                 .build();
     }
 
@@ -68,13 +68,13 @@ public class TestUtils {
                 .amount(ONE)
                 .description(EXAMPLE_DESCRIPTION)
                 .type(type)
-                .date(Instant.now())
+                .date(DATE_NOW)
                 .financialTransactionCategory(category)
                 .build();
     }
 
     public static FinancialTransactionDTO createFinancialTransactionDTOForTest(FinancialTransactionType type) {
-        return new FinancialTransactionDTO(ID_1L, ONE, EXAMPLE_DESCRIPTION, type, Instant.now(), CATEGORY_ID);
+        return new FinancialTransactionDTO(ID_1L, ONE, EXAMPLE_DESCRIPTION, type, DATE_NOW, CATEGORY_ID);
     }
 
     public static List<FinancialTransaction> createFinancialTransactionListForTest(
@@ -88,7 +88,7 @@ public class TestUtils {
                     .wallet(wallet)
                     .type(type)
                     .amount(amount)
-                    .date(Instant.now())
+                    .date(DATE_NOW)
                     .description(EXAMPLE_DESCRIPTION + i)
                     .build()
             );
@@ -108,7 +108,7 @@ public class TestUtils {
                     amount,
                     EXAMPLE_DESCRIPTION + i,
                     type,
-                    Instant.now(),
+                    DATE_NOW,
                     categoryId)
             );
         }
@@ -121,13 +121,13 @@ public class TestUtils {
                 .id(ID_1L)
                 .name(EXAMPLE_CATEGORY_NAME)
                 .type(type)
-                .creationDate(Instant.now())
+                .creationDate(DATE_NOW)
                 .build();
     }
 
     public static FinancialTransactionCategoryDTO createFinancialTransactionCategoryDTOForTest(
             FinancialTransactionType type, Long userId) {
-        return new FinancialTransactionCategoryDTO(ID_1L, EXAMPLE_CATEGORY_NAME, type, Instant.now(), userId);
+        return new FinancialTransactionCategoryDTO(ID_1L, EXAMPLE_CATEGORY_NAME, type, DATE_NOW, userId);
 
     }
 

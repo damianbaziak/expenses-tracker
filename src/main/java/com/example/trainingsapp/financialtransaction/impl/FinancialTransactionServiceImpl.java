@@ -127,7 +127,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
             Optional<FinancialTransactionCategory> ftCategory = financialTransactionCategoryRepository
                     .findByIdAndUserId(categoryId, userId);
             if (ftCategory.isEmpty()) {
-                throw new AppRuntimeException(ErrorCode.FT001, String.format(
+                throw new AppRuntimeException(ErrorCode.FTC001, String.format(
                         "Financial transaction category with this id: %d not exist", categoryId));
             }
             return ftCategory.get();

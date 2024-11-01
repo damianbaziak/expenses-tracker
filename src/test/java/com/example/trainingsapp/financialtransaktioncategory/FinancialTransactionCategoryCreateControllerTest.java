@@ -108,9 +108,7 @@ class FinancialTransactionCategoryCreateControllerTest {
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/categories")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO)))
-                .characterEncoding("UTF-8")
-                .principal(() -> USER_EMAIL));
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))));
 
         // then
         resultActions.andExpect(status().isBadRequest());
@@ -131,9 +129,7 @@ class FinancialTransactionCategoryCreateControllerTest {
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/categories")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO)))
-                .characterEncoding("UTF-8")
-                .principal(() -> USER_EMAIL));
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))));
 
         // then
         resultActions.andExpect(status().isBadRequest());
@@ -154,9 +150,7 @@ class FinancialTransactionCategoryCreateControllerTest {
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/categories")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO)))
-                .characterEncoding("UTF-8")
-                .principal(() -> USER_EMAIL));
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(financialTransactionCategoryCreateDTO))));
 
         // then
         resultActions.andExpect(status().isBadRequest());

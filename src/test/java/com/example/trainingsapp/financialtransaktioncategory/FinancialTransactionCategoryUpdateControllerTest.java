@@ -32,6 +32,8 @@ import java.util.Objects;
 import static com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType.EXPENSE;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = FinancialTransactionCategoryController.class,
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
@@ -86,5 +88,67 @@ class FinancialTransactionCategoryUpdateControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(categoryDTO.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.type").value(EXPENSE.toString()));
 
+    }
+
+    @Test
+    @DisplayName("Should returns bad request status when financialTransactionType is null")
+    @WithMockUser(username = USER_EMAIL)
+    void updateFinancialTransactionCategory_FTCTypeNull_shouldReturnsBadRequestStatus() throws Exception {
+        // given
+        User user = TestUtils.createUserForTest();
+        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
+
+        FinancialTransactionCategoryUpdateDTO categoryUpdateDTO =
+                new FinancialTransactionCategoryUpdateDTO(EXAMPLE_CATEGORY_NAME, null);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(patch("/api/categories/{id}", ID_1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(categoryUpdateDTO))));
+
+        // then
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(username = USER_EMAIL)
+    @DisplayName("Should returns bad request status when name is blank")
+    void updateFinancialTransactionCategory_fieldNameBlank_shouldReturnsStatusBadRequest() throws Exception {
+        // given
+        User user = TestUtils.createUserForTest();
+        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
+
+        FinancialTransactionCategoryUpdateDTO categoryUpdateDTO
+                = new FinancialTransactionCategoryUpdateDTO("   ", EXPENSE);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(post("/api/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(categoryUpdateDTO))));
+
+        // then
+        resultActions.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(username = USER_EMAIL)
+    @DisplayName("Should returns bad request status when name is to long")
+    void updateFinancialTransactionCategory_nameToLong_shouldReturnsStatusBadRequest() throws Exception {
+        // given
+        User user = TestUtils.createUserForTest();
+
+        FinancialTransactionCategoryUpdateDTO updateCategoryDTO
+                = new FinancialTransactionCategoryUpdateDTO(CATEGORY_NAME_TO_LONG, EXPENSE);
+
+        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(post("/api/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(updateCategoryDTO))));
+
+        // then
+        resultActions.andExpect(status().isBadRequest());
     }
 }

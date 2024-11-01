@@ -42,7 +42,7 @@ class FinancialTransactionCategoryCreateServiceImplTest {
 
 
     @Test
-    @DisplayName("Should returns financial transaction category for valid parameters")
+    @DisplayName("Should returns financial transaction category DTO for valid parameters")
     void createCategory_withValidParameters_shouldReturnsFinancialTransactionCategory() {
         // given
         FinancialTransactionCategoryCreateDTO financialTransactionCategoryCreateDTO =

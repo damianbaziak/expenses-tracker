@@ -6,12 +6,10 @@ import com.example.trainingsapp.financialtransaction.api.FinancialTransactionRep
 import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionDTO;
 import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionUpdateDTO;
 import com.example.trainingsapp.financialtransaction.api.model.FinancialTransaction;
-import com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType;
 import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryRepository;
 import com.example.trainingsapp.financialtransaktioncategory.api.model.FinancialTransactionCategory;
 import com.example.trainingsapp.general.exception.AppRuntimeException;
 import com.example.trainingsapp.general.exception.ErrorCode;
-import com.example.trainingsapp.user.api.model.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,12 +20,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Optional;
 
 import static com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType.EXPENSE;
 import static com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType.INCOME;
-import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.TEN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -35,14 +33,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
 class FinancialTransactionUpdateServiceImplTest {
-    private static final Long ID_1L = 1L;
-    private static final String DESCRIPTION = "Description";
+    private static final Long TRANSACTION_ID_1L = 1L;
+    private static final Long CATEGORY_ID_1L = 1L;
+    private static final Long USER_ID_1L = 1L;
     private static final String NEW_DESCRIPTION = "Updated description";
-    private static final Instant DATE_NOW = Instant.now();
     private static final Instant NEW_DATE = Instant.parse("2024-12-22T14:30:00.500Z");
-    private static final Long NEW_CATEGORY_ID = 2L;
+    private static final BigDecimal NEW_AMOUNT = TEN;
 
     @Mock
     private FinancialTransactionRepository financialTransactionRepository;
@@ -58,54 +55,55 @@ class FinancialTransactionUpdateServiceImplTest {
 
 
     @Test
-    @DisplayName("Should return financial transaction with updated parameters")
+    @DisplayName("Should update financial transaction and return updated DTO")
     void updateFinancialTransaction_validParameters_returnFinancialTransactionDTO() {
         // given
-        User user = TestUtils.createUserForTest();
-        FinancialTransactionUpdateDTO financialTransactionUpdateDTO = createFinancialTransactionUpdateDTO();
+        FinancialTransactionCategory financialTransactionCategory = TestUtils.createFinancialTransactionCategoryForTest(
+                EXPENSE);
 
-        FinancialTransaction financialTransaction = createEntityFinancialTransaction(ID_1L);
-        when(financialTransactionRepository.findByIdAndWalletUserId(ID_1L, user.getId())).thenReturn(
-                Optional.of(financialTransaction));
+        FinancialTransactionUpdateDTO transactionUpdateDTO = createTransactionUpdateDTO();
+        FinancialTransaction existingTransaction = TestUtils.createFinancialTransactionForTest(EXPENSE);
+        FinancialTransactionDTO expectedDTO = createExpectedDTO();
 
-        FinancialTransactionCategory financialTransactionCategory = createFinancialTransactionCategory(EXPENSE, user);
-        when(financialTransactionCategoryRepository.findByIdAndUserId(any(), any())).thenReturn(
-                Optional.ofNullable(financialTransactionCategory));
+        when(financialTransactionRepository.findByIdAndWalletUserId(TRANSACTION_ID_1L, USER_ID_1L)).thenReturn(
+                Optional.of(existingTransaction));
 
-        FinancialTransactionDTO financialTransactionDTO = new FinancialTransactionDTO(
-                ID_1L, TEN, NEW_DESCRIPTION, INCOME, NEW_DATE, NEW_CATEGORY_ID);
+        when(financialTransactionCategoryRepository.findByIdAndUserId(TRANSACTION_ID_1L, USER_ID_1L)).thenReturn(
+                Optional.of(financialTransactionCategory));
+
         when(financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(
-                financialTransaction)).thenReturn(financialTransactionDTO);
+                existingTransaction)).thenReturn(expectedDTO);
 
         // when
         FinancialTransactionDTO result = financialTransactionService.updateFinancialTransaction
-                (ID_1L, financialTransactionUpdateDTO, user.getId());
+                (TRANSACTION_ID_1L, transactionUpdateDTO, USER_ID_1L);
 
         // then
         Assertions.assertAll(
-                () -> assertEquals(financialTransactionDTO, result),
-                () -> assertEquals(financialTransactionDTO.getId(), result.getId()),
-                () -> assertEquals(financialTransactionDTO.getAmount(), result.getAmount()));
-        verify(financialTransactionRepository, atMostOnce()).save(any());
+                () -> assertEquals(expectedDTO, result),
+                () -> assertEquals(expectedDTO.getId(), result.getId()),
+                () -> assertEquals(expectedDTO.getAmount(), result.getAmount()),
+                () -> assertEquals(expectedDTO.getDescription(), result.getDescription()));
         verify(financialTransactionCategoryRepository, atMostOnce()).findByIdAndUserId(any(), any());
         verify(financialTransactionModelMapper, atMostOnce())
                 .mapFinancialTransactionEntityToFinancialTransactionDTO(any());
 
     }
 
-    @Test
-    @DisplayName("Should throw an exception when updating transaction wit an Invalid id")
-    void updateFinancialTransaction_invalidId_throwAppRuntimeException() {
-        // given
-        User user = TestUtils.createUserForTest();
-        FinancialTransactionUpdateDTO financialTransactionUpdateDTO = createFinancialTransactionUpdateDTO();
 
-        when(financialTransactionRepository.findByIdAndWalletUserId(any(), any())).thenReturn(Optional.empty());
+    @Test
+    @DisplayName("Should throw an exception when updating transaction not found")
+    void updateFinancialTransaction_transactionNotFound_shouldTrowException() {
+        // given
+        FinancialTransactionUpdateDTO transactionUpdateDTO = createTransactionUpdateDTO();
+
+        when(financialTransactionRepository.findByIdAndWalletUserId(TRANSACTION_ID_1L, USER_ID_1L))
+                .thenReturn(Optional.empty());
 
         // when
         AppRuntimeException result = assertThrows(AppRuntimeException.class,
                 () -> financialTransactionService.updateFinancialTransaction(
-                        ID_1L, financialTransactionUpdateDTO, user.getId()));
+                        TRANSACTION_ID_1L, transactionUpdateDTO, USER_ID_1L));
 
         // then
         assertEquals(ErrorCode.FT001.getBusinessMessage(), result.getMessage());
@@ -115,26 +113,13 @@ class FinancialTransactionUpdateServiceImplTest {
 
     }
 
-
-    private FinancialTransaction createEntityFinancialTransaction(Long financialTransactionId) {
-        FinancialTransaction financialTransaction = new FinancialTransaction();
-        financialTransaction.setId(financialTransactionId);
-        financialTransaction.setAmount(ONE);
-        financialTransaction.setDescription(DESCRIPTION);
-        financialTransaction.setType(INCOME);
-        financialTransaction.setDate(DATE_NOW);
-        return financialTransaction;
+    private FinancialTransactionUpdateDTO createTransactionUpdateDTO() {
+        return new FinancialTransactionUpdateDTO(NEW_AMOUNT, NEW_DESCRIPTION, EXPENSE,
+                NEW_DATE, TRANSACTION_ID_1L);
     }
 
-
-    private FinancialTransactionUpdateDTO createFinancialTransactionUpdateDTO() {
-        return new FinancialTransactionUpdateDTO(TEN, NEW_DESCRIPTION, EXPENSE,
-                NEW_DATE, NEW_CATEGORY_ID);
-    }
-
-    private FinancialTransactionCategory createFinancialTransactionCategory(FinancialTransactionType type, User user) {
-        return new FinancialTransactionCategory(ID_1L, "Example Category Name", type, null,
-                DATE_NOW, user);
-
+    private static FinancialTransactionDTO createExpectedDTO() {
+        return new FinancialTransactionDTO(
+                TRANSACTION_ID_1L, NEW_AMOUNT, NEW_DESCRIPTION, INCOME, NEW_DATE, CATEGORY_ID_1L);
     }
 }

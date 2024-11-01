@@ -99,13 +99,13 @@ class FinancialTransactionUpdateControllerTest {
     @Test
     @WithMockUser(username = USER_EMAIL)
     @DisplayName("Should return bad request status when financialTransactionType is null")
-    void updateFinancialTransaction_financialTransactionTypeNull_shouldReturnStatusBadRequest() throws Exception {
+    void updateFinancialTransaction_financialTransactionTypeNull_shouldReturnsBadRequestStatus() throws Exception {
         // given
+        User user = TestUtils.createUserForTest();
+        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
+
         FinancialTransactionUpdateDTO financialTransactionUpdateDTO = createFinancialTransactionUpdate();
         financialTransactionUpdateDTO.setType(null);
-        User user = TestUtils.createUserForTest();
-
-        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
 
         // when
         ResultActions resultActions = mockMvc.perform(patch("/api/transactions/{id}", ID_1L)

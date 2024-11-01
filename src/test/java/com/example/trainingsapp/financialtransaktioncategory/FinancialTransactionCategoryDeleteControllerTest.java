@@ -45,7 +45,7 @@ class FinancialTransactionCategoryDeleteControllerTest {
     @MockBean
     private UserService userService;
     @MockBean
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
     private MockMvc mockMvc;
 

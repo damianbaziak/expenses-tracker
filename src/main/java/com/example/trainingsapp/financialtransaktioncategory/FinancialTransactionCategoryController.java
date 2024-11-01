@@ -76,7 +76,7 @@ public class FinancialTransactionCategoryController {
     @PatchMapping("/{id}")
     public ResponseEntity<FinancialTransactionCategoryDTO> updateFinancialTransactionCategory(
             @NotNull @Min(1) @PathVariable Long id,
-            @RequestBody FinancialTransactionCategoryUpdateDTO categoryUpdateDTO,
+            @Valid @RequestBody FinancialTransactionCategoryUpdateDTO categoryUpdateDTO,
             Principal principal) {
         String email = principal.getName();
         User user = userService.findUserByEmail(email);
