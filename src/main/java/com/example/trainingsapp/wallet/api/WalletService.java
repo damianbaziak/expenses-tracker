@@ -15,6 +15,7 @@ public interface WalletService {
 
     WalletDTO findById(Long walletId, Long UserId);
 
-    List<WalletDTO> getWallets(Long userId);
+    List<WalletDTO> findAllWallets(Long userId);
 
+    List<WalletDTO> findAllByNameIgnoreCase(String name, Long userId);
 }

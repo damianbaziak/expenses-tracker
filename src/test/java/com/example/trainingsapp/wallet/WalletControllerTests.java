@@ -151,7 +151,7 @@ class WalletControllerTests {
 
         List<WalletDTO> walletDTOS = createWalletsForTest();
         Mockito.when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
-        Mockito.when(walletService.getWallets(USER_ID_1L)).thenReturn(walletDTOS);
+        Mockito.when(walletService.findAllWallets(USER_ID_1L)).thenReturn(walletDTOS);
 
         //when
         ResultActions resultActions = mockMvc.perform(get("/api/wallets")

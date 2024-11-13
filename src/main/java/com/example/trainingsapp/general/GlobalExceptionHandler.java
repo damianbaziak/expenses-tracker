@@ -21,7 +21,8 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @Autowired
-    ErrorStrategy errorStrategy;
+    private ErrorStrategy errorStrategy;
+
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -33,6 +34,7 @@ public class GlobalExceptionHandler {
         });
         return errorMap;
     }
+
 
     @ExceptionHandler(AppRuntimeException.class)
     public ResponseEntity<String> handleAppRuntimeException(AppRuntimeException exception) {
@@ -53,4 +55,6 @@ public class GlobalExceptionHandler {
                 HttpStatus.valueOf(ErrorCode.TEA003.getHttpStatusCode())
         );
     }
+
+
 }

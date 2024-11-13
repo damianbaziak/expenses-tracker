@@ -12,4 +12,6 @@ public interface WalletRepository extends CrudRepository<Wallet, Long> {
     List<Wallet> findAllByUserIdOrderByNameAsc(Long userId);
 
     Optional<Wallet> findByIdAndUserId(Long walletId, Long userId);
+
+    List<Wallet> findAllByUserIdAndNameIsContainingIgnoreCase(Long userId, String name);
 }

@@ -1,5 +1,10 @@
 package com.example.trainingsapp.wallet.impl;
 
+import com.example.trainingsapp.financialtransaction.api.FinancialTransactionModelMapper;
+import com.example.trainingsapp.financialtransaction.api.FinancialTransactionRepository;
+import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactionDTO;
+import com.example.trainingsapp.financialtransaction.api.model.FinancialTransaction;
+import com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType;
 import com.example.trainingsapp.general.exception.AppRuntimeException;
 import com.example.trainingsapp.general.exception.ErrorCode;
 import com.example.trainingsapp.user.api.UserRepository;
@@ -11,9 +16,11 @@ import com.example.trainingsapp.wallet.api.dto.WalletCreateDTO;
 import com.example.trainingsapp.wallet.api.dto.WalletDTO;
 import com.example.trainingsapp.wallet.api.dto.WalletUpdateDTO;
 import com.example.trainingsapp.wallet.api.model.Wallet;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +35,12 @@ public class WalletServiceImpl implements WalletService {
     @Autowired
     private WalletRepository walletRepository;
 
+    @Autowired
+    private FinancialTransactionRepository financialTransactionRepository;
+
+    @Autowired
+    private FinancialTransactionModelMapper transactionModelMapper;
+
     @Override
     public WalletDTO createWallet(WalletCreateDTO createWalletDTO, Long userId) {
         User walletOwner = getUserByUserId(userId);
@@ -35,9 +48,9 @@ public class WalletServiceImpl implements WalletService {
 
         Wallet wallet = new Wallet(walletName, walletOwner);
 
-        walletRepository.save(wallet);
+        Wallet savedWallet = walletRepository.save(wallet);
 
-        return walletModelMapper.mapWalletEntityToWalletDTO(wallet);
+        return walletModelMapper.mapWalletEntityToWalletDTO(savedWallet);
     }
 
     @Override
@@ -54,9 +67,10 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
+    @Transactional
     public WalletDTO updateWallet(Long walletId, WalletUpdateDTO updateWalletDTO, Long userId) {
         Optional<Wallet> wallet = walletRepository.findById(walletId);
-        if (!wallet.isPresent()) {
+        if (wallet.isEmpty()) {
             throw new AppRuntimeException(ErrorCode.W001, String.format("Wallet with this id: %d not exist", walletId));
         }
         if (!wallet.get().getUser().getId().equals(userId)) {
@@ -66,9 +80,20 @@ public class WalletServiceImpl implements WalletService {
         Wallet existedWallet = wallet.get();
         existedWallet.setName(updateWalletDTO.getName());
 
+
+        List<FinancialTransaction> transactions =
+                financialTransactionRepository.findAllByWalletIdAndWalletUserIdOrderByDateDesc(
+                        existedWallet.getId(), userId);
+        List<FinancialTransactionDTO> transactionDTOs = transactions
+                .stream()
+                .map(transactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
+                .toList();
+        BigDecimal balance = calculateCurrentBalance(transactionDTOs);
+
         walletRepository.save(existedWallet);
 
-        return walletModelMapper.mapWalletEntityToWalletDTO(existedWallet);
+        return new WalletDTO(existedWallet.getId(), existedWallet.getName(), existedWallet.getCreationDate(),
+                existedWallet.getUser().getId(), balance);
     }
 
     @Override
@@ -83,12 +108,21 @@ public class WalletServiceImpl implements WalletService {
 
         Wallet existedWallet = wallet.get();
 
+        List<FinancialTransaction> transactions =
+                financialTransactionRepository.findAllByWalletIdAndWalletUserIdOrderByDateDesc(
+                        existedWallet.getId(), userId);
+        List<FinancialTransactionDTO> transactionDTOs = transactions
+                .stream()
+                .map(transactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
+                .toList();
+        BigDecimal balance = calculateCurrentBalance(transactionDTOs);
+
         return new WalletDTO(existedWallet.getId(), existedWallet.getName(), existedWallet.getCreationDate(),
-                existedWallet.getUser().getId());
+                existedWallet.getUser().getId(), balance);
     }
 
     @Override
-    public List<WalletDTO> getWallets(Long userId) {
+    public List<WalletDTO> findAllWallets(Long userId) {
         List<Wallet> walletList = walletRepository.findAllByUserIdOrderByNameAsc(userId);
 
         if (walletList.isEmpty()) {
@@ -96,9 +130,50 @@ public class WalletServiceImpl implements WalletService {
         }
 
         return walletList.stream()
-                .map(wallet -> new WalletDTO(wallet.getId(), wallet.getName(), wallet.getCreationDate(), wallet.getUser()
-                        .getId()))
+                .map(wallet -> {
+                    List<FinancialTransaction> transactions =
+                            financialTransactionRepository.findAllByWalletIdAndWalletUserIdOrderByDateDesc(
+                                    wallet.getId(), userId);
+                    List<FinancialTransactionDTO> transactionDTOs = transactions
+                            .stream()
+                            .map(transactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
+                            .toList();
+                    BigDecimal balance = calculateCurrentBalance(transactionDTOs);
+
+                    return new WalletDTO(wallet.getId(), wallet.getName(), wallet.getCreationDate(),
+                            wallet.getUser().getId(), balance);
+                })
                 .toList();
+    }
+
+
+    @Override
+    public List<WalletDTO> findAllByNameIgnoreCase(String name, Long userId) {
+        return walletRepository.findAllByUserIdAndNameIsContainingIgnoreCase(userId, name)
+                .stream()
+                .map(wallet -> {
+                    List<FinancialTransaction> transactions =
+                            financialTransactionRepository.findAllByWalletIdAndWalletUserIdOrderByDateDesc(
+                                    wallet.getId(), userId);
+                    List<FinancialTransactionDTO> transactionDTOs = transactions
+                            .stream()
+                            .map(transactionModelMapper::mapFinancialTransactionEntityToFinancialTransactionDTO)
+                            .toList();
+                    BigDecimal balance = calculateCurrentBalance(transactionDTOs);
+                    return new WalletDTO(wallet.getId(), wallet.getName(), wallet.getCreationDate(),
+                            wallet.getUser().getId(), balance);
+                })
+                .toList();
+
+
+    }
+
+    private BigDecimal calculateCurrentBalance(List<FinancialTransactionDTO> transactionDTOs) {
+        return transactionDTOs.stream()
+                .map(transaction -> transaction.getType() == FinancialTransactionType.INCOME
+                        ? transaction.getAmount()
+                        : transaction.getAmount().negate())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public User getUserByUserId(Long userId) {

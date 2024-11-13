@@ -6,6 +6,7 @@ import com.example.trainingsapp.financialtransaction.api.model.FinancialTransact
 import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.model.FinancialTransactionCategory;
 import com.example.trainingsapp.user.api.model.User;
+import com.example.trainingsapp.wallet.api.dto.WalletDTO;
 import com.example.trainingsapp.wallet.api.model.Wallet;
 
 import java.math.BigDecimal;
@@ -22,6 +23,7 @@ public class TestUtils {
     private static final Long WALLET_ID_1L = 1L;
     private static final String EXAMPLE_DESCRIPTION = "Example description_";
     private static final String EXAMPLE_CATEGORY_NAME = "Example category name_";
+    private static final String EXAMPLE_WALLET_NAME = "Example wallet name_";
     private static final Long ID_1L = 1L;
     private static final Long CATEGORY_ID = 1L;
     private static final Instant DATE_NOW = Instant.now();
@@ -45,10 +47,14 @@ public class TestUtils {
         return Wallet.builder()
                 .id(WALLET_ID_1L)
                 .user(user)
-                .name("Example wallet name")
-                .creationDate(Instant.now())
+                .name(EXAMPLE_WALLET_NAME)
+                .creationDate(DATE_NOW)
                 .build();
 
+    }
+
+    public static WalletDTO createWalletDTOForTest(Long userId) {
+        return new WalletDTO(WALLET_ID_1L, EXAMPLE_WALLET_NAME, DATE_NOW, userId);
     }
 
     public static FinancialTransaction createFinancialTransactionForTest(FinancialTransactionType type) {
