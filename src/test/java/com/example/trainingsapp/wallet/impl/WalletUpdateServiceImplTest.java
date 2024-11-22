@@ -41,17 +41,11 @@ class WalletUpdateServiceImplTest {
     private static final String NEW_WALLET_NAME = "New wallet name";
     private static final BigDecimal INCOME_AMOUNT = new BigDecimal(100);
     private static final BigDecimal EXPENSE_AMOUNT = new BigDecimal(50);
-    private static final String INCOME_DESCRIPTION = "Income transaction";
-    private static final String EXPENSE_DESCRIPTION = "Expense transaction";
 
-    @Mock
-    private UserRepository userRepository;
     @InjectMocks
     private WalletServiceImpl walletService;
     @Mock
     private WalletRepository walletRepository;
-    @Mock
-    private WalletModelMapper walletModelMapper;
     @Mock
     private FinancialTransactionRepository financialTransactionRepository;
     @Mock
@@ -168,10 +162,8 @@ class WalletUpdateServiceImplTest {
 
     List<FinancialTransaction> createTestTransactions() {
         FinancialTransaction transaction1 = TestUtils.createFinancialTransactionForTest(INCOME);
-        transaction1.setDescription(INCOME_DESCRIPTION);
         transaction1.setAmount(INCOME_AMOUNT);
         FinancialTransaction transaction2 = TestUtils.createFinancialTransactionForTest(EXPENSE);
-        transaction2.setDescription(EXPENSE_DESCRIPTION);
         transaction2.setAmount(EXPENSE_AMOUNT);
 
         return Arrays.asList(transaction1, transaction2);

@@ -1,6 +1,7 @@
 package com.example.trainingsapp.general.exception;
 
 public class AppRuntimeException extends RuntimeException {
+    private final ErrorCode errorCode;
     private final String description;
     private final String status;
     private final String message;
@@ -11,6 +12,7 @@ public class AppRuntimeException extends RuntimeException {
         this.status = errorCode.getBusinessStatus();
         this.message = errorCode.getBusinessMessage();
         this.httpStatusCode = errorCode.getHttpStatusCode();
+        this.errorCode = errorCode;
 
     }
 
@@ -29,5 +31,9 @@ public class AppRuntimeException extends RuntimeException {
 
     public Integer getHttpStatusCode() {
         return httpStatusCode;
+    }
+
+    public ErrorCode getErrorCode() {
+        return errorCode;
     }
 }

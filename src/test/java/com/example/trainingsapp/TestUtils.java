@@ -57,6 +57,35 @@ public class TestUtils {
         return new WalletDTO(WALLET_ID_1L, EXAMPLE_WALLET_NAME, DATE_NOW, userId);
     }
 
+    public static List<Wallet> createWalletListForTest(int count, User user) {
+        ArrayList<Wallet> list = new ArrayList<>();
+        for (long i = 1; i <= count; i++) {
+            list.add(Wallet.builder()
+                    .id(i)
+                    .user(user)
+                    .name(EXAMPLE_WALLET_NAME)
+                    .creationDate(DATE_NOW)
+                    .build()
+            );
+        }
+        return list;
+
+    }
+
+    public static List<WalletDTO> createWalletDTOListForTest(int count, Long userId) {
+        ArrayList<WalletDTO> list = new ArrayList<>();
+        for (long i = 1; i <= count; i++) {
+            list.add(new WalletDTO(
+                    i,
+                    EXAMPLE_WALLET_NAME,
+                    DATE_NOW,
+                    userId
+            ));
+        }
+        return list;
+
+    }
+
     public static FinancialTransaction createFinancialTransactionForTest(FinancialTransactionType type) {
         return FinancialTransaction.builder()
                 .id(ID_1L)

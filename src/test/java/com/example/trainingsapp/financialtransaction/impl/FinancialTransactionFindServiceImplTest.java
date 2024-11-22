@@ -130,7 +130,7 @@ class FinancialTransactionFindServiceImplTest {
 
     @Test
     @DisplayName("Should retrieve transaction by ID and walletUserId")
-    void findFinancialTransactionForUser_whenTransactionExist_shouldReturnTransactionAndStatusOk() {
+    void findFinancialTransactionForUser_whenTransactionExist_shouldReturnTransaction() {
         // given
         FinancialTransactionDTO financialTransactionDTO = TestUtils.createFinancialTransactionDTOForTest(INCOME);
         FinancialTransactionCategory financialTransactionCategory = TestUtils.createFinancialTransactionCategoryForTest(

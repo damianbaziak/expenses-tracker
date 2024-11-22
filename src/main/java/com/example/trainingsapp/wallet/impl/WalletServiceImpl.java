@@ -99,7 +99,7 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public WalletDTO findById(Long walletId, Long userId) {
         Optional<Wallet> wallet = walletRepository.findById(walletId);
-        if (!wallet.isPresent()) {
+        if (wallet.isEmpty()) {
             throw new AppRuntimeException(ErrorCode.W001, String.format("Wallet with this id: %d not exist", walletId));
         }
         if (!wallet.get().getUser().getId().equals(userId)) {
