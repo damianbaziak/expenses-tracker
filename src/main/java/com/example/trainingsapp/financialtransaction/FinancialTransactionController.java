@@ -57,7 +57,7 @@ public class FinancialTransactionController {
 
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<FinancialTransactionDTO> updateTransactionById(
             @Min(1) @NotNull @PathVariable Long id,
             @Valid @RequestBody FinancialTransactionUpdateDTO financialTransactionUpdateDTO, Principal principal) {

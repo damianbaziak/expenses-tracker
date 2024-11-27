@@ -12,7 +12,7 @@ public class FinancialTransactionCreateDTO {
 
     @Min(1)
     @NotNull
-    Long walletId;
+    private Long walletId;
 
     //The @Digits(integer = 12, fraction = 2) annotation in Java ensures that a number:
     //Has a maximum of 12 digits before the decimal point.

@@ -35,6 +35,7 @@ import static com.example.trainingsapp.financialtransaction.api.model.FinancialT
 import static java.math.BigDecimal.TEN;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -73,6 +74,7 @@ class FinancialTransactionUpdateControllerTest {
     void updateFinancialTransaction_validData_shouldReturnFinancialTransactionAndStatusOK() throws Exception {
         // given
         User user = TestUtils.createUserForTest();
+
         FinancialTransactionUpdateDTO ftUpdateDTO = createFinancialTransactionUpdate();
 
         FinancialTransactionDTO ftDTO = new FinancialTransactionDTO(
@@ -83,16 +85,16 @@ class FinancialTransactionUpdateControllerTest {
         when(financialTransactionService.updateFinancialTransaction(ID_1L, ftUpdateDTO, USER_ID_1L)).thenReturn(ftDTO);
 
         // when
-        ResultActions resultActions = mockMvc.perform(patch("/api/transactions/{1}", ID_1L)
+        ResultActions resultActions = mockMvc.perform(put("/api/transactions/{1}", ID_1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(ftUpdateDTO)))
                 .characterEncoding("UTF-8"));
 
         // then
         resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", CoreMatchers.is(ftDTO.getId().intValue())))
-                .andExpect(jsonPath("$.type", CoreMatchers.is(INCOME.name())))
-                .andExpect(jsonPath("$.description", CoreMatchers.is(ftDTO.getDescription())));
+                .andExpect(jsonPath("$.id", CoreMatchers.is(ID_1L.intValue())))
+                .andExpect(jsonPath("$.type", CoreMatchers.is(ftUpdateDTO.getType().name())))
+                .andExpect(jsonPath("$.description", CoreMatchers.is(ftUpdateDTO.getDescription())));
 
     }
 
@@ -108,7 +110,7 @@ class FinancialTransactionUpdateControllerTest {
         financialTransactionUpdateDTO.setType(null);
 
         // when
-        ResultActions resultActions = mockMvc.perform(patch("/api/transactions/{id}", ID_1L)
+        ResultActions resultActions = mockMvc.perform(put("/api/transactions/{id}", ID_1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(financialTransactionUpdateDTO)))
                 .characterEncoding("UTF-8"));
@@ -129,7 +131,7 @@ class FinancialTransactionUpdateControllerTest {
         when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
 
         // when
-        ResultActions resultActions = mockMvc.perform(patch("/api/transactions/{id}", ID_1L)
+        ResultActions resultActions = mockMvc.perform(put("/api/transactions/{id}", ID_1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(financialTransactionUpdateDTO)))
                 .characterEncoding("UTF-8"));
@@ -150,7 +152,7 @@ class FinancialTransactionUpdateControllerTest {
         when(userService.findUserByEmail(USER_EMAIL)).thenReturn(user);
 
         // when
-        ResultActions resultActions = mockMvc.perform(patch("/api/transactions/{id}", ID_1L)
+        ResultActions resultActions = mockMvc.perform(put("/api/transactions/{id}", ID_1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(financialTransactionUpdateDTO)))
                 .characterEncoding("UTF-8"));

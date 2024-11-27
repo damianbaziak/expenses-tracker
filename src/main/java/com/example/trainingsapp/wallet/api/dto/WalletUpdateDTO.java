@@ -7,8 +7,11 @@ import jakarta.validation.constraints.Size;
 import java.util.Objects;
 
 public class WalletUpdateDTO {
-    private @NotBlank @Size(min = 2, max = 20, message =
-            "Name should contains maximum 20 characters.") @Pattern(regexp = "[\\w ]+") String name;
+    @NotBlank(message = "Name can not be blank")
+    @Size(min = 2, max = 20, message =
+            "Name should be between 2 and 20 characters long")
+    @Pattern(regexp = "[\\w ]+", message = "Name can only contain letters, numbers, and spaces.")
+    private String name;
 
     public WalletUpdateDTO() {
     }
