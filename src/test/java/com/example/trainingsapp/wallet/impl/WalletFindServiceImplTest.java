@@ -185,7 +185,55 @@ class WalletFindServiceImplTest {
     }
 
     @Test
-    void findAllByNameIgnoreCase() {
+    @DisplayName("Should return all wallets whose names partially match the given name, ignoring case")
+    void findAllByNameIgnoreCase_ReturnsAllPartiallyMatchingWallets() {
+        // given
+        List<Wallet> walletList = TestUtils.createWalletListForTest(3, User.builder().id(USER_ID_1L).build());
+
+        when(walletRepository.findAllByUserIdAndNameIsContainingIgnoreCase(USER_ID_1L, "wallet_name"))
+                .thenReturn(walletList);
+
+        List<WalletDTO> walletDTOs = TestUtils.createWalletDTOListForTest(3, USER_ID_1L);
+
+        // when
+        List<WalletDTO> result = walletService.findAllByNameIgnoreCase("wallet_name", USER_ID_1L);
+
+        // then
+        Assertions.assertAll(
+                () -> assertThat(result).isNotNull(),
+                () -> assertThat(result).containsExactlyInAnyOrderElementsOf(walletDTOs));
+    }
+
+    @Test
+    @DisplayName("Should calculate balances correctly for all retrieving wallets")
+    void findAllByNameIgnoreCase_calculateBalanceCorrectly() {
+        // given
+        List<Wallet> walletList = TestUtils.createWalletListForTest(3, User.builder().id(USER_ID_1L).build());
+        List<List<FinancialTransaction>> transactionsForAllWallets = List.of(
+                createIncomeAndExpenseTransactionsForWallet(INCOME_AMOUNT_1, EXPENSE_AMOUNT_1),
+                createIncomeAndExpenseTransactionsForWallet(INCOME_AMOUNT_2, EXPENSE_AMOUNT_2),
+                createIncomeAndExpenseTransactionsForWallet(INCOME_AMOUNT_3, EXPENSE_AMOUNT_3));
+
+        when(walletRepository.findAllByUserIdAndNameIsContainingIgnoreCase(USER_ID_1L, "wallet"))
+                .thenReturn(walletList);
+
+        for (int i = 0; i < transactionsForAllWallets.size(); i++) {
+            mockTransactionRepositoryAndMapperBehaviour(walletList.get(i), transactionsForAllWallets.get(i));
+        }
+
+        // when
+        List<WalletDTO> result = walletService.findAllByNameIgnoreCase("wallet", USER_ID_1L);
+
+        // then
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(walletList.size(), result.size());
+        Assertions.assertAll(
+                () -> assertEquals(INCOME_AMOUNT_1.subtract(EXPENSE_AMOUNT_1), result.get(0).getBalance()),
+                () -> assertEquals(INCOME_AMOUNT_2.subtract(EXPENSE_AMOUNT_2), result.get(1).getBalance()),
+                () -> assertEquals(INCOME_AMOUNT_3.subtract(EXPENSE_AMOUNT_3), result.get(2).getBalance())
+        );
+
+
     }
 
 

@@ -63,7 +63,7 @@ public class TestUtils {
             list.add(Wallet.builder()
                     .id(i)
                     .user(user)
-                    .name(EXAMPLE_WALLET_NAME)
+                    .name(EXAMPLE_WALLET_NAME + 1)
                     .creationDate(DATE_NOW)
                     .build()
             );
@@ -77,7 +77,7 @@ public class TestUtils {
         for (long i = 1; i <= count; i++) {
             list.add(new WalletDTO(
                     i,
-                    EXAMPLE_WALLET_NAME,
+                    EXAMPLE_WALLET_NAME + 1,
                     DATE_NOW,
                     userId
             ));
