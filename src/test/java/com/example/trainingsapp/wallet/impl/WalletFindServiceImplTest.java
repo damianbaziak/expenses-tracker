@@ -185,18 +185,18 @@ class WalletFindServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should return all wallets whose names partially match the given name, ignoring case")
+    @DisplayName("Should return all wallets that names partially match the given name, ignoring case")
     void findAllByNameIgnoreCase_ReturnsAllPartiallyMatchingWallets() {
         // given
         List<Wallet> walletList = TestUtils.createWalletListForTest(3, User.builder().id(USER_ID_1L).build());
 
-        when(walletRepository.findAllByUserIdAndNameIsContainingIgnoreCase(USER_ID_1L, "wallet_name"))
+        when(walletRepository.findAllByUserIdAndNameIsContainingIgnoreCase(USER_ID_1L, "wallet"))
                 .thenReturn(walletList);
 
         List<WalletDTO> walletDTOs = TestUtils.createWalletDTOListForTest(3, USER_ID_1L);
 
         // when
-        List<WalletDTO> result = walletService.findAllByNameIgnoreCase("wallet_name", USER_ID_1L);
+        List<WalletDTO> result = walletService.findAllByNameIgnoreCase("wallet", USER_ID_1L);
 
         // then
         Assertions.assertAll(

@@ -89,7 +89,7 @@ public class WalletController {
     }
 
     @GetMapping("/wallets/{name}")
-    public ResponseEntity<List<WalletDTO>> findAllByNameLikeIgnorCase(
+    public ResponseEntity<List<WalletDTO>> getAllByNameLikeIgnoreCase(
             @PathVariable @NotBlank @Pattern(regexp = "[\\w ]+") @Size(min = 2, max = 20)
             String name, Principal principal) {
         String email = principal.getName();
@@ -97,6 +97,10 @@ public class WalletController {
         Long userId = user.getId();
 
         List<WalletDTO> walletDTOs = walletService.findAllByNameIgnoreCase(name, userId);
+
+        if (walletDTOs.isEmpty()) {
+            return new ResponseEntity<>(walletDTOs, HttpStatus.NO_CONTENT);
+        }
 
         return new ResponseEntity<>(walletDTOs, HttpStatus.OK);
 

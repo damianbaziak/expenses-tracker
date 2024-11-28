@@ -62,7 +62,8 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
                 new AppRuntimeException(ErrorCode.W001, String.format("Wallet with this id: %d not exist", walletId)));
 
         return financialTransactionRepository.findAllByWalletIdAndWalletUserIdOrderByDateDesc(walletId, userId).stream()
-                .map(financialTransaction -> financialTransactionModelMapper.mapFinancialTransactionEntityToFinancialTransactionDTO(financialTransaction))
+                .map(financialTransaction -> financialTransactionModelMapper
+                        .mapFinancialTransactionEntityToFinancialTransactionDTO(financialTransaction))
                 .toList();
 
 

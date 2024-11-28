@@ -24,10 +24,10 @@ import java.util.List;
 public class FinancialTransactionController {
 
     @Autowired
-    FinancialTransactionService financialTransactionService;
+    private FinancialTransactionService financialTransactionService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @PostMapping()
     public ResponseEntity<FinancialTransactionDTO> createFinancialTransaction(
