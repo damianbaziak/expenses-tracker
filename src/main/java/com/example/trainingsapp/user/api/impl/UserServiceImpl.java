@@ -4,11 +4,12 @@ import com.example.trainingsapp.general.exception.AppRuntimeException;
 import com.example.trainingsapp.general.exception.ErrorCode;
 import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.api.UserService;
-import com.example.trainingsapp.user.api.dto.EmailUptadeDTO;
-import com.example.trainingsapp.user.api.dto.PasswordUptadeDTO;
 import com.example.trainingsapp.user.api.dto.UserDTO;
-import com.example.trainingsapp.user.api.dto.UsernameUpdateDTO;
+import com.example.trainingsapp.user.api.dto.UserEmailUptadeDTO;
+import com.example.trainingsapp.user.api.dto.UserPasswordUpdateDTO;
+import com.example.trainingsapp.user.api.dto.UserUsernameUpdateDTO;
 import com.example.trainingsapp.user.api.model.User;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,22 +21,22 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public UserDTO getUserById(Long id) {
+    public UserDTO findUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new AppRuntimeException(ErrorCode.U003, "User with this id does not exist");
         }
         User existingUser = user.get();
 
-        UserDTO userDTO = new UserDTO(existingUser.getFirstname(), existingUser.getLastname(), existingUser.getAge(),
+        return new UserDTO(existingUser.getFirstname(), existingUser.getLastname(), existingUser.getAge(),
                 existingUser.getEmail(), existingUser.getUsername(), existingUser.getPassword());
-        return userDTO;
     }
 
     @Override
-    public User updateUsername(Long id, UsernameUpdateDTO usernameUpdateDTO) {
+    @Transactional
+    public UserDTO updateUsername(Long id, UserUsernameUpdateDTO usernameUpdateDTO) {
         Optional<User> userFromDb = userRepository.findById(id);
-        if (!userFromDb.isPresent()) {
+        if (userFromDb.isEmpty()) {
             throw new AppRuntimeException(ErrorCode.U003, "User with this id not exist");
         }
         User existingUser = userFromDb.get();
@@ -43,15 +44,18 @@ public class UserServiceImpl implements UserService {
         if (usernameUpdateDTO.getUsername() != null) {
             existingUser.setUsername(usernameUpdateDTO.getUsername());
         }
+        userRepository.save(existingUser);
 
-        return userRepository.save(existingUser);
+        return new UserDTO(existingUser.getFirstname(), existingUser.getLastname(), existingUser.getAge(),
+                existingUser.getEmail(), existingUser.getUsername(), existingUser.getPassword());
 
     }
 
     @Override
-    public User updatePassword(Long id, PasswordUptadeDTO passwordUptadeDto) {
+    @Transactional
+    public UserDTO updatePassword(Long id, UserPasswordUpdateDTO passwordUptadeDto) {
         Optional<User> userFromDb = userRepository.findById(id);
-        if (!userFromDb.isPresent()) {
+        if (userFromDb.isEmpty()) {
             throw new AppRuntimeException(ErrorCode.U003, "User with this id not exist");
         }
         User existingUser = userFromDb.get();
@@ -59,14 +63,18 @@ public class UserServiceImpl implements UserService {
         if (passwordUptadeDto.getPassword() != null) {
             existingUser.setPassword(passwordUptadeDto.getPassword());
         }
+        userRepository.save(existingUser);
 
-        return userRepository.save(existingUser);
+        return new UserDTO(existingUser.getFirstname(), existingUser.getLastname(), existingUser.getAge(),
+                existingUser.getEmail(), existingUser.getUsername(), existingUser.getPassword());
+
     }
 
     @Override
-    public User updateEmail(Long id, EmailUptadeDTO emailUptadeDTO) {
+    @Transactional
+    public UserDTO updateEmail(Long id, UserEmailUptadeDTO emailUptadeDTO) {
         Optional<User> userFromDb = userRepository.findById(id);
-        if (!userFromDb.isPresent()) {
+        if (userFromDb.isEmpty()) {
             throw new AppRuntimeException(ErrorCode.U003, "User with this id not exist");
         }
         User existingUser = userFromDb.get();
@@ -74,8 +82,11 @@ public class UserServiceImpl implements UserService {
         if (emailUptadeDTO.getEmail() != null) {
             existingUser.setEmail(emailUptadeDTO.getEmail());
         }
+        userRepository.save(existingUser);
 
-        return userRepository.save(existingUser);
+        return new UserDTO(existingUser.getFirstname(), existingUser.getLastname(), existingUser.getAge(),
+                existingUser.getEmail(), existingUser.getUsername(), existingUser.getPassword());
+
     }
 
     @Override

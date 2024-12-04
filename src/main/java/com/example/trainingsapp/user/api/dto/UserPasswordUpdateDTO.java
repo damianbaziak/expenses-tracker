@@ -5,13 +5,13 @@ import jakarta.validation.constraints.Pattern;
 
 import java.util.Objects;
 
-public class PasswordUptadeDTO {
+public class UserPasswordUpdateDTO {
 
     @Pattern(regexp = "^[a-zA-Z0-9.]{10}$", message = "Password muss contain exactly 10 characters and can contain only letters and digits")
     @NotBlank(message = "invalid password")
     private String password;
 
-    public PasswordUptadeDTO(String password) {
+    public UserPasswordUpdateDTO(String password) {
         this.password = password;
     }
 
@@ -27,7 +27,7 @@ public class PasswordUptadeDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PasswordUptadeDTO that = (PasswordUptadeDTO) o;
+        UserPasswordUpdateDTO that = (UserPasswordUpdateDTO) o;
         return Objects.equals(password, that.password);
     }
 

@@ -47,10 +47,11 @@ class FinancialTransactionCategoryFindServiceImplTest {
     @Mock
     private FinancialTransactionCategoryModelMapper financialTransactionCategoryModelMapper;
 
+
     @Test
     @DisplayName("Should returns financial transaction category detailed DTO")
-        // given
     void findFinancialTransactionCategoryForUser_transactionCategoryExist_returnsFTCDetailedDTO() {
+        // given
         FinancialTransactionCategory financialTransactionCategory = TestUtils.createFinancialTransactionCategoryForTest(
                 EXPENSE);
         when(financialTransactionCategoryRepository.findByIdAndUserId(CATEGORY_ID_1L, USER_ID_1L))
@@ -82,8 +83,8 @@ class FinancialTransactionCategoryFindServiceImplTest {
 
     @Test
     @DisplayName("Should throws an AppRuntimeException when financial category not found")
-        // given
     void findFinancialTransactionCategoryForUser_categoryNotFound_throwsAppRuntimeException() {
+        // given
         when(financialTransactionCategoryRepository.findByIdAndUserId(CATEGORY_ID_1L, USER_ID_1L))
                 .thenReturn(Optional.empty());
 
@@ -91,7 +92,6 @@ class FinancialTransactionCategoryFindServiceImplTest {
         AppRuntimeException result = assertThrows(AppRuntimeException.class, () -> financialTransactionCategoryService
                 .findFinancialTransactionCategoryForUser(CATEGORY_ID_1L, USER_ID_1L));
 
-        // then
         assertThat(result).hasMessage(ErrorCode.FTC001.getBusinessMessage());
         assertThat(result.getHttpStatusCode()).isEqualTo(ErrorCode.FTC001.getHttpStatusCode());
         assertThat(result.getStatus()).isEqualTo((ErrorCode.FTC001.getBusinessStatus()));

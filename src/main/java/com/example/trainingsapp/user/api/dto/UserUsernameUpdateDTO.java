@@ -5,14 +5,17 @@ import jakarta.validation.constraints.Size;
 
 import java.util.Objects;
 
-public class UsernameUpdateDTO {
+public class UserUsernameUpdateDTO {
 
     @NotBlank(message = "username is mandatory")
     @Size(min = 2, max = 15, message = "username must be between 2 and 15 characters")
     private String username;
 
-    public UsernameUpdateDTO(String username) {
+    public UserUsernameUpdateDTO(String username) {
         this.username = username;
+    }
+
+    public UserUsernameUpdateDTO() {
     }
 
     public String getUsername() {
@@ -27,7 +30,7 @@ public class UsernameUpdateDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UsernameUpdateDTO that = (UsernameUpdateDTO) o;
+        UserUsernameUpdateDTO that = (UserUsernameUpdateDTO) o;
         return Objects.equals(username, that.username);
     }
 

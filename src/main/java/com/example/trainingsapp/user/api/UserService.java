@@ -1,19 +1,19 @@
 package com.example.trainingsapp.user.api;
 
-import com.example.trainingsapp.user.api.dto.EmailUptadeDTO;
-import com.example.trainingsapp.user.api.dto.PasswordUptadeDTO;
+import com.example.trainingsapp.user.api.dto.UserEmailUptadeDTO;
+import com.example.trainingsapp.user.api.dto.UserPasswordUpdateDTO;
 import com.example.trainingsapp.user.api.dto.UserDTO;
-import com.example.trainingsapp.user.api.dto.UsernameUpdateDTO;
+import com.example.trainingsapp.user.api.dto.UserUsernameUpdateDTO;
 import com.example.trainingsapp.user.api.model.User;
 
 public interface UserService {
-    UserDTO getUserById(Long id);
+    UserDTO findUserById(Long id);
 
-    User updateUsername(Long id, UsernameUpdateDTO usernameUpdateDTO);
+    UserDTO updateUsername(Long id, UserUsernameUpdateDTO usernameUpdateDTO);
 
-    User updateEmail(Long id, EmailUptadeDTO emailUptadeDTO);
+    UserDTO updateEmail(Long id, UserEmailUptadeDTO emailUptadeDTO);
 
-    User updatePassword(Long id, PasswordUptadeDTO passwordUptadeDto);
+    UserDTO updatePassword(Long id, UserPasswordUpdateDTO passwordUptadeDto);
 
     User findUserByEmail(String email);
 
