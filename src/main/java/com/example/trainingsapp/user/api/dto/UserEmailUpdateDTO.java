@@ -5,16 +5,16 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.Objects;
 
-public class UserEmailUptadeDTO {
+public class UserEmailUpdateDTO {
     @Email
     @NotNull
     private String email;
 
-    public UserEmailUptadeDTO(String email) {
+    public UserEmailUpdateDTO(String email) {
         this.email = email;
     }
 
-    public UserEmailUptadeDTO() {
+    public UserEmailUpdateDTO() {
     }
 
     public String getEmail() {
@@ -29,7 +29,7 @@ public class UserEmailUptadeDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserEmailUptadeDTO that = (UserEmailUptadeDTO) o;
+        UserEmailUpdateDTO that = (UserEmailUpdateDTO) o;
         return Objects.equals(email, that.email);
     }
 

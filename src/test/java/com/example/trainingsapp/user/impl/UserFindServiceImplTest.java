@@ -1,10 +1,11 @@
-package com.example.trainingsapp.user.api.impl;
+package com.example.trainingsapp.user.impl;
 
 import com.example.trainingsapp.general.exception.AppRuntimeException;
 import com.example.trainingsapp.general.exception.ErrorCode;
 import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.api.dto.UserDTO;
 import com.example.trainingsapp.user.api.model.User;
+import com.example.trainingsapp.user.impl.UserServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class UserFindServiceImplTest {
     private static final Long USER_ID_1L = 1L;
+    private static final Long PRINCIPAL_ID_1L = 1L;
     private static final int USER_AGE = 30;
     private static final String USER_FIRSTNAME = "Firstname_Example";
     private static final String USER_LASTNAME = "Lastname_Example";
@@ -38,15 +40,17 @@ class UserFindServiceImplTest {
     @DisplayName("Should return userDTO when user exists in Database")
     void findUserById_whenUserExists_returnUserDTO() {
         // given
-        User user = User.builder().id(USER_ID_1L).firstname(USER_FIRSTNAME).lastname(USER_LASTNAME).age(USER_AGE)
-                .email(USER_EMAIL).username(USER_USERNAME).password(USER_PASSWORD).build();
+        User user = User.builder()
+                .id(USER_ID_1L).firstname(USER_FIRSTNAME).lastname(USER_LASTNAME).age(USER_AGE).email(USER_EMAIL)
+                .username(USER_USERNAME).password(USER_PASSWORD).build();
 
-        UserDTO userDTO = new UserDTO(USER_FIRSTNAME, USER_LASTNAME, USER_AGE, USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+        UserDTO userDTO = new UserDTO(
+                USER_FIRSTNAME, USER_LASTNAME, USER_AGE, USER_EMAIL, USER_USERNAME, USER_PASSWORD);
 
         when(userRepository.findById(USER_ID_1L)).thenReturn(Optional.of(user));
 
         // when
-        UserDTO result = userService.findUserById(USER_ID_1L);
+        UserDTO result = userService.findUserById(USER_ID_1L, PRINCIPAL_ID_1L);
 
         // then
         Assertions.assertThat(result).isNotNull();
@@ -62,12 +66,29 @@ class UserFindServiceImplTest {
 
         // when and then
         AppRuntimeException result = assertThrows(
-                AppRuntimeException.class, () -> userService.findUserById(USER_ID_1L));
+                AppRuntimeException.class, () -> userService.findUserById(USER_ID_1L, PRINCIPAL_ID_1L));
 
         assertAll(
                 () -> assertEquals(result.getStatus(), ErrorCode.U003.getBusinessStatus()),
                 () -> assertEquals(result.getMessage(), ErrorCode.U003.getBusinessMessage()),
                 () -> assertEquals(result.getHttpStatusCode(), ErrorCode.U003.getHttpStatusCode())
+        );
+    }
+
+    @Test
+    @DisplayName("Should return an AppRuntimeException when user doesn't have permissions")
+    void findUserById_whenUserHasNoPermissions_returnException() {
+        // given
+        when(userRepository.findById(2L)).thenReturn(Optional.of(User.builder().id(2L).build()));
+
+        // when and then
+        AppRuntimeException result = assertThrows(
+                AppRuntimeException.class, () -> userService.findUserById(2L, PRINCIPAL_ID_1L));
+
+        assertAll(
+                () -> assertEquals(result.getStatus(), ErrorCode.U004.getBusinessStatus()),
+                () -> assertEquals(result.getMessage(), ErrorCode.U004.getBusinessMessage()),
+                () -> assertEquals(result.getHttpStatusCode(), ErrorCode.U004.getHttpStatusCode())
         );
     }
 }

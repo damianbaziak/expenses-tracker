@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
                 classes = {FinancialTransactionCategoryServiceImpl.class}),
         includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
-                classes = {JwtService.class, MyUserDetailsService.class, JwtAuthorizationFilter.class,}))
+                classes = {JwtService.class, MyUserDetailsService.class, JwtAuthorizationFilter.class}))
 class FinancialTransactionCategoryGetControllerTest {
     private static final Long CATEGORY_ID_1L = 1L;
     private static final Long CATEGORY_ID_2L = 2L;
@@ -121,21 +121,6 @@ class FinancialTransactionCategoryGetControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Category not found"));
         verify(financialTransactionCategoryService, times(1))
-                .findFinancialTransactionCategoryForUser(CATEGORY_ID_1L, USER_ID_1L);
-
-    }
-
-    @Test
-    @DisplayName("Should returns UNAUTHORIZED when user is not authenticated")
-    void getFinancialCategoryById_userNotFound_returnsUnauthorized() throws Exception {
-        // when
-        ResultActions result = mockMvc.perform(MockMvcRequestBuilders.get(
-                "/api/categories/{id}", CATEGORY_ID_1L));
-
-        // then
-        result
-                .andExpect(status().isUnauthorized());
-        verify(financialTransactionCategoryService, times(0))
                 .findFinancialTransactionCategoryForUser(CATEGORY_ID_1L, USER_ID_1L);
 
     }

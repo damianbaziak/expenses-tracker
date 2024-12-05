@@ -85,7 +85,7 @@ class FinancialTransactionCategoryUpdateControllerTest {
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(ID_1L.intValue()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(categoryDTO.getName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(categoryUpdateDTO.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.type").value(EXPENSE.toString()));
 
     }

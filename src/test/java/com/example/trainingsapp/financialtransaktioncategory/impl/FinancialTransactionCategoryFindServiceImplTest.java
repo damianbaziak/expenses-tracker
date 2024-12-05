@@ -38,6 +38,7 @@ class FinancialTransactionCategoryFindServiceImplTest {
     private static final String EXAMPLE_CATEGORY_NAME_1 = "Example category name_1";
     private static final String EXAMPLE_CATEGORY_NAME_2 = "Example category name_2";
     private static final String EXAMPLE_CATEGORY_NAME_3 = "Example category name_3";
+    private static final BigInteger NUMBER_OF_FINANCIAL_TRANSACTIONS = new BigInteger("4");
     @Mock
     private FinancialTransactionCategoryRepository financialTransactionCategoryRepository;
     @InjectMocks
@@ -57,18 +58,14 @@ class FinancialTransactionCategoryFindServiceImplTest {
         when(financialTransactionCategoryRepository.findByIdAndUserId(CATEGORY_ID_1L, USER_ID_1L))
                 .thenReturn(Optional.of(financialTransactionCategory));
 
-        BigInteger numberOfFinancialTransactions = new BigInteger("4");
         when(financialTransactionRepository.countFinancialTransactionsByFinancialTransactionCategoryId(CATEGORY_ID_1L))
-                .thenReturn(numberOfFinancialTransactions);
+                .thenReturn(NUMBER_OF_FINANCIAL_TRANSACTIONS);
 
         FinancialTransactionCategoryDTO financialTransactionCategoryDTO =
                 TestUtils.createFinancialTransactionCategoryDTOForTest(EXPENSE, USER_ID_1L);
         when(financialTransactionCategoryModelMapper
                 .mapFinancialTransactionCategoryEntityToFinancialTransactionCategoryDTO(financialTransactionCategory))
                 .thenReturn(financialTransactionCategoryDTO);
-
-        FinancialTransactionCategoryDetailedDTO financialTransactionCategoryDetailedDTO =
-                new FinancialTransactionCategoryDetailedDTO(financialTransactionCategoryDTO, numberOfFinancialTransactions);
 
         // when
         FinancialTransactionCategoryDetailedDTO result =
@@ -77,7 +74,7 @@ class FinancialTransactionCategoryFindServiceImplTest {
         // then
         assertThat(result).isNotNull();
         assertThat(result.financialTransactionCategoryDTO()).isEqualTo(financialTransactionCategoryDTO);
-        assertThat(result.financialTransactionCounter()).isEqualTo(numberOfFinancialTransactions);
+        assertThat(result.financialTransactionCounter()).isEqualTo(NUMBER_OF_FINANCIAL_TRANSACTIONS);
 
     }
 
