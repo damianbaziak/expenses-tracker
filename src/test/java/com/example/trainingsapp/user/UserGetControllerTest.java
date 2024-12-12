@@ -2,6 +2,7 @@ package com.example.trainingsapp.user;
 
 import com.example.trainingsapp.TestUtils;
 import com.example.trainingsapp.authorization.JwtAuthorizationFilter;
+import com.example.trainingsapp.authorization.WebSecurityConfiguration;
 import com.example.trainingsapp.authorization.api.MyUserDetailsService;
 import com.example.trainingsapp.authorization.webtoken.JwtService;
 import com.example.trainingsapp.general.exception.AppRuntimeException;
@@ -34,7 +35,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = UserController.class,
         includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
-                classes = {JwtService.class, MyUserDetailsService.class, JwtAuthorizationFilter.class}),
+                classes = {
+                ErrorStrategy.class, WebSecurityConfiguration.class, JwtService.class, MyUserDetailsService.class,
+                        JwtAuthorizationFilter.class}),
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
                 classes = {UserServiceImpl.class}))
 class UserGetControllerTest {
@@ -48,9 +51,6 @@ class UserGetControllerTest {
     private static final String USER_USERNAME = "Username_Example";
     @MockBean
     private UserRepository userRepository;
-
-    @MockBean
-    private ErrorStrategy errorStrategy;
 
     @MockBean
     private UserService userService;
@@ -77,7 +77,7 @@ class UserGetControllerTest {
 
         // then
         result.andExpect(status().isOk());
-        result.andExpect(content().json(new ObjectMapper().writeValueAsString(userDTO)));
+        result.andExpect(content().string(new ObjectMapper().writeValueAsString(userDTO)));
 
     }
 

@@ -1,9 +1,9 @@
 package com.example.trainingsapp.user;
 
 import com.example.trainingsapp.user.api.UserService;
+import com.example.trainingsapp.user.api.dto.UserDTO;
 import com.example.trainingsapp.user.api.dto.UserEmailUpdateDTO;
 import com.example.trainingsapp.user.api.dto.UserPasswordUpdateDTO;
-import com.example.trainingsapp.user.api.dto.UserDTO;
 import com.example.trainingsapp.user.api.dto.UserUsernameUpdateDTO;
 import com.example.trainingsapp.user.api.model.User;
 import jakarta.validation.Valid;
@@ -12,10 +12,12 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
+@Validated
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -34,7 +36,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/username")
-    public ResponseEntity updateUsername(
+    public ResponseEntity<UserDTO> updateUsername(
             @Min(1) @NotNull @PathVariable Long id,
             @Valid @RequestBody UserUsernameUpdateDTO updateDTO, Principal principal) {
         String email = principal.getName();

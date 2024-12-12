@@ -20,9 +20,9 @@ import java.util.Map;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
     @Autowired
     private ErrorStrategy errorStrategy;
-
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)

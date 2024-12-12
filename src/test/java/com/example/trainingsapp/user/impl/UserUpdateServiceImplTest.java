@@ -30,7 +30,7 @@ class UserUpdateServiceImplTest {
     private static final String USER_FIRSTNAME = "Firstname_Example";
     private static final String USER_LASTNAME = "Lastname_Example";
     private static final String USER_EMAIL = "example@email.com";
-    private static final String USER_PASSWORD = "52345hg23jk4h5";
+    private static final String USER_PASSWORD = "52.345hg23";
     private static final String USER_USERNAME = "Username_Example";
     private static final String NEW_USERNAME = "New_Username";
     private static final String NEW_PASSWORD = "New_Password";

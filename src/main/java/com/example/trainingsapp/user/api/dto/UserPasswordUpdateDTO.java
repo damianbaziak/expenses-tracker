@@ -7,12 +7,17 @@ import java.util.Objects;
 
 public class UserPasswordUpdateDTO {
 
-    @Pattern(regexp = "^[a-zA-Z0-9.]{10}$", message = "Password muss contain exactly 10 characters and can contain only letters and digits")
-    @NotBlank(message = "invalid password")
+    @Pattern(
+            regexp = "^[a-zA-Z0-9.]{10}$",
+            message = "Password muss  contain exactly 10 characters and can contain only letters and digits")
+    @NotBlank(message = "Password can not be blank")
     private String password;
 
     public UserPasswordUpdateDTO(String password) {
         this.password = password;
+    }
+
+    public UserPasswordUpdateDTO() {
     }
 
     public String getPassword() {
@@ -38,7 +43,7 @@ public class UserPasswordUpdateDTO {
 
     @Override
     public String toString() {
-        return "PasswordUptadeDTO{" +
+        return "UserPasswordUpdateDTO{" +
                 "password='" + password + '\'' +
                 '}';
     }
