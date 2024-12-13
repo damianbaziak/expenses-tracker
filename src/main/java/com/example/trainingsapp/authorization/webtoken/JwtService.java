@@ -39,7 +39,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(decodedKey);
     }
 
-    public String exractUsername(String jwt) {
+    public String extractUsername(String jwt) {
         Claims claims = getClaims(jwt);
         return claims.getSubject();
     }

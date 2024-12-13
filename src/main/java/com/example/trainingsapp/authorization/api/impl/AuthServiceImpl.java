@@ -36,15 +36,10 @@ public class AuthServiceImpl implements AuthService {
     private JwtService jwtService;
 
     @Override
-    public User registerUser(UserDTO userDTO) {
+    public void registerUser(UserDTO userDTO) {
         Optional<User> userFromDb = userRepository.findByEmail(userDTO.getEmail());
         if (userFromDb.isPresent()) {
-            throw new AppRuntimeException(ErrorCode.U001, "User with this email already exist");
-        }
-
-        Optional<User> userByUsername = userRepository.findByUsername(userDTO.getUsername());
-        if (userByUsername.isPresent()) {
-            throw new AppRuntimeException(ErrorCode.U001, "User with this username already exist");
+            throw new AppRuntimeException(ErrorCode.U001, "User with this email already exists");
         }
 
         User user = User.builder()
@@ -55,7 +50,8 @@ public class AuthServiceImpl implements AuthService {
                 .username(userDTO.getUsername())
                 .password(hashedPassword(userDTO.getPassword()))
                 .build();
-        return userRepository.save(user);
+
+        userRepository.save(user);
     }
 
     @Override
@@ -77,7 +73,7 @@ public class AuthServiceImpl implements AuthService {
 
     }
 
-    public String hashedPassword(String password) {
+    private String hashedPassword(String password) {
         return passwordEncoder.encode(password);
     }
 
