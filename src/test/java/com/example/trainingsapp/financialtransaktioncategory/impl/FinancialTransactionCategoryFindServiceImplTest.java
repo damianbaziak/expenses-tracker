@@ -90,8 +90,8 @@ class FinancialTransactionCategoryFindServiceImplTest {
                 .findFinancialTransactionCategoryForUser(CATEGORY_ID_1L, USER_ID_1L));
 
         assertThat(result).hasMessage(ErrorCode.FTC001.getBusinessMessage());
-        assertThat(result.getHttpStatusCode()).isEqualTo(ErrorCode.FTC001.getHttpStatusCode());
-        assertThat(result.getStatus()).isEqualTo((ErrorCode.FTC001.getBusinessStatus()));
+        assertThat(result.getHttpStatusCode()).isEqualTo(ErrorCode.FTC001.getHttpStatus());
+        assertThat(result.getStatus()).isEqualTo((ErrorCode.FTC001.getBusinessCode()));
 
         // Verification that not unnecessary operation were called
         verify(financialTransactionRepository, times(0))

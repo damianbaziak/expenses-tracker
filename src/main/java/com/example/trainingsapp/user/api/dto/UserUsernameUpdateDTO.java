@@ -8,7 +8,7 @@ import java.util.Objects;
 public class UserUsernameUpdateDTO {
 
     @NotBlank(message = "username is mandatory")
-    @Size(min = 2, max = 16, message = "username must be between 2 and 15 characters")
+    @Size(min = 2, max = 16, message = "username must be between 2 and 16 characters")
     private String username;
 
     public UserUsernameUpdateDTO(String username) {

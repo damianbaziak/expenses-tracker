@@ -8,7 +8,6 @@ import com.example.trainingsapp.user.api.dto.UserEmailUpdateDTO;
 import com.example.trainingsapp.user.api.dto.UserPasswordUpdateDTO;
 import com.example.trainingsapp.user.api.dto.UserUsernameUpdateDTO;
 import com.example.trainingsapp.user.api.model.User;
-import com.example.trainingsapp.user.impl.UserServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -78,9 +77,9 @@ class UserUpdateServiceImplTest {
                 AppRuntimeException.class, () -> userService.updateUsername(USER_ID_1L, updateDTO, PRINCIPAL_ID_1L));
 
         assertAll(
-                () -> assertEquals(result.getStatus(), ErrorCode.U003.getBusinessStatus()),
+                () -> assertEquals(result.getStatus(), ErrorCode.U003.getBusinessCode()),
                 () -> assertEquals(result.getMessage(), ErrorCode.U003.getBusinessMessage()),
-                () -> assertEquals(result.getHttpStatusCode(), ErrorCode.U003.getHttpStatusCode())
+                () -> assertEquals(result.getHttpStatusCode(), ErrorCode.U003.getHttpStatus())
         );
         verify(userRepository, never()).save(any(User.class));
     }
@@ -97,9 +96,9 @@ class UserUpdateServiceImplTest {
                 AppRuntimeException.class, () -> userService.updateUsername(2L, updateDTO, PRINCIPAL_ID_1L));
 
         assertAll(
-                () -> assertEquals(result.getStatus(), ErrorCode.U004.getBusinessStatus()),
+                () -> assertEquals(result.getStatus(), ErrorCode.U004.getBusinessCode()),
                 () -> assertEquals(result.getMessage(), ErrorCode.U004.getBusinessMessage()),
-                () -> assertEquals(result.getHttpStatusCode(), ErrorCode.U004.getHttpStatusCode())
+                () -> assertEquals(result.getHttpStatusCode(), ErrorCode.U004.getHttpStatus())
         );
         verify(userRepository, never()).save(any(User.class));
     }
@@ -141,9 +140,9 @@ class UserUpdateServiceImplTest {
                 AppRuntimeException.class, () -> userService.updatePassword(USER_ID_1L, updateDTO, PRINCIPAL_ID_1L));
 
         assertAll(
-                () -> assertEquals(result.getStatus(), ErrorCode.U003.getBusinessStatus()),
+                () -> assertEquals(result.getStatus(), ErrorCode.U003.getBusinessCode()),
                 () -> assertEquals(result.getMessage(), ErrorCode.U003.getBusinessMessage()),
-                () -> assertEquals(result.getHttpStatusCode(), ErrorCode.U003.getHttpStatusCode())
+                () -> assertEquals(result.getHttpStatusCode(), ErrorCode.U003.getHttpStatus())
         );
         verify(userRepository, never()).save(any(User.class));
     }
@@ -160,9 +159,9 @@ class UserUpdateServiceImplTest {
                 AppRuntimeException.class, () -> userService.updatePassword(2L, updateDTO, PRINCIPAL_ID_1L));
 
         assertAll(
-                () -> assertEquals(result.getStatus(), ErrorCode.U004.getBusinessStatus()),
+                () -> assertEquals(result.getStatus(), ErrorCode.U004.getBusinessCode()),
                 () -> assertEquals(result.getMessage(), ErrorCode.U004.getBusinessMessage()),
-                () -> assertEquals(result.getHttpStatusCode(), ErrorCode.U004.getHttpStatusCode())
+                () -> assertEquals(result.getHttpStatusCode(), ErrorCode.U004.getHttpStatus())
         );
         verify(userRepository, never()).save(any(User.class));
     }
@@ -204,9 +203,9 @@ class UserUpdateServiceImplTest {
                 AppRuntimeException.class, () -> userService.updateEmail(USER_ID_1L, updateDTO, PRINCIPAL_ID_1L));
 
         assertAll(
-                () -> assertEquals(result.getStatus(), ErrorCode.U003.getBusinessStatus()),
+                () -> assertEquals(result.getStatus(), ErrorCode.U003.getBusinessCode()),
                 () -> assertEquals(result.getMessage(), ErrorCode.U003.getBusinessMessage()),
-                () -> assertEquals(result.getHttpStatusCode(), ErrorCode.U003.getHttpStatusCode())
+                () -> assertEquals(result.getHttpStatusCode(), ErrorCode.U003.getHttpStatus())
         );
         verify(userRepository, never()).save(any(User.class));
     }
@@ -223,9 +222,9 @@ class UserUpdateServiceImplTest {
                 AppRuntimeException.class, () -> userService.updateEmail(2L, updateDTO, PRINCIPAL_ID_1L));
 
         assertAll(
-                () -> assertEquals(result.getStatus(), ErrorCode.U004.getBusinessStatus()),
+                () -> assertEquals(result.getStatus(), ErrorCode.U004.getBusinessCode()),
                 () -> assertEquals(result.getMessage(), ErrorCode.U004.getBusinessMessage()),
-                () -> assertEquals(result.getHttpStatusCode(), ErrorCode.U004.getHttpStatusCode())
+                () -> assertEquals(result.getHttpStatusCode(), ErrorCode.U004.getHttpStatus())
         );
         verify(userRepository, never()).save(any(User.class));
     }

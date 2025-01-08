@@ -26,12 +26,12 @@ public class AuthController {
     private UserRepository userRepository;
 
     @PostMapping("/register")
-    public ResponseEntity registerUser(@Valid @RequestBody UserDTO userDTO) {
+    public ResponseEntity<String> registerUser(@Valid @RequestBody UserDTO userDTO) {
         return new ResponseEntity<>("User created correctly", HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity loginUser(@Valid @RequestBody UserLoginDTO userLoginDTO) {
+    public ResponseEntity<String> loginUser(@Valid @RequestBody UserLoginDTO userLoginDTO) {
         return new ResponseEntity<>(authService.loginUser(userLoginDTO), HttpStatus.OK);
     }
 }

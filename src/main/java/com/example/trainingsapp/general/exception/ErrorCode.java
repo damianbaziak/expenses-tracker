@@ -16,25 +16,25 @@ public enum ErrorCode {
 
     TEA001("TEA001", "VALIDATION_FAILED", 400);
 
-    private final String businessStatus;
+    private final String businessCode;
     private final String businessMessage;
-    private final Integer httpStatusCode;
+    private final Integer httpStatus;
 
-    ErrorCode(String status, String message, Integer statusCode) {
-        this.businessStatus = status;
-        this.businessMessage = message;
-        this.httpStatusCode = statusCode;
+    ErrorCode(String businessCode, String businessMessage, Integer httpStatus) {
+        this.businessCode = businessCode;
+        this.businessMessage = businessMessage;
+        this.httpStatus = httpStatus;
     }
 
-    public String getBusinessStatus() {
-        return businessStatus;
+    public String getBusinessCode() {
+        return businessCode;
     }
 
     public String getBusinessMessage() {
         return businessMessage;
     }
 
-    public Integer getHttpStatusCode() {
-        return httpStatusCode;
+    public Integer getHttpStatus() {
+        return httpStatus;
     }
 }

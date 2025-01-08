@@ -9,9 +9,9 @@ public class AppRuntimeException extends RuntimeException {
 
     public AppRuntimeException(ErrorCode errorCode, String description) {
         this.description = description;
-        this.status = errorCode.getBusinessStatus();
+        this.status = errorCode.getBusinessCode();
         this.message = errorCode.getBusinessMessage();
-        this.httpStatusCode = errorCode.getHttpStatusCode();
+        this.httpStatusCode = errorCode.getHttpStatus();
         this.errorCode = errorCode;
 
     }

@@ -23,10 +23,11 @@ public class UserDTO {
     private String email;
 
     @NotBlank(message = "username is mandatory")
-    @Size(min = 2, max = 15, message = "username must be between 2 and 15 characters")
+    @Size(min = 2, max = 16, message = "username must be between 2 and 16 characters")
     private String username;
 
-    @Pattern(regexp = "^[a-zA-Z0-9.]{10}$", message = "Password muss contain exactly 10 characters and can contain only letters and digits")
+    @Pattern(regexp = "^[a-zA-Z0-9.]{10}$", message = "Password muss contain exactly 10 characters and can contain " +
+            "only letters and digits")
     @NotBlank(message = "invalid password")
     private String password;
 

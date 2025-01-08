@@ -7,9 +7,7 @@ import com.example.trainingsapp.financialtransaction.api.dto.FinancialTransactio
 import com.example.trainingsapp.financialtransaction.api.model.FinancialTransaction;
 import com.example.trainingsapp.general.exception.AppRuntimeException;
 import com.example.trainingsapp.general.exception.ErrorCode;
-import com.example.trainingsapp.user.api.UserRepository;
 import com.example.trainingsapp.user.api.model.User;
-import com.example.trainingsapp.wallet.api.WalletModelMapper;
 import com.example.trainingsapp.wallet.api.WalletRepository;
 import com.example.trainingsapp.wallet.api.dto.WalletDTO;
 import com.example.trainingsapp.wallet.api.dto.WalletUpdateDTO;
@@ -104,8 +102,8 @@ class WalletUpdateServiceImplTest {
         // then
         Assertions.assertAll(
                 () -> assertEquals(ErrorCode.W001.getBusinessMessage(), result.getMessage()),
-                () -> assertEquals(ErrorCode.W001.getHttpStatusCode(), result.getHttpStatusCode()),
-                () -> assertEquals(ErrorCode.W001.getBusinessStatus(), result.getStatus()));
+                () -> assertEquals(ErrorCode.W001.getHttpStatus(), result.getHttpStatusCode()),
+                () -> assertEquals(ErrorCode.W001.getBusinessCode(), result.getStatus()));
         verify(walletRepository, times(1)).findById(WALLET_ID_1L);
         verify(walletRepository, times(0)).deleteById(WALLET_ID_1L);
 
@@ -128,8 +126,8 @@ class WalletUpdateServiceImplTest {
         // then
         Assertions.assertAll(
                 () -> assertEquals(ErrorCode.W002.getBusinessMessage(), result.getMessage()),
-                () -> assertEquals(ErrorCode.W002.getHttpStatusCode(), result.getHttpStatusCode()),
-                () -> assertEquals(ErrorCode.W002.getBusinessStatus(), result.getStatus()));
+                () -> assertEquals(ErrorCode.W002.getHttpStatus(), result.getHttpStatusCode()),
+                () -> assertEquals(ErrorCode.W002.getBusinessCode(), result.getStatus()));
         verify(walletRepository, times(1)).findById(WALLET_ID_1L);
         verify(walletRepository, times(0)).deleteById(WALLET_ID_1L);
 

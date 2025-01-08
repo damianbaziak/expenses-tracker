@@ -1,4 +1,4 @@
-package com.example.trainingsapp.authorization.api.impl;
+package com.example.trainingsapp.authorization.impl;
 
 import com.example.trainingsapp.authorization.api.AuthService;
 import com.example.trainingsapp.authorization.api.MyUserDetailsService;
@@ -57,13 +57,13 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String loginUser(UserLoginDTO userLoginDTO) {
         Optional<User> userFromDb = userRepository.findByEmail(userLoginDTO.email());
-        if (!userFromDb.isPresent()) {
-            throw new AppRuntimeException(ErrorCode.U002, "User with this email not exist");
+        if (userFromDb.isEmpty()) {
+            throw new AppRuntimeException(ErrorCode.U002, "User with this email not exists");
         }
 
-        User u = userFromDb.get();
-        if (!passwordEncoder.matches(userLoginDTO.password(), u.getPassword())) {
-            throw new AppRuntimeException(ErrorCode.U002, "User with this email or password not exist");
+        User user = userFromDb.get();
+        if (!passwordEncoder.matches(userLoginDTO.password(), user.getPassword())) {
+            throw new AppRuntimeException(ErrorCode.U002, "User with this email or password not exists");
         }
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -73,7 +73,7 @@ public class AuthServiceImpl implements AuthService {
 
     }
 
-    private String hashedPassword(String password) {
+    public String hashedPassword(String password) {
         return passwordEncoder.encode(password);
     }
 

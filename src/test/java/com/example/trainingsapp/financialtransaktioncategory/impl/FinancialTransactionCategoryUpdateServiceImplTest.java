@@ -4,7 +4,6 @@ import com.example.trainingsapp.TestUtils;
 import com.example.trainingsapp.financialtransaction.api.model.FinancialTransactionType;
 import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryModelMapper;
 import com.example.trainingsapp.financialtransaktioncategory.api.FinancialTransactionCategoryRepository;
-import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryCreateDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.dto.FinancialTransactionCategoryUpdateDTO;
 import com.example.trainingsapp.financialtransaktioncategory.api.model.FinancialTransactionCategory;
@@ -100,7 +99,7 @@ class FinancialTransactionCategoryUpdateServiceImplTest {
                         CATEGORY_ID_1L, categoryUpdateDTO, USER_ID_1L));
 
         Assertions.assertAll(
-                () -> assertEquals(ErrorCode.FTC001.getHttpStatusCode(), result.getHttpStatusCode()),
+                () -> assertEquals(ErrorCode.FTC001.getHttpStatus(), result.getHttpStatusCode()),
                 () -> assertEquals(ErrorCode.FTC001.getBusinessMessage(), result.getMessage()));
         verify(financialTransactionCategoryRepository, never()).findById(USER_ID_1L);
         verify(financialTransactionCategoryModelMapper, never())

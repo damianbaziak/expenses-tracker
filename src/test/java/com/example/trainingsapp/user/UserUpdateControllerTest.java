@@ -44,14 +44,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserUpdateControllerTest {
 
     private static final Long ID_1L = 1L;
-    private static final String USER_EMAIL = "example@email.com";
-    private static final String USER_FIRSTNAME = "Firstname_Example";
-    private static final String USER_LASTNAME = "Lastname_Example";
-    private static final String USER_PASSWORD = "52345h.23j";
-    private static final String USER_USERNAME = "Username_Example";
+    private static final String EMAIL = "example@email.com";
+    private static final String FIRSTNAME = "Firstname_Example";
+    private static final String LASTNAME = "Lastname_Example";
+    private static final String PASSWORD = "52345h.23j";
+    private static final String USERNAME = "Username_Example";
     private static final String TO_LONG_USERNAME = "fdsgsDAg345_4534sdfasdfds";
     private static final String PASSWORD_1_CHAR_MORE = "0123456789.";
-    private static final int USER_AGE = 30;
+    private static final int AGE = 30;
 
     @MockBean
     private UserRepository userRepository;
@@ -66,17 +66,17 @@ class UserUpdateControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    @WithMockUser(username = USER_EMAIL)
+    @WithMockUser(username = EMAIL)
     @DisplayName("Should return HTTP status OK and userDTO with new username for valid input")
     void updateUsername_validInput_shouldReturnUserDTO() throws Exception {
         // given
-        User userPrincipal = TestUtils.createUserForTest(USER_EMAIL);
-        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(userPrincipal);
+        User userPrincipal = TestUtils.createUserForTest(EMAIL);
+        when(userService.findUserByEmail(EMAIL)).thenReturn(userPrincipal);
 
-        UserUsernameUpdateDTO updateDTO = new UserUsernameUpdateDTO(USER_USERNAME);
+        UserUsernameUpdateDTO updateDTO = new UserUsernameUpdateDTO(USERNAME);
 
         UserDTO userDTO = new UserDTO(
-                USER_FIRSTNAME, USER_LASTNAME, USER_AGE, USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+                FIRSTNAME, LASTNAME, AGE, EMAIL, USERNAME, PASSWORD);
 
         when(userService.updateUsername(ID_1L, updateDTO, userPrincipal.getId())).thenReturn(userDTO);
 
@@ -87,17 +87,17 @@ class UserUpdateControllerTest {
 
         // then
         result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$.username", is(USER_USERNAME)));
+        result.andExpect(jsonPath("$.username", is(USERNAME)));
         result.andExpect(content().string(objectMapper.writeValueAsString(userDTO)));
     }
 
     @Test
-    @WithMockUser(username = USER_EMAIL)
+    @WithMockUser(username = EMAIL)
     @DisplayName("Should return HTTP status Bad Request when username is blank")
     void updateUsername_usernameIsBlank_shouldReturnStatusBadRequest() throws Exception {
         // given
-        User userPrincipal = TestUtils.createUserForTest(USER_EMAIL);
-        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(userPrincipal);
+        User userPrincipal = TestUtils.createUserForTest(EMAIL);
+        when(userService.findUserByEmail(EMAIL)).thenReturn(userPrincipal);
 
         UserUsernameUpdateDTO updateDTO = new UserUsernameUpdateDTO("     ");
 
@@ -111,12 +111,12 @@ class UserUpdateControllerTest {
     }
 
     @Test
-    @WithMockUser(username = USER_EMAIL)
+    @WithMockUser(username = EMAIL)
     @DisplayName("Should return HTTP status Bad Request when username is to long")
     void updateUsername_usernameToLong_shouldReturnStatusBadRequest() throws Exception {
         // given
-        User userPrincipal = TestUtils.createUserForTest(USER_EMAIL);
-        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(userPrincipal);
+        User userPrincipal = TestUtils.createUserForTest(EMAIL);
+        when(userService.findUserByEmail(EMAIL)).thenReturn(userPrincipal);
 
         UserUsernameUpdateDTO updateDTO = new UserUsernameUpdateDTO(TO_LONG_USERNAME);
 
@@ -131,17 +131,17 @@ class UserUpdateControllerTest {
 
 
     @Test
-    @WithMockUser(username = USER_EMAIL)
+    @WithMockUser(username = EMAIL)
     @DisplayName("Should return HTTP status OK and userDTO with new email for valid input")
     void updateEmail_validInput_shouldReturnUserDTO() throws Exception {
         // given
-        User userPrincipal = TestUtils.createUserForTest(USER_EMAIL);
-        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(userPrincipal);
+        User userPrincipal = TestUtils.createUserForTest(EMAIL);
+        when(userService.findUserByEmail(EMAIL)).thenReturn(userPrincipal);
 
-        UserEmailUpdateDTO updateDTO = new UserEmailUpdateDTO(USER_EMAIL);
+        UserEmailUpdateDTO updateDTO = new UserEmailUpdateDTO(EMAIL);
 
         UserDTO userDTO = new UserDTO(
-                USER_FIRSTNAME, USER_LASTNAME, USER_AGE, USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+                FIRSTNAME, LASTNAME, AGE, EMAIL, USERNAME, PASSWORD);
 
         when(userService.updateEmail(ID_1L, updateDTO, userPrincipal.getId())).thenReturn(userDTO);
 
@@ -152,17 +152,17 @@ class UserUpdateControllerTest {
 
         // then
         result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$.email", is(USER_EMAIL)));
+        result.andExpect(jsonPath("$.email", is(EMAIL)));
         result.andExpect(content().string(objectMapper.writeValueAsString(userDTO)));
     }
 
     @Test
-    @WithMockUser(username = USER_EMAIL)
+    @WithMockUser(username = EMAIL)
     @DisplayName("Should return HTTP status Bad Request when email pattern is wrong")
     void updateEmail_wrongPattern_shouldReturnBadRequestStatus() throws Exception {
         // given
-        User userPrincipal = TestUtils.createUserForTest(USER_EMAIL);
-        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(userPrincipal);
+        User userPrincipal = TestUtils.createUserForTest(EMAIL);
+        when(userService.findUserByEmail(EMAIL)).thenReturn(userPrincipal);
 
         UserEmailUpdateDTO updateDTO = new UserEmailUpdateDTO("wrongPattern.pl");
 
@@ -176,12 +176,12 @@ class UserUpdateControllerTest {
     }
 
     @Test
-    @WithMockUser(username = USER_EMAIL)
+    @WithMockUser(username = EMAIL)
     @DisplayName("Should return HTTP status Bad Request when email is null")
     void updateEmail_emailIsNull_shouldReturnBadRequestStatus() throws Exception {
         // given
-        User userPrincipal = TestUtils.createUserForTest(USER_EMAIL);
-        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(userPrincipal);
+        User userPrincipal = TestUtils.createUserForTest(EMAIL);
+        when(userService.findUserByEmail(EMAIL)).thenReturn(userPrincipal);
 
         UserEmailUpdateDTO updateDTO = new UserEmailUpdateDTO(null);
 
@@ -196,17 +196,17 @@ class UserUpdateControllerTest {
 
 
     @Test
-    @WithMockUser(username = USER_EMAIL)
+    @WithMockUser(username = EMAIL)
     @DisplayName("Should return HTTP status OK and userDTO with new password for valid input")
     void updatePassword_validInput_shouldReturnUserDTO() throws Exception {
         // given
-        User userPrincipal = TestUtils.createUserForTest(USER_EMAIL);
-        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(userPrincipal);
+        User userPrincipal = TestUtils.createUserForTest(EMAIL);
+        when(userService.findUserByEmail(EMAIL)).thenReturn(userPrincipal);
 
-        UserPasswordUpdateDTO updateDTO = new UserPasswordUpdateDTO(USER_PASSWORD);
+        UserPasswordUpdateDTO updateDTO = new UserPasswordUpdateDTO(PASSWORD);
 
         UserDTO userDTO = new UserDTO(
-                USER_FIRSTNAME, USER_LASTNAME, USER_AGE, USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+                FIRSTNAME, LASTNAME, AGE, EMAIL, USERNAME, PASSWORD);
 
         when(userService.updatePassword(ID_1L, updateDTO, userPrincipal.getId())).thenReturn(userDTO);
 
@@ -217,18 +217,18 @@ class UserUpdateControllerTest {
 
         // then
         result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$.password", is(USER_PASSWORD)));
+        result.andExpect(jsonPath("$.password", is(PASSWORD)));
         result.andExpect(content().string(objectMapper.writeValueAsString(userDTO)));
     }
 
 
     @Test
-    @WithMockUser(username = USER_EMAIL)
+    @WithMockUser(username = EMAIL)
     @DisplayName("Should return HTTP status Bad Request when password is blank")
     void updatePassword_passwordIsBlank_shouldReturnUserDTO() throws Exception {
         // given
-        User userPrincipal = TestUtils.createUserForTest(USER_EMAIL);
-        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(userPrincipal);
+        User userPrincipal = TestUtils.createUserForTest(EMAIL);
+        when(userService.findUserByEmail(EMAIL)).thenReturn(userPrincipal);
 
         UserPasswordUpdateDTO updateDTO = new UserPasswordUpdateDTO("    ");
 
@@ -242,12 +242,12 @@ class UserUpdateControllerTest {
     }
 
     @Test
-    @WithMockUser(username = USER_EMAIL)
+    @WithMockUser(username = EMAIL)
     @DisplayName("Should return HTTP status Bad Request when password is to long")
     void updatePassword_passwordToLong_shouldReturnUserDTO() throws Exception {
         // given
-        User userPrincipal = TestUtils.createUserForTest(USER_EMAIL);
-        when(userService.findUserByEmail(USER_EMAIL)).thenReturn(userPrincipal);
+        User userPrincipal = TestUtils.createUserForTest(EMAIL);
+        when(userService.findUserByEmail(EMAIL)).thenReturn(userPrincipal);
 
         UserPasswordUpdateDTO updateDTO = new UserPasswordUpdateDTO(PASSWORD_1_CHAR_MORE);
 

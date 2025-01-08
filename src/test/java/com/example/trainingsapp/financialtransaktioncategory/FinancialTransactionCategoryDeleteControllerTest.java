@@ -104,8 +104,8 @@ class FinancialTransactionCategoryDeleteControllerTest {
         // then
         result.andExpectAll(
                 MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.TEA001.getBusinessStatus()),
+                MockMvcResultMatchers.jsonPath("$.status").value(ErrorCode.TEA001.getBusinessCode()),
                 MockMvcResultMatchers.jsonPath("$.message").value(ErrorCode.TEA001.getBusinessMessage()),
-                MockMvcResultMatchers.jsonPath("$.statusCode").value(ErrorCode.TEA001.getHttpStatusCode()));
+                MockMvcResultMatchers.jsonPath("$.statusCode").value(ErrorCode.TEA001.getHttpStatus()));
     }
 }

@@ -17,8 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -107,7 +105,7 @@ class FinancialTransactionUpdateServiceImplTest {
 
         // then
         assertEquals(ErrorCode.FT001.getBusinessMessage(), result.getMessage());
-        assertEquals(ErrorCode.FT001.getHttpStatusCode(), result.getHttpStatusCode());
+        assertEquals(ErrorCode.FT001.getHttpStatus(), result.getHttpStatusCode());
         verify(financialTransactionModelMapper, never()).mapFinancialTransactionEntityToFinancialTransactionDTO(any());
         verify(financialTransactionCategoryRepository, never()).findByIdAndUserId(any(), any());
 

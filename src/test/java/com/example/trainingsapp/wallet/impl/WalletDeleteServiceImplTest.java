@@ -8,16 +8,13 @@ import com.example.trainingsapp.user.api.model.User;
 import com.example.trainingsapp.wallet.api.WalletRepository;
 import com.example.trainingsapp.wallet.api.model.Wallet;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.Instant;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -67,8 +64,8 @@ class WalletDeleteServiceImplTest {
         // then
         Assertions.assertAll(
                 () -> assertEquals(ErrorCode.W001.getBusinessMessage(), result.getMessage()),
-                () -> assertEquals(ErrorCode.W001.getHttpStatusCode(), result.getHttpStatusCode()),
-                () -> assertEquals(ErrorCode.W001.getBusinessStatus(), result.getStatus()));
+                () -> assertEquals(ErrorCode.W001.getHttpStatus(), result.getHttpStatusCode()),
+                () -> assertEquals(ErrorCode.W001.getBusinessCode(), result.getStatus()));
         verify(walletRepository, times(1)).findById(WALLET_ID_1L);
         verify(walletRepository, times(0)).deleteById(WALLET_ID_1L);
 
@@ -90,8 +87,8 @@ class WalletDeleteServiceImplTest {
         // then
         Assertions.assertAll(
                 () -> assertEquals(ErrorCode.W002.getBusinessMessage(), result.getMessage()),
-                () -> assertEquals(ErrorCode.W002.getHttpStatusCode(), result.getHttpStatusCode()),
-                () -> assertEquals(ErrorCode.W002.getBusinessStatus(), result.getStatus()));
+                () -> assertEquals(ErrorCode.W002.getHttpStatus(), result.getHttpStatusCode()),
+                () -> assertEquals(ErrorCode.W002.getBusinessCode(), result.getStatus()));
         verify(walletRepository, times(1)).findById(WALLET_ID_1L);
         verify(walletRepository, times(0)).deleteById(WALLET_ID_1L);
 

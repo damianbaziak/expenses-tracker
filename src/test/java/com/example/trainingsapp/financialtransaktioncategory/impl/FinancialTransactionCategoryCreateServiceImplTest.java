@@ -94,7 +94,7 @@ class FinancialTransactionCategoryCreateServiceImplTest {
                 financialTransactionCategoryService.createCategory(financialTransactionCategoryCreateDTO, USER_ID_1L));
 
         Assertions.assertAll(
-                () -> assertEquals(ErrorCode.U003.getHttpStatusCode(), result.getHttpStatusCode()),
+                () -> assertEquals(ErrorCode.U003.getHttpStatus(), result.getHttpStatusCode()),
                 () -> assertEquals(ErrorCode.U003.getBusinessMessage(), result.getMessage()));
         verify(financialTransactionCategoryRepository, never()).save(any(FinancialTransactionCategory.class));
         verify(financialTransactionCategoryModelMapper, never())

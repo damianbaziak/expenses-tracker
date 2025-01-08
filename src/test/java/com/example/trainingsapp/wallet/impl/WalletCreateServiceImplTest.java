@@ -80,9 +80,9 @@ class WalletCreateServiceImplTest {
                 () -> walletService.createWallet(createDTO, USER_ID_1L));
 
         Assertions.assertAll(
-                () -> assertEquals(ErrorCode.U003.getHttpStatusCode(), result.getHttpStatusCode()),
+                () -> assertEquals(ErrorCode.U003.getHttpStatus(), result.getHttpStatusCode()),
                 () -> assertEquals(ErrorCode.U003.getBusinessMessage(), result.getMessage()),
-                () -> assertEquals(ErrorCode.U003.getBusinessStatus(), result.getStatus()),
+                () -> assertEquals(ErrorCode.U003.getBusinessCode(), result.getStatus()),
                 () -> verify(walletRepository, never()).save(any(Wallet.class)),
                 () -> verify(walletModelMapper, never()).mapWalletEntityToWalletDTO(any(Wallet.class)));
 

@@ -104,7 +104,7 @@ class FinancialTransactionFindServiceImplTest {
                 () -> financialTransactionService.findFinancialTransactionsByWalletId(2L, user.getId()));
 
         Assertions.assertEquals(ErrorCode.W001.getBusinessMessage(), result.getMessage());
-        Assertions.assertEquals(ErrorCode.W001.getHttpStatusCode(), result.getHttpStatusCode());
+        Assertions.assertEquals(ErrorCode.W001.getHttpStatus(), result.getHttpStatusCode());
         verify(financialTransactionRepository, never()).findAllByWalletIdAndWalletUserIdOrderByDateDesc(any(), any());
     }
 
@@ -167,7 +167,7 @@ class FinancialTransactionFindServiceImplTest {
                 () -> financialTransactionService.findFinancialTransactionForUser(1L, USER_ID_1L));
 
         Assertions.assertEquals(ErrorCode.FT001.getBusinessMessage(), result.getMessage());
-        Assertions.assertEquals(ErrorCode.FT001.getHttpStatusCode(), result.getHttpStatusCode());
+        Assertions.assertEquals(ErrorCode.FT001.getHttpStatus(), result.getHttpStatusCode());
         verify(financialTransactionModelMapper, never()).mapFinancialTransactionEntityToFinancialTransactionDTO(any());
 
     }

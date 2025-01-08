@@ -1,7 +1,6 @@
-package com.example.trainingsapp.authorization.api;
+package com.example.trainingsapp.authorization.impl;
 
-import com.example.trainingsapp.authorization.api.dto.UserLoginDTO;
-import com.example.trainingsapp.authorization.api.impl.AuthServiceImpl;
+import com.example.trainingsapp.authorization.impl.AuthServiceImpl;
 import com.example.trainingsapp.general.exception.AppRuntimeException;
 import com.example.trainingsapp.general.exception.ErrorCode;
 import com.example.trainingsapp.user.api.UserRepository;
@@ -13,33 +12,34 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class AuthServiceImplTest {
+class AuthServiceImplRegisterTest {
+
     @InjectMocks
     private AuthServiceImpl authService;
+
     @Mock
     private UserRepository userRepository;
-    @Mock
-    private PasswordEncoder passwordEncoder;
+
+    @Spy
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 
     @Test
-    @DisplayName("Should create adn save new user to the database")
+    @DisplayName("Should create and save new user to the database")
     void addUser_newUser_shouldSaveUser() {
         // given
         UserDTO userDTO = new UserDTO("damian", "baziak", 30, "damianbaziak@gmail.com",
                 "bazyl", "1234567890");
-
-        when(passwordEncoder.encode("1234567890")).thenReturn("encodedPassword");
 
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 
@@ -56,7 +56,7 @@ class AuthServiceImplTest {
         assertEquals(userDTO.getAge(), capturedUser.getAge());
         assertEquals(userDTO.getEmail(), capturedUser.getEmail());
         assertEquals(userDTO.getUsername(), capturedUser.getUsername());
-        assertEquals("encodedPassword", capturedUser.getPassword());
+        assertNotEquals(userDTO.getPassword(), capturedUser.getPassword());
     }
 
     @Test
@@ -79,14 +79,16 @@ class AuthServiceImplTest {
     }
 
     @Test
-    void loginUser() {
-        UserLoginDTO userLoginDTO = new UserLoginDTO("damianbaziak@gmail.com",
-                "1234567890");
+    @DisplayName("Hashing a valid password should produce a result of correct length")
+    void hashedPassword_validPassword_shouldReturnCorrectLengthHash() {
+        // given
+        String passsword = "String123.";
 
+        // when
+        String result = authService.hashedPassword(passsword);
 
-    }
+        // then
+        assertEquals(60, result.length());
 
-    @Test
-    void hashedPassword() {
     }
 }

@@ -47,12 +47,12 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(
                 new ErrorResponseDTO(
-                        ErrorCode.TEA001.getBusinessStatus(),
+                        ErrorCode.TEA001.getBusinessCode(),
                         errorStrategy.returnExceptionMessage(ErrorCode.TEA001.getBusinessMessage()),
                         errorStrategy.returnExceptionDescription(String.format("Throwable exception %s",
                                 e.getMessage())),
-                        ErrorCode.TEA001.getHttpStatusCode()),
-                HttpStatus.valueOf(ErrorCode.TEA001.getHttpStatusCode())
+                        ErrorCode.TEA001.getHttpStatus()),
+                HttpStatus.valueOf(ErrorCode.TEA001.getHttpStatus())
         );
     }
 
